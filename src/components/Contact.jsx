@@ -43,7 +43,7 @@ export default function Contact() {
   return (
     <section id="contact" className="contact-page">
       
-      {/* 🔥 HERO SECTION */}
+      {/*  HERO SECTION */}
       <div className="contact-hero text-white position-relative">
         <div className="container py-5">
           <div className="row align-items-center">

@@ -1,13 +1,12 @@
-// src/pages/ServiceDetail.jsx
-import { Link, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
-import { useState, useEffect } from "react";
-import { services } from "../data/servicesData";
+import { Link, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
+import { services } from '../data/servicesData';
+import ServiceDetailTabs from '../components/services/ServiceDetailTabs';
 
 function ServiceDetail() {
   const { slug } = useParams();
   const service = services.find((s) => s.slug === slug);
-  const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -15,10 +14,10 @@ function ServiceDetail() {
 
   if (!service) {
     return (
-      <div style={{ textAlign: 'center', padding: '100px 20px' }}>
-        <h1>Service Not Found</h1>
-        <p>The service you're looking for doesn't exist.</p>
-        <Link to="/services" style={{ color: '#667eea', textDecoration: 'none' }}>
+      <div className="text-center py-24 px-4">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Service Not Found</h1>
+        <p className="text-gray-600 mb-6">The service you're looking for doesn't exist.</p>
+        <Link to="/services" className="text-purple-600 hover:text-purple-700 font-semibold">
           ← Back to Services
         </Link>
       </div>
@@ -45,76 +44,7 @@ function ServiceDetail() {
               <h1 className="service-detail-title">{service.name}</h1>
               <div className="service-category-badge">{service.category}</div>
               
-              <div className="service-tabs">
-                <button 
-                  className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('overview')}
-                >
-                  Overview
-                </button>
-                <button 
-                  className={`tab-btn ${activeTab === 'features' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('features')}
-                >
-                  Features
-                </button>
-                <button 
-                  className={`tab-btn ${activeTab === 'tech' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('tech')}
-                >
-                  Technology
-                </button>
-              </div>
-
-              <div className="tab-content">
-                {activeTab === 'overview' && (
-                  <div>
-                    <p className="service-description-full">{service.details}</p>
-                    <div className="service-stats">
-                      <div className="stat-item">
-                        <strong>{service.portfolio}</strong>
-                        <span>Track Record</span>
-                      </div>
-                      {service.certifications && (
-                        <div className="stat-item">
-                          <strong>{service.certifications[0]}</strong>
-                          <span>Certification</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'features' && (
-                  <ul className="features-list">
-                    {service.features.map((feature, idx) => (
-                      <li key={idx}>✓ {feature}</li>
-                    ))}
-                  </ul>
-                )}
-
-                {activeTab === 'tech' && (
-                  <div>
-                    <div className="tech-tags">
-                      {service.technologies.map((tech, idx) => (
-                        <span key={idx} className="tech-tag">{tech}</span>
-                      ))}
-                    </div>
-                    {service.certifications && (
-                      <div className="certifications">
-                        <h3>Certifications</h3>
-                        {service.certifications.map((cert, idx) => (
-                          <p key={idx}>🏆 {cert}</p>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <Link to="/contact" className="inquiry-btn">
-                Request a Quote →
-              </Link>
+              <ServiceDetailTabs service={service} />
             </div>
 
             <div className="service-detail-image">

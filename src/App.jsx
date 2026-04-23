@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import TeamPage from './pages/TeamPage';
 import ServicesPage from './pages/ServicesPage';
 import ServiceDetail from './pages/ServiceDetail';
 import ProjectsPage from './pages/ProjectsPage';
@@ -51,6 +52,7 @@ export default function App() {
        
         <Route path="/" element={<Layout><HomePage /></Layout>} />
         <Route path="/about" element={<Layout><AboutPage /></Layout>} />
+        <Route path="/team" element={<Layout><TeamPage /></Layout>} />
         <Route path="/services" element={<Layout><ServicesPage /></Layout>} />
         <Route path="/services/:slug" element={<Layout><ServiceDetail /></Layout>} />
         <Route path="/projects" element={<Layout><ProjectsPage /></Layout>} />
