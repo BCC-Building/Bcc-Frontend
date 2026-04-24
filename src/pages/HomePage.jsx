@@ -12,7 +12,7 @@ import CTA from '../components/CTA';
 // Services Preview Imports
 import ServiceCard from '../components/services/ServiceCard';
 import SectionHeader from '../components/common/SectionHeader';
-import { services } from '../data/servicesData';
+import { services } from '../data/ServicesData';
 
 export default function HomePage() {
   return (

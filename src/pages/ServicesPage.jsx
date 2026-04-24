@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { services } from '../data/servicesData';
+import { services } from '../data/ServicesData';
 import ServicesHero from '../components/services/ServicesHero';
 import ServiceFilter from '../components/services/ServiceFilter';
 import ServicesGrid from '../components/services/ServicesGrid';
