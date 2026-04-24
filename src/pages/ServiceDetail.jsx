@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useEffect } from 'react';
-import { services } from '../data/servicesData';
+import { services } from '../data/ServicesData';
 import ServiceDetailTabs from '../components/services/ServiceDetailTabs';
 
 function ServiceDetail() {
