@@ -7,10 +7,10 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import WhatsAppButton from './components/WhatsAppButton';
+import AboutPage from './pages/AboutPage';
+import TeamPage from './pages/TeamPage';  
 
 // Non-critical pages - lazy load (load when needed)
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const TeamPage = lazy(() => import('./pages/TeamPage'));
 const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
