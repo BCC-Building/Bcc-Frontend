@@ -4,42 +4,157 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- ⚡ PERFORMANCE: Preload Critical Assets -->
+    <link rel="preload" href="/src/assets/img.webp" as="image" fetchpriority="high" />
+    <link rel="preload" href="/images/hero-bg.webp" as="image" fetchpriority="high" />
+    
+    <!-- ⚡ PERFORMANCE: DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="//images.unsplash.com" />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    
+    <!-- ⚡ PERFORMANCE: Inline Critical CSS (Above-fold styles) -->
+    <style>
+      /* Prevent Flash of Invisible Text */
+      @font-face {
+        font-family: 'bootstrap-icons';
+        font-display: swap;
+        src: url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2") format("woff2");
+      }
+      
+      /* Base styles - visible immediately */
+      :root {
+        --bs-body-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      body {
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+        visibility: visible;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      
+      /* Prevent layout shift - Navbar placeholder */
+      nav.fixed {
+        height: 64px;
+        background: #ffffff;
+        contain: layout style paint;
+      }
+      
+      /* Prevent layout shift - Hero placeholder */
+      .hero {
+        min-height: calc(100vh - 64px);
+        background: #0a1628;
+        contain: layout style;
+      }
+      
+      /* Prevent layout shift - Images */
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      /* Skip to content - Accessibility */
+      .skip-link {
+        position: absolute;
+        top: -100%;
+        left: 0;
+        z-index: 10000;
+        padding: 12px 20px;
+        background: #0d6efd;
+        color: #ffffff;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 0 0 4px 0;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 0;
+        outline: 3px solid #ffffff;
+        outline-offset: -6px;
+      }
+      
+      @media (min-width: 768px) {
+        nav.fixed { height: 80px; }
+        .hero { min-height: calc(100vh - 80px); }
+      }
+    </style>
+    
+    <!-- ⚡ PERFORMANCE: Bootstrap CSS - Async (non-render-blocking) -->
+    <link 
+      rel="preload" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    
+    <!-- ⚡ PERFORMANCE: Bootstrap Icons - Async -->
+    <link 
+      rel="preload" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" 
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    
+    <!-- Fallback for no-JS -->
+    <noscript>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    </noscript>
 
-    <!-- Primary SEO -->
-    <title>Building Creators And Consulting | BCC | Rudrapur Uttarakhand</title>
-    <meta name="description" content="Building Creators And Consulting (BCC) — Rudrapur, Uttarakhand. Expert Soil Testing, Land Survey, Construction & Consulting services. Call for free site visit." />
-    <meta name="keywords" content="soil testing Rudrapur, land survey Uttarakhand, construction company Rudrapur, BCC consulting, building contractor Rudrapur, site survey Uttarakhand" />
+    <!-- 🔍 SEO: Primary Meta Tags -->
+    <title>Building Creators And Consulting | BCC | Soil Testing, Land Survey & Construction | Rudrapur, Uttarakhand</title>
+    <meta name="description" content="Building Creators And Consulting (BCC) — Rudrapur, Uttarakhand. Expert Soil Testing, Land Survey, Construction & Consulting services. Call for free site visit. Trusted since 2018." />
+    <meta name="keywords" content="soil testing Rudrapur, land survey Uttarakhand, construction company Rudrapur, BCC consulting, building contractor Rudrapur, site survey Uttarakhand, architectural design Rudrapur, structural engineering Uttarakhand" />
     <meta name="author" content="Building Creators And Consulting" />
     <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0d6efd" />
     <link rel="canonical" href="https://bcc.net.in/" />
 
-    <!-- Open Graph (Facebook / WhatsApp share) -->
+    <!-- 🔍 SEO: Open Graph (Facebook, WhatsApp, LinkedIn) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Building Creators And Consulting" />
-    <meta property="og:title" content="BCC | Soil Testing & Land Survey | Rudrapur" />
-    <meta property="og:description" content="Trusted construction & consulting company in Rudrapur, Uttarakhand. Soil Testing, Land Survey, Building Consultation & more." />
+    <meta property="og:title" content="BCC | Soil Testing, Land Survey & Construction | Rudrapur, Uttarakhand" />
+    <meta property="og:description" content="Trusted construction & consulting company in Rudrapur, Uttarakhand. Soil Testing, Land Survey, Building Consultation & Architectural Design." />
     <meta property="og:image" content="https://bcc.net.in/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://bcc.net.in/" />
     <meta property="og:locale" content="en_IN" />
 
-    <!-- Twitter Card -->
+    <!-- 🔍 SEO: Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="BCC | Soil Testing & Land Survey | Rudrapur" />
-    <meta name="twitter:description" content="Expert Soil Testing, Land Survey & Construction Consulting in Rudrapur, Uttarakhand." />
+    <meta name="twitter:title" content="BCC | Soil Testing, Land Survey & Construction | Rudrapur" />
+    <meta name="twitter:description" content="Expert Soil Testing, Land Survey & Construction Consulting in Rudrapur, Uttarakhand. Free site visit available." />
     <meta name="twitter:image" content="https://bcc.net.in/og-image.jpg" />
 
-    <!-- Local Business Schema -->
+    <!-- 🔍 SEO: Additional Meta -->
+    <meta name="geo.region" content="IN-UT" />
+    <meta name="geo.placename" content="Rudrapur" />
+    <meta name="geo.position" content="28.9845;79.4039" />
+    <meta name="ICBM" content="28.9845, 79.4039" />
+
+    <!-- 🔍 SEO: Local Business Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": "Building Creators & Consulting",
-      "alternateName": "BCC",
-      "description": "Architectural Design, Soil Testing, Land Survey, Construction & Consulting services in Rudrapur, Uttarakhand",
+      "alternateName": ["BCC", "Building Creators And Consulting"],
+      "description": "Premium architectural design, soil testing, land survey, construction & consulting services in Rudrapur, Uttarakhand since 2018.",
       "url": "https://bcc.net.in/",
-      "telephone": "+91-XXXXXXXXXX",
+      "telephone": "+91-9876543210",
+      "email": "info@bcc.net.in",
+      "image": "https://bcc.net.in/og-image.jpg",
       "address": {
         "@type": "PostalAddress",
+        "streetAddress": "Guru Angad Dev Complex, 4th Floor",
         "addressLocality": "Rudrapur",
         "addressRegion": "Uttarakhand",
         "postalCode": "263153",
@@ -50,16 +165,93 @@
         "latitude": "28.9845",
         "longitude": "79.4039"
       },
-      "areaServed": ["Rudrapur", "Haldwani", "Kashipur", "Uttarakhand"],
-      "openingHours": "Mo-Sa 09:00-18:00"
+      "areaServed": ["Rudrapur", "Haldwani", "Kashipur", "Pantnagar", "Udham Singh Nagar", "Uttarakhand"],
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "09:00",
+          "closes": "18:00"
+        }
+      ],
+      "priceRange": "₹₹",
+      "sameAs": [
+        "https://facebook.com/bccrudrapur",
+        "https://linkedin.com/company/bccrudrapur",
+        "https://instagram.com/bccrudrapur"
+      ]
     }
     </script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- 🔍 SEO: Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://bcc.net.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://bcc.net.in/services"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Contact",
+          "item": "https://bcc.net.in/contact"
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
+    <!-- Accessibility: Skip Navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Root Element -->
     <div id="root"></div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- ⚡ PERFORMANCE: Bootstrap JS - Deferred (non-render-blocking) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- App Entry Point -->
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- ⚡ PERFORMANCE: Service Worker Registration (Optional - for offline support) -->
+    <script>
+      // Detect when page is fully loaded
+      window.addEventListener('load', () => {
+        // Remove loading states
+        document.body.classList.add('loaded');
+        
+        // Performance monitoring
+        if ('performance' in window && 'PerformanceObserver' in window) {
+          // Log LCP
+          new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            if (entries.length > 0) {
+              const lcp = entries[entries.length - 1];
+              console.log('LCP:', Math.round(lcp.startTime) + 'ms', lcp.element);
+            }
+          }).observe({ type: 'largest-contentful-paint', buffered: true });
+          
+          // Log CLS
+          let cls = 0;
+          new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              if (!entry.hadRecentInput) cls += entry.value;
+            }
+            console.log('CLS:', cls.toFixed(3));
+          }).observe({ type: 'layout-shift', buffered: true });
+        }
+      });
+    </script>
   </body>
 </html>

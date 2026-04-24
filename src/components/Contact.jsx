@@ -41,10 +41,10 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="contact-page">
+    <main aria-label="Contact page" id="contact" className="contact-page">
       
-      {/*  HERO SECTION */}
-      <div className="contact-hero text-white position-relative">
+      {/* HERO SECTION */}
+      <section className="contact-hero text-white position-relative" aria-label="Contact hero">
         <div className="container py-5">
           <div className="row align-items-center">
             <div className="col-lg-7">
@@ -67,11 +67,13 @@ export default function Contact() {
                 <TypeAnimation
                   sequence={[
                     'Contact Us', 2000,
-                    'Let’s Build Together', 2000,
+                    'Let\'s Build Together', 2000,
                     'Start Your Project Today', 2000,
                   ]}
                   speed={50}
                   repeat={Infinity}
+                  wrapper="span"
+                  aria-label="Contact Us, Let's Build Together, Start Your Project Today"
                 />
               </motion.h1>
 
@@ -81,7 +83,7 @@ export default function Contact() {
                 transition={{ delay: 0.5 }}
                 className="lead text-white mt-3"
               >
-                Let's connect and build something great. Our team is ready to help you turn your vision into reality.
+                Let&apos;s connect and build something great. Our team is ready to help you turn your vision into reality.
               </motion.p>
 
               <motion.div
@@ -90,10 +92,18 @@ export default function Contact() {
                 transition={{ delay: 0.7 }}
                 className="mt-4 d-flex gap-3 flex-wrap"
               >
-                <a href="tel:+919876543210" className="btn btn-light px-4">
+                <a 
+                  href="tel:+919876543210" 
+                  className="btn btn-light px-4"
+                  aria-label="Call us at +91 98765 43210"
+                >
                   📞 Call Now
                 </a>
-                <a href="#contact" className="btn btn-outline-light px-4">
+                <a 
+                  href="#contact-form" 
+                  className="btn btn-outline-light px-4"
+                  aria-label="Go to contact form"
+                >
                   Get Quote
                 </a>
               </motion.div>
@@ -101,10 +111,11 @@ export default function Contact() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* CONTACT INFO CARDS */}
-      <div className="container py-5">
+      <section className="container py-5" aria-label="Contact information">
+        <h2 className="visually-hidden">Contact Details</h2>
         <div className="row gy-4">
           {[
             {
@@ -113,6 +124,7 @@ export default function Contact() {
               text: '+91 98765 43210',
               sub: 'Mon - Sat: 9:00 AM - 7:00 PM',
               color: 'bg-primary',
+              ariaLabel: 'Phone number: +91 98765 43210',
             },
             {
               icon: 'bi-envelope-fill',
@@ -120,13 +132,15 @@ export default function Contact() {
               text: 'info@bcc.net.in',
               sub: 'We reply within 24 hours',
               color: 'bg-success',
+              ariaLabel: 'Email address: info@bcc.net.in',
             },
             {
               icon: 'bi-geo-alt-fill',
               title: 'Visit Us',
-              text: 'Guru Angad Dev Complex,4th Floor, Rudrapur,(U.S.Nagar)',
-              sub: 'Uttrakhand - India',
+              text: 'Guru Angad Dev Complex, 4th Floor, Rudrapur, (U.S. Nagar)',
+              sub: 'Uttarakhand - India',
               color: 'bg-warning',
+              ariaLabel: 'Office address: Guru Angad Dev Complex, 4th Floor, Rudrapur',
             },
             {
               icon: 'bi-clock-fill',
@@ -134,6 +148,7 @@ export default function Contact() {
               text: 'Mon - Sat: 9:00 AM - 7:00 PM',
               sub: 'Sunday: Closed',
               color: 'bg-info',
+              ariaLabel: 'Business hours: Monday to Saturday, 9 AM to 7 PM, Sunday closed',
             },
           ].map((item, index) => (
             <motion.div
@@ -144,14 +159,17 @@ export default function Contact() {
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <div className="contact-card p-4 h-100 shadow-sm rounded-4">
-                <div className={`icon-box ${item.color} text-white mb-3`}>
+              <article 
+                className="contact-card p-4 h-100 shadow-sm rounded-4"
+                aria-label={item.ariaLabel}
+              >
+                <div className={`icon-box ${item.color} text-white mb-3`} aria-hidden="true">
                   <i className={`bi ${item.icon} fs-4`}></i>
                 </div>
-                <h5>{item.title}</h5>
+                <h3 className="h5">{item.title}</h3>
                 <p className="text-muted mb-1">{item.text}</p>
                 <small className="text-muted">{item.sub}</small>
-              </div>
+              </article>
             </motion.div>
           ))}
         </div>
@@ -164,22 +182,106 @@ export default function Contact() {
               initial={{ opacity: 0, x: -60 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              id="contact-form"
             >
-              <h4 className="mb-4">Send Us a Message</h4>
+              <h2 className="h4 mb-4">Send Us a Message</h2>
 
               {submitted && (
-                <div className="alert alert-success">
-                  Message sent successfully!
+                <div className="alert alert-success" role="alert">
+                  ✅ Message sent successfully! We&apos;ll get back to you soon.
                 </div>
               )}
 
-              <form onSubmit={handleSubmit}>
-                <input className="form-control mb-3" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange}/>
-                <input className="form-control mb-3" name="email" placeholder="Email" value={formData.email} onChange={handleChange}/>
-                <input className="form-control mb-3" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange}/>
-                <textarea className="form-control mb-3" name="message" placeholder="Message" value={formData.message} onChange={handleChange}></textarea>
+              <form onSubmit={handleSubmit} aria-label="Contact form" noValidate>
+                <div className="mb-3">
+                  <label htmlFor="fullName" className="visually-hidden">Full Name</label>
+                  <input 
+                    id="fullName"
+                    className="form-control" 
+                    name="fullName" 
+                    placeholder="Full Name" 
+                    value={formData.fullName} 
+                    onChange={handleChange}
+                    aria-required="true"
+                    required
+                    autoComplete="name"
+                  />
+                </div>
 
-                <button className="btn btn-primary w-100">Send Message</button>
+                <div className="mb-3">
+                  <label htmlFor="email" className="visually-hidden">Email Address</label>
+                  <input 
+                    id="email"
+                    className="form-control" 
+                    name="email" 
+                    type="email"
+                    placeholder="Email" 
+                    value={formData.email} 
+                    onChange={handleChange}
+                    aria-required="true"
+                    required
+                    autoComplete="email"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="phone" className="visually-hidden">Phone Number</label>
+                  <input 
+                    id="phone"
+                    className="form-control" 
+                    name="phone" 
+                    type="tel"
+                    placeholder="Phone" 
+                    value={formData.phone} 
+                    onChange={handleChange}
+                    aria-required="true"
+                    required
+                    autoComplete="tel"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="service" className="visually-hidden">Select Service</label>
+                  <select 
+                    id="service"
+                    className="form-control" 
+                    name="service" 
+                    value={formData.service} 
+                    onChange={handleChange}
+                    aria-required="true"
+                    required
+                  >
+                    <option value="Choose a service">Choose a service</option>
+                    <option value="Residential">Residential</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Renovation">Renovation</option>
+                    <option value="Interior">Interior Design</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="message" className="visually-hidden">Your Message</label>
+                  <textarea 
+                    id="message"
+                    className="form-control" 
+                    name="message" 
+                    placeholder="Your Message" 
+                    value={formData.message} 
+                    onChange={handleChange}
+                    rows="4"
+                    aria-required="true"
+                    required
+                  ></textarea>
+                </div>
+
+                <button 
+                  type="submit"
+                  className="btn btn-primary w-100"
+                  aria-label="Submit contact form"
+                >
+                  Send Message
+                </button>
               </form>
             </motion.div>
           </div>
@@ -190,17 +292,21 @@ export default function Contact() {
               initial={{ opacity: 0, x: 60 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              aria-label="Google Maps location"
             >
               <iframe
-                title="map"
+                title="Building Creators And Consulting location on Google Maps"
                 className="w-100"
                 style={{ minHeight: '420px', border: 0 }}
                 src="https://www.google.com/maps?q=Guru+Angad+Dev+Complex%2C4th+Floor%2C+Rudrapur%2C(U.S.Nagar)Uttrakhand&output=embed"
+                loading="lazy"
+                allowFullScreen=""
+                referrerPolicy="no-referrer-when-downgrade"
               ></iframe>
             </motion.div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }
