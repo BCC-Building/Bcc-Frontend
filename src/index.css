@@ -600,3 +600,12 @@ footer a.text-white-50:hover {
 section, main, article, [class*="container"], [class*="col-"] {
   position: relative;
 }
+/* GPU accelerate all animations */
+[class*="motion"],
+[class*="animate"],
+.team-card,
+.hero {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
