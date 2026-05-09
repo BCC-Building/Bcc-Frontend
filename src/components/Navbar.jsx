@@ -1,314 +1,821 @@
-// src/components/Navbar.jsx - Final Optimized Version
-import React, { useState, useEffect, useCallback } from 'react';
+// src/components/Navbar.jsx
+// Dual-Row Premium Navbar — Building Creators & Consulting Pvt. Ltd.
+// Top info bar + Bottom nav strip | SEO | WCAG AA | Mobile-first | Production ready
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/img.webp';
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
+/* ─── CONFIG — change these ─── */
+const COMPANY_FULL  = 'Building Creators And Consulting';
+const COMPANY_SHORT = 'BCC';
+const PHONE         = '+918057540906';
+const PHONE_DISPLAY = '+91 80575 40906';
+const EMAIL         = 'info@bcc.net.in';
+const ADDRESS       = 'Guru Angad Dev Complex, 4th Floor, Rudrapur (U.S.Nagar), Uttarakhand';
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
+const NAV_LINKS = [
+  { path: '/',          name: 'Home'         },
+  { path: '/about',     name: 'About Us'},
+  { path: '/services',  name: 'Services'},
+  { path: '/achievements', name: 'Achievements' },
+  { path: '/team',      name: 'Our Experts'  },
+  { path: '/clients',   name: 'Our Clients'  },
+  { path: '/gallery',   name: 'Gallery'      },
+  { path: '/projects',  name: 'Projects'     },
+  { path: '/careers',   name: 'Career'       },
+  { path: '/contact',   name: 'Contact Us'   },
+];
 
-  // Handle scroll effect with passive listener for better performance
+/* ─── Dropdown hook ─── */
+function useDropdown() {
+  const [open, setOpen] = useState(null);
+  const ref = useRef(null);
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(null);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+  return { open, setOpen, ref };
+}
+
+export default function Navbar() {
+  const [menuOpen,    setMenuOpen]    = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [searchOpen,  setSearchOpen]  = useState(false);
+  const [searchVal,   setSearchVal]   = useState('');
+  const [mobileExp,   setMobileExp]   = useState(null); // expanded mobile dropdown
+  const location = useLocation();
+  const { open: ddOpen, setOpen: setDdOpen, ref: ddRef } = useDropdown();
+  const searchRef = useRef(null);
+
+  useEffect(() => {
+    const s = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', s, { passive: true });
+    return () => window.removeEventListener('scroll', s);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (isOpen) {
+    if (menuOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
+      document.body.style.width    = '100%';
     } else {
       document.body.style.overflow = '';
       document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.width    = '';
     }
     return () => {
       document.body.style.overflow = '';
       document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.width    = '';
     };
-  }, [isOpen]);
+  }, [menuOpen]);
 
-  // Close menu on Escape key
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
-      }
+    const e = (ev) => {
+      if (ev.key === 'Escape') { setMenuOpen(false); setSearchOpen(false); setDdOpen(null); }
     };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen]);
-
-  const toggleMenu = useCallback(() => {
-    setIsOpen(prev => !prev);
+    document.addEventListener('keydown', e);
+    return () => document.removeEventListener('keydown', e);
   }, []);
 
-  const closeMenu = useCallback(() => {
-    setIsOpen(false);
-  }, []);
+  useEffect(() => { setMenuOpen(false); setDdOpen(null); }, [location.pathname]);
 
-  const navLinks = [
-    { path: "/", name: "Home", icon: "🏠" },
-    { path: "/about", name: "About", icon: "ℹ️" },
-    { path: "/services", name: "Services", icon: "🛠️" },
-    { path: "/projects", name: "Projects", icon: "📁" },
-    { path: "/blog", name: "Blog", icon: "📝" },
-    { path: "/faq", name: "FAQ", icon: "❓" },
-    { path: "/gallery", name: "Gallery", icon: "🖼️" },
-    { path: "/careers", name: "Careers", icon: "💼" },
-    { path: "/contact", name: "Contact", icon: "📞" },
-  ];
+  useEffect(() => {
+    if (searchOpen && searchRef.current) searchRef.current.focus();
+  }, [searchOpen]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchVal.trim()) {
+      // implement search routing as needed
+      console.log('Search:', searchVal);
+      setSearchVal('');
+      setSearchOpen(false);
+    }
+  };
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 w-full transition-all duration-300 z-[9999] ${
-          isScrolled 
-            ? 'bg-white/95 backdrop-blur-md shadow-lg' 
-            : 'bg-white shadow-md'
-        }`}
-        style={{ 
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(0,0,0,0.05)'
-        }}
-        role="navigation"
-        aria-label="Main navigation"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 md:h-20">
-            
-            {/* Logo Section - Desktop */}
-            <Link 
-              to="/" 
-              className="flex items-center gap-2 md:gap-3 shrink-0"
-              aria-label="Building Creators And Consulting - Go to homepage"
-            >
-              <img
-                src={logo}
-                alt="Building Creators And Consulting logo"
-                className="h-10 w-10 md:h-12 md:w-12 object-contain rounded-lg"
-                width="48"
-                height="48"
-                loading="eager"
-                fetchPriority="high"
-                decoding="sync"
-              />
-              <div className="flex flex-col">
-                <span className="text-[10px] md:text-xs text-gray-500 font-medium hidden sm:block">
-                  BUILDING CREATORS
-                </span>
-                <span className="text-sm md:text-base font-bold text-gray-800">
-                  BCC <span className="hidden sm:inline">CONSULTING</span>
-                </span>
-              </div>
-            </Link>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap');
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1" role="menubar" aria-label="Desktop navigation">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  role="menuitem"
-                  className={({ isActive }) => `
-                    px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-200 whitespace-nowrap
-                    ${isActive 
-                      ? 'text-blue-600 bg-blue-50' 
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                    }
-                  `}
-                  aria-current={location.pathname === link.path ? 'page' : undefined}
+        :root {
+          --navy:      #1a2a5e;
+          --navy-d:    #111e47;
+          --navy-l:    #243470;
+          --gold:      #c9a84c;
+          --gold-l:    #e2c06a;
+          --white:     #ffffff;
+          --off:       #f4f6fb;
+          --text:      #2d3a5c;
+          --mid:       #6b7a99;
+          --line:      rgba(26,42,94,.10);
+          --line-w:    rgba(255,255,255,.12);
+          --head:      'Barlow Condensed', sans-serif;
+          --body:      'Barlow', sans-serif;
+          --top-h:     68px;
+          --bot-h:     48px;
+          --total-h:   calc(var(--top-h) + var(--bot-h));
+        }
+
+        .nb * { box-sizing: border-box; margin: 0; padding: 0; }
+        .nb { font-family: var(--body); }
+
+        /* ══ WRAPPER ══ */
+        .nb-wrap {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 9000;
+          transition: box-shadow .3s ease;
+        }
+        .nb-wrap.scrolled {
+          box-shadow: 0 4px 32px rgba(26,42,94,.18);
+        }
+
+        /* ══ TOP BAR ══ */
+        .nb-top {
+          background: var(--white);
+          border-bottom: 1px solid var(--line);
+          transition: height .3s ease, opacity .3s ease;
+          overflow: hidden;
+        }
+        .nb-top-inner {
+          max-width: 1320px; margin: 0 auto;
+          padding: 0 clamp(16px, 4vw, 48px);
+          height: var(--top-h);
+          display: flex; align-items: center; gap: 20px;
+        }
+
+        /* Logo block */
+        .nb-logo {
+          display: flex; align-items: center; gap: 12px;
+          text-decoration: none; flex-shrink: 0;
+        }
+        .nb-logo-img {
+          width: 52px; height: 52px; border-radius: 50%;
+          object-fit: contain; display: block;
+          border: 2px solid var(--navy);
+          transition: transform .3s;
+        }
+        .nb-logo:hover .nb-logo-img { transform: rotate(-5deg) scale(1.05); }
+        .nb-logo-fallback {
+          width: 52px; height: 52px; border-radius: 50%;
+          background: var(--navy); border: 2px solid var(--gold);
+          display: flex; align-items: center; justify-content: center;
+          font-family: var(--head); font-weight: 800; font-size: 20px; color: var(--gold);
+          flex-shrink: 0; transition: transform .3s;
+        }
+        .nb-logo-text { display: flex; flex-direction: column; gap: 2px; }
+        .nb-logo-name {
+          font-family: var(--head); font-weight: 800;
+          font-size: clamp(14px, 1.4vw, 18px);
+          color: var(--navy); line-height: 1.1; letter-spacing: .01em;
+          text-transform: uppercase;
+        }
+        .nb-logo-addr {
+          font-family: var(--body); font-size: 11px;
+          color: var(--mid); line-height: 1.3;
+          display: none;
+        }
+        @media (min-width: 900px) { .nb-logo-addr { display: block; } }
+
+        /* Contact chips */
+        .nb-contacts {
+          display: none; align-items: center; gap: 20px; margin-left: auto;
+        }
+        @media (min-width: 768px) { .nb-contacts { display: flex; } }
+
+        .nb-chip {
+          display: flex; align-items: center; gap: 8px;
+          text-decoration: none;
+        }
+        .nb-chip-icon {
+          width: 34px; height: 34px; border-radius: 8px;
+          background: var(--off); border: 1px solid var(--line);
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0; transition: background .2s, border-color .2s;
+        }
+        .nb-chip:hover .nb-chip-icon { background: var(--navy); border-color: var(--navy); }
+        .nb-chip:hover .nb-chip-icon svg { stroke: #fff; }
+        .nb-chip-body { display: flex; flex-direction: column; gap: 1px; }
+        .nb-chip-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--mid); font-family: var(--body); }
+        .nb-chip-val   { font-size: 13px; font-weight: 600; color: var(--text); font-family: var(--body); line-height: 1.2; }
+
+        /* Divider */
+        .nb-divider { width: 1px; height: 36px; background: var(--line); flex-shrink: 0; }
+
+        /* Search button */
+        .nb-search-btn {
+          width: 36px; height: 36px; border-radius: 8px;
+          background: var(--off); border: 1px solid var(--line);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; flex-shrink: 0;
+          transition: background .2s, border-color .2s;
+        }
+        .nb-search-btn:hover { background: var(--navy); border-color: var(--navy); }
+        .nb-search-btn:hover svg { stroke: #fff; }
+
+        /* Search overlay */
+        .nb-search-overlay {
+          position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+          background: var(--white);
+          display: flex; align-items: center;
+          padding: 0 24px; gap: 12px;
+          opacity: 0; pointer-events: none; z-index: 10;
+          transition: opacity .2s;
+        }
+        .nb-search-overlay.open { opacity: 1; pointer-events: all; }
+        .nb-search-form { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .nb-search-input {
+          flex: 1; height: 42px; border: 1.5px solid var(--navy);
+          border-radius: 8px; padding: 0 16px;
+          font-family: var(--body); font-size: 15px; color: var(--text);
+          outline: none; background: var(--off);
+        }
+        .nb-search-input::placeholder { color: var(--mid); }
+        .nb-search-submit {
+          height: 42px; padding: 0 20px; background: var(--navy); color: #fff;
+          border: none; border-radius: 8px; cursor: pointer;
+          font-family: var(--head); font-size: 14px; font-weight: 700;
+          letter-spacing: .05em; text-transform: uppercase;
+          transition: background .2s;
+        }
+        .nb-search-submit:hover { background: var(--navy-d); }
+        .nb-search-close {
+          width: 36px; height: 36px; background: none; border: none;
+          cursor: pointer; color: var(--mid); font-size: 20px;
+          display: flex; align-items: center; justify-content: center;
+          border-radius: 50%;
+          transition: background .2s, color .2s;
+        }
+        .nb-search-close:hover { background: var(--off); color: var(--text); }
+
+        /* ══ BOTTOM NAV BAR ══ */
+        .nb-bot {
+          background: var(--navy);
+          position: relative;
+        }
+        .nb-bot-inner {
+          max-width: 1320px; margin: 0 auto;
+          padding: 0 clamp(16px, 4vw, 48px);
+          height: var(--bot-h);
+          display: flex; align-items: stretch;
+        }
+
+        /* Nav links */
+        .nb-nav { display: none; align-items: stretch; gap: 0; }
+        @media (min-width: 1024px) { .nb-nav { display: flex; } }
+
+        .nb-item { position: relative; display: flex; align-items: stretch; }
+
+        .nb-link {
+          display: flex; align-items: center; gap: 5px;
+          padding: 0 14px;
+          font-family: var(--head); font-size: 14px; font-weight: 700;
+          letter-spacing: .06em; text-transform: uppercase;
+          color: rgba(255,255,255,.82);
+          text-decoration: none; white-space: nowrap;
+          border-bottom: 3px solid transparent;
+          transition: color .2s, border-color .2s, background .2s;
+          cursor: pointer; position: relative;
+        }
+        .nb-link:hover { color: var(--white); background: rgba(255,255,255,.07); }
+        .nb-link.active {
+          color: var(--gold);
+          border-bottom-color: var(--gold);
+        }
+        .nb-link svg.dd-arrow {
+          width: 12px; height: 12px; flex-shrink: 0;
+          stroke: currentColor; fill: none;
+          transition: transform .25s;
+        }
+        .nb-item.dd-open .nb-link svg.dd-arrow { transform: rotate(180deg); }
+
+        /* Dropdown */
+        .nb-dropdown {
+          position: absolute; top: calc(100% + 4px); left: 0;
+          min-width: 210px;
+          background: var(--white);
+          border-radius: 10px;
+          border: 1px solid var(--line);
+          box-shadow: 0 16px 48px rgba(26,42,94,.16);
+          overflow: hidden;
+          opacity: 0; transform: translateY(8px); pointer-events: none;
+          transition: opacity .22s, transform .22s;
+          z-index: 100;
+        }
+        .nb-item.dd-open .nb-dropdown {
+          opacity: 1; transform: translateY(0); pointer-events: all;
+        }
+        .nb-dd-link {
+          display: flex; align-items: center; gap: 8px;
+          padding: 11px 16px;
+          font-family: var(--body); font-size: 13.5px; font-weight: 500;
+          color: var(--text); text-decoration: none;
+          border-bottom: 1px solid var(--line);
+          transition: background .15s, color .15s, padding-left .15s;
+        }
+        .nb-dd-link:last-child { border-bottom: none; }
+        .nb-dd-link:hover { background: var(--off); color: var(--navy); padding-left: 22px; }
+        .nb-dd-link::before {
+          content: ''; width: 4px; height: 4px; border-radius: 50%;
+          background: var(--gold); flex-shrink: 0;
+        }
+
+        /* Right side CTA in nav bar */
+        .nb-bot-cta {
+          margin-left: auto; display: none; align-items: center;
+        }
+        @media (min-width: 1024px) { .nb-bot-cta { display: flex; } }
+
+        .nb-cta-btn {
+          display: flex; align-items: center; gap: 8px;
+          padding: 0 18px; height: 34px; margin: auto 0;
+          background: var(--gold); color: var(--navy-d);
+          border-radius: 6px; text-decoration: none;
+          font-family: var(--head); font-size: 13px; font-weight: 800;
+          letter-spacing: .06em; text-transform: uppercase;
+          transition: background .2s, transform .15s;
+        }
+        .nb-cta-btn:hover { background: var(--gold-l); transform: translateY(-1px); }
+
+        /* Hamburger */
+        .nb-ham {
+          display: flex; align-items: center; justify-content: center;
+          width: 44px; height: 44px; margin: auto 0 auto auto;
+          background: rgba(255,255,255,.1); border: none; border-radius: 8px;
+          cursor: pointer; flex-direction: column; gap: 5px;
+          -webkit-tap-highlight-color: transparent;
+          transition: background .2s;
+        }
+        .nb-ham:hover { background: rgba(255,255,255,.18); }
+        .nb-ham span {
+          display: block; width: 20px; height: 1.5px;
+          background: #fff; border-radius: 99px;
+          transition: all .3s cubic-bezier(.16,1,.3,1); transform-origin: center;
+        }
+        .nb-ham.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+        .nb-ham.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .nb-ham.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+        @media (min-width: 1024px) { .nb-ham { display: none; } }
+
+        /* ══ MOBILE DRAWER ══ */
+        .nb-overlay {
+          position: fixed; inset: 0; background: rgba(10,15,50,.55);
+          backdrop-filter: blur(4px); z-index: 8900;
+          opacity: 0; pointer-events: none;
+          transition: opacity .35s;
+        }
+        .nb-overlay.open { opacity: 1; pointer-events: all; }
+
+        .nb-drawer {
+          position: fixed; top: 0; right: 0; bottom: 0;
+          width: min(360px, 100vw);
+          background: var(--white); z-index: 9100;
+          display: flex; flex-direction: column;
+          transform: translateX(100%);
+          transition: transform .38s cubic-bezier(.16,1,.3,1);
+          overflow: hidden;
+        }
+        .nb-drawer.open { transform: translateX(0); }
+
+        .nb-drawer-accent {
+          height: 4px;
+          background: linear-gradient(90deg, var(--navy), var(--gold), var(--navy));
+          background-size: 200%;
+          animation: accShimmer 3s linear infinite;
+        }
+        @keyframes accShimmer { to { background-position: 200% 0; } }
+
+        .nb-drawer-head {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 16px 20px; border-bottom: 1px solid var(--line);
+          background: var(--navy);
+        }
+        .nb-drawer-head .nb-logo-name { color: var(--white); font-size: 14px; }
+        .nb-drawer-head .nb-logo-addr { color: rgba(255,255,255,.5); }
+
+        .nb-drawer-close {
+          width: 34px; height: 34px; border-radius: 50%;
+          border: 1px solid rgba(255,255,255,.2);
+          background: rgba(255,255,255,.1);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; color: rgba(255,255,255,.8); font-size: 16px;
+          transition: background .2s;
+        }
+        .nb-drawer-close:hover { background: rgba(255,255,255,.22); color: #fff; }
+
+        /* Mobile contact strip */
+        .nb-m-contacts {
+          display: flex; flex-direction: column; gap: 0;
+          background: var(--off); border-bottom: 1px solid var(--line);
+        }
+        .nb-m-chip {
+          display: flex; align-items: center; gap: 12px;
+          padding: 10px 20px; text-decoration: none;
+          border-bottom: 1px solid var(--line);
+        }
+        .nb-m-chip:last-child { border-bottom: none; }
+        .nb-m-chip-icon {
+          width: 30px; height: 30px; border-radius: 6px;
+          background: var(--navy); display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        }
+        .nb-m-chip-val { font-family: var(--body); font-size: 13px; font-weight: 600; color: var(--text); }
+        .nb-m-chip-label { font-family: var(--body); font-size: 10px; color: var(--mid); }
+
+        /* Mobile nav links */
+        .nb-m-nav { flex: 1; overflow-y: auto; padding: 8px 12px; }
+        .nb-m-link {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 12px 14px; border-radius: 8px;
+          font-family: var(--head); font-size: 15px; font-weight: 700;
+          letter-spacing: .06em; text-transform: uppercase;
+          color: var(--text); text-decoration: none; cursor: pointer;
+          margin-bottom: 2px;
+          transition: background .15s, color .15s, padding-left .15s;
+        }
+        .nb-m-link:hover { background: var(--off); color: var(--navy); }
+        .nb-m-link.active { background: rgba(26,42,94,.07); color: var(--navy); }
+        .nb-m-link .m-arr { font-size: 13px; color: var(--mid); transition: transform .2s; }
+        .nb-m-link.has-dd .m-arr { font-size: 11px; }
+        .nb-m-link.dd-exp .m-arr { transform: rotate(90deg); }
+
+        .nb-m-dropdown {
+          overflow: hidden; max-height: 0;
+          transition: max-height .3s ease;
+          padding-left: 12px;
+        }
+        .nb-m-dropdown.open { max-height: 300px; }
+        .nb-m-dd-link {
+          display: flex; align-items: center; gap: 8px;
+          padding: 9px 14px; border-radius: 7px;
+          font-family: var(--body); font-size: 13.5px; font-weight: 500;
+          color: var(--mid); text-decoration: none; margin-bottom: 1px;
+          transition: background .15s, color .15s;
+        }
+        .nb-m-dd-link:hover { background: var(--off); color: var(--navy); }
+        .nb-m-dd-link::before {
+          content: '—'; font-size: 10px; color: var(--gold);
+        }
+
+        /* Mobile CTA */
+        .nb-m-footer {
+          padding: 14px 16px; border-top: 1px solid var(--line);
+        }
+        .nb-m-cta {
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          padding: 13px; border-radius: 10px;
+          background: var(--navy); color: #fff; text-decoration: none;
+          font-family: var(--head); font-size: 14px; font-weight: 800;
+          letter-spacing: .06em; text-transform: uppercase;
+          transition: background .2s;
+        }
+        .nb-m-cta:hover { background: var(--navy-d); }
+        .nb-m-cta-gold { color: var(--gold); }
+
+        /* Stagger animation */
+        .nb-drawer.open .nb-m-link {
+          animation: slideIn .4s cubic-bezier(.16,1,.3,1) both;
+        }
+        @keyframes slideIn {
+          from { opacity:0; transform: translateX(16px); }
+          to   { opacity:1; transform: translateX(0); }
+        }
+
+        /* ══ SPACER ══ */
+        .nb-spacer { height: var(--total-h); }
+
+        @media (max-width: 767px) {
+          :root { --top-h: 60px; }
+          .nb-spacer { height: var(--top-h); }
+        }
+      `}</style>
+
+      {/* ══════════════════════════════════════════════
+          NAVBAR WRAPPER
+      ══════════════════════════════════════════════ */}
+      <header role="banner" className="nb">
+        <div className={`nb-wrap nb${scrolled ? ' scrolled' : ''}`} itemScope itemType="https://schema.org/SiteNavigationElement">
+
+          {/* ─── TOP BAR ─── */}
+          <div className="nb-top" style={{ position: 'relative' }}>
+            <div className="nb-top-inner">
+
+              {/* Logo */}
+              <Link to="/" className="nb-logo" aria-label={`${COMPANY_FULL} – Homepage`} itemProp="url">
+                <img
+                  src={logo}
+                  alt={`${COMPANY_SHORT} Logo`}
+                  className="nb-logo-img"
+                  width="52" height="52"
+                  loading="eager" fetchPriority="high" decoding="sync"
+                  itemProp="image"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.insertAdjacentHTML('afterbegin',
+                      `<div class="nb-logo-fallback">${COMPANY_SHORT}</div>`
+                    );
+                  }}
+                />
+                <div className="nb-logo-text" itemProp="name">
+                  <span className="nb-logo-name">{COMPANY_FULL}</span>
+                  <span className="nb-logo-addr">{ADDRESS}</span>
+                </div>
+              </Link>
+
+              {/* Contact chips — desktop */}
+              <div className="nb-contacts">
+                <a href={`tel:${PHONE}`} className="nb-chip" aria-label={`Call us at ${PHONE_DISPLAY}`}>
+                  <div className="nb-chip-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a2a5e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                    </svg>
+                  </div>
+                  <div className="nb-chip-body">
+                    <span className="nb-chip-label">Call Us</span>
+                    <span className="nb-chip-val">{PHONE_DISPLAY}</span>
+                  </div>
+                </a>
+
+                <div className="nb-divider" aria-hidden="true" />
+
+                <a href={`mailto:${EMAIL}`} className="nb-chip" aria-label={`Email us at ${EMAIL}`}>
+                  <div className="nb-chip-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a2a5e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                  </div>
+                  <div className="nb-chip-body">
+                    <span className="nb-chip-label">Feel Free to Mail</span>
+                    <span className="nb-chip-val">{EMAIL}</span>
+                  </div>
+                </a>
+
+                <div className="nb-divider" aria-hidden="true" />
+
+                {/* Search */}
+                <button
+                  className="nb-search-btn"
+                  onClick={() => setSearchOpen(true)}
+                  aria-label="Open search"
+                  aria-expanded={searchOpen}
                 >
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-base" aria-hidden="true">{link.icon}</span>
-                    <span>{link.name}</span>
-                  </span>
-                </NavLink>
-              ))}
-            </div>
-
-            {/* Desktop Call Button */}
-            <div className="hidden lg:block">
-              <a
-                href="tel:+919876543210"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                aria-label="Call Building Creators And Consulting at +91 98765 43210"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                <span>Call Now</span>
-              </a>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={toggleMenu}
-              className="lg:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-200 z-[10000] relative focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
-              aria-expanded={isOpen}
-              aria-controls="mobile-menu"
-              aria-haspopup="true"
-            >
-              <div className="w-6 h-5 relative flex flex-col justify-between" aria-hidden="true">
-                <span className={`w-full h-0.5 bg-gray-800 transform transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                <span className={`w-full h-0.5 bg-gray-800 transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-                <span className={`w-full h-0.5 bg-gray-800 transform transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a2a5e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                </button>
               </div>
-            </button>
+
+              {/* Search overlay (inside top bar) */}
+              <div className={`nb-search-overlay${searchOpen ? ' open' : ''}`} role="search">
+                <form onSubmit={handleSearch} className="nb-search-form">
+                  <input
+                    ref={searchRef}
+                    type="search"
+                    className="nb-search-input"
+                    placeholder="Search projects, services…"
+                    value={searchVal}
+                    onChange={(e) => setSearchVal(e.target.value)}
+                    aria-label="Search"
+                  />
+                  <button type="submit" className="nb-search-submit">Search</button>
+                </form>
+                <button
+                  className="nb-search-close"
+                  onClick={() => setSearchOpen(false)}
+                  aria-label="Close search"
+                >✕</button>
+              </div>
+            </div>
+          </div>
+
+          {/* ─── BOTTOM NAV ─── */}
+          <div className="nb-bot">
+            <div className="nb-bot-inner" ref={ddRef}>
+
+              {/* Desktop nav links */}
+              <nav className="nb-nav" role="menubar" aria-label="Main navigation">
+                {NAV_LINKS.map((link) => {
+                  const isActive = location.pathname === link.path ||
+                    (link.dropdown && link.dropdown.some(d => location.pathname === d.path));
+                  const hasDd = !!link.dropdown;
+                  const isOpen = ddOpen === link.path;
+
+                  return (
+                    <div
+                      key={link.path}
+                      className={`nb-item${isOpen ? ' dd-open' : ''}`}
+                      onMouseEnter={() => hasDd && setDdOpen(link.path)}
+                      onMouseLeave={() => hasDd && setDdOpen(null)}
+                    >
+                      {hasDd ? (
+                        <button
+                          className={`nb-link${isActive ? ' active' : ''}`}
+                          onClick={() => setDdOpen(isOpen ? null : link.path)}
+                          aria-expanded={isOpen}
+                          aria-haspopup="true"
+                          role="menuitem"
+                          itemProp="url"
+                        >
+                          <span itemProp="name">{link.name}</span>
+                          <svg className="dd-arrow" viewBox="0 0 24 24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9"/>
+                          </svg>
+                        </button>
+                      ) : (
+                        <NavLink
+                          to={link.path}
+                          className={({ isActive: a }) => `nb-link${a ? ' active' : ''}`}
+                          role="menuitem"
+                          aria-current={location.pathname === link.path ? 'page' : undefined}
+                          itemProp="url"
+                          end={link.path === '/'}
+                        >
+                          <span itemProp="name">{link.name}</span>
+                        </NavLink>
+                      )}
+
+                      {hasDd && (
+                        <div className="nb-dropdown" role="menu" aria-label={`${link.name} submenu`}>
+                          {link.dropdown.map((d) => (
+                            <NavLink
+                              key={d.path}
+                              to={d.path}
+                              className="nb-dd-link"
+                              role="menuitem"
+                              onClick={() => setDdOpen(null)}
+                            >
+                              {d.name}
+                            </NavLink>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </nav>
+
+              {/* Desktop CTA */}
+              <div className="nb-bot-cta">
+                <a href={`tel:${PHONE}`} className="nb-cta-btn" aria-label="Call us now">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                  </svg>
+                  Get Quote
+                </a>
+              </div>
+
+              {/* Hamburger */}
+              <button
+                className={`nb-ham${menuOpen ? ' open' : ''}`}
+                onClick={() => setMenuOpen(p => !p)}
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={menuOpen}
+                aria-controls="nb-mobile-menu"
+              >
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+                <span aria-hidden="true" />
+              </button>
+            </div>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Mobile Menu Overlay */}
-      <div 
-        className={`fixed inset-0 bg-black/50 transition-all duration-300 lg:hidden ${
-          isOpen ? 'opacity-100 visible z-[9998]' : 'opacity-0 invisible -z-10'
-        }`}
-        onClick={closeMenu}
-        aria-hidden="true"
-      />
+      {/* ══════════════════════════════════════════════
+          MOBILE DRAWER
+      ══════════════════════════════════════════════ */}
+      <div className={`nb nb-overlay${menuOpen ? ' open' : ''}`} onClick={() => setMenuOpen(false)} aria-hidden="true" />
 
-      {/* Mobile Menu Panel */}
       <div
-        id="mobile-menu"
-        className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl transition-all duration-300 transform lg:hidden ${
-          isOpen ? 'translate-x-0 z-[9999]' : 'translate-x-full -z-10'
-        }`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Mobile navigation menu"
-        aria-hidden={!isOpen}
+        id="nb-mobile-menu"
+        className={`nb nb-drawer${menuOpen ? ' open' : ''}`}
+        role="dialog" aria-modal="true"
+        aria-label="Navigation menu"
+        aria-hidden={!menuOpen}
       >
-        {/* Mobile Menu Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <div className="flex items-center gap-2">
+        <div className="nb-drawer-accent" aria-hidden="true" />
+
+        {/* Drawer header */}
+        <div className="nb-drawer-head">
+          <Link to="/" className="nb-logo" onClick={() => setMenuOpen(false)}>
             <img
-              src={logo}
-              alt="Building Creators And Consulting logo"
-              className="h-10 w-10 rounded-lg"
-              width="40"
-              height="40"
-              loading="lazy"
-              decoding="async"
+              src={logo} alt="BCC Logo"
+              className="nb-logo-img" style={{ width: 40, height: 40 }}
+              width="40" height="40" loading="lazy" decoding="async"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.parentElement.insertAdjacentHTML('afterbegin',
+                  '<div class="nb-logo-fallback" style="width:40px;height:40px;font-size:16px">BCC</div>'
+                );
+              }}
             />
-            <div>
-              <div className="text-xs text-gray-500">BUILDING CREATORS</div>
-              <div className="font-bold text-gray-800">AND CONSULTING</div>
+            <div className="nb-logo-text">
+              <span className="nb-logo-name">BCC Consulting</span>
+              <span className="nb-logo-addr" style={{ display: 'block', color: 'rgba(255,255,255,.5)', fontSize: 10 }}>Pvt. Ltd.</span>
             </div>
-          </div>
-          <button
-            onClick={closeMenu}
-            className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Close navigation menu"
-            autoFocus={isOpen}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          </Link>
+          <button className="nb-drawer-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
         </div>
 
-        {/* Mobile Navigation Links */}
-        <nav className="p-4 overflow-y-auto" style={{ height: 'calc(100% - 73px)' }} aria-label="Mobile navigation">
-          <div className="space-y-1" role="menu">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                onClick={closeMenu}
-                role="menuitem"
-                className={({ isActive }) => `
-                  flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
-                  ${isActive 
-                    ? 'bg-blue-50 text-blue-600' 
-                    : 'text-gray-700 hover:bg-gray-50'
-                  }
-                `}
-                aria-current={location.pathname === link.path ? 'page' : undefined}
-              >
-                <span className="text-xl" aria-hidden="true">{link.icon}</span>
-                <span className="font-medium">{link.name}</span>
-                {location.pathname === link.path && (
-                  <span className="ml-auto text-blue-600" aria-label="Current page">✓</span>
-                )}
-              </NavLink>
-            ))}
-          </div>
-
-          {/* Mobile Call Button */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <a
-              href="tel:+919876543210"
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              onClick={closeMenu}
-              aria-label="Call Building Creators And Consulting at +91 98765 43210"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        {/* Mobile contact strip */}
+        <div className="nb-m-contacts">
+          <a href={`tel:${PHONE}`} className="nb-m-chip" onClick={() => setMenuOpen(false)}>
+            <div className="nb-m-chip-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
               </svg>
-              <span>Call Now: +91 98765 43210</span>
-            </a>
-          </div>
-
-          {/* Mobile Social Links */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <p className="text-xs text-gray-500 text-center">Follow us on</p>
-            <div className="flex justify-center gap-4 mt-3">
-              <a 
-                href="#" 
-                className="text-gray-400 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1"
-                aria-label="Follow us on Facebook (opens in new tab)"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-                </svg>
-              </a>
-              <a 
-                href="#" 
-                className="text-gray-400 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1"
-                aria-label="Follow us on LinkedIn (opens in new tab)"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
-                  <circle cx="4" cy="4" r="2" />
-                </svg>
-              </a>
-              <a 
-                href="#" 
-                className="text-gray-400 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full p-1"
-                aria-label="Follow us on Twitter (opens in new tab)"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
-                </svg>
-              </a>
             </div>
-          </div>
+            <div>
+              <div className="nb-m-chip-label">Call Us</div>
+              <div className="nb-m-chip-val">{PHONE_DISPLAY}</div>
+            </div>
+          </a>
+          <a href={`mailto:${EMAIL}`} className="nb-m-chip" onClick={() => setMenuOpen(false)}>
+            <div className="nb-m-chip-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div>
+              <div className="nb-m-chip-label">Email Us</div>
+              <div className="nb-m-chip-val">{EMAIL}</div>
+            </div>
+          </a>
+        </div>
+
+        {/* Mobile nav links */}
+        <nav className="nb-m-nav" aria-label="Mobile navigation">
+          {NAV_LINKS.map((link, i) => {
+            const isActive = location.pathname === link.path ||
+              (link.dropdown && link.dropdown.some(d => location.pathname === d.path));
+            const hasDd = !!link.dropdown;
+            const isExp = mobileExp === link.path;
+
+            return (
+              <div key={link.path}>
+                {hasDd ? (
+                  <div
+                    className={`nb-m-link has-dd${isActive ? ' active' : ''}${isExp ? ' dd-exp' : ''}`}
+                    onClick={() => setMobileExp(isExp ? null : link.path)}
+                    role="button"
+                    aria-expanded={isExp}
+                    style={{ animationDelay: `${i * 35}ms` }}
+                  >
+                    <span>{link.name}</span>
+                    <span className="m-arr">▶</span>
+                  </div>
+                ) : (
+                  <NavLink
+                    to={link.path}
+                    className={({ isActive: a }) => `nb-m-link${a ? ' active' : ''}`}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={location.pathname === link.path ? 'page' : undefined}
+                    style={{ animationDelay: `${i * 35}ms` }}
+                    end={link.path === '/'}
+                  >
+                    <span>{link.name}</span>
+                    <span className="m-arr">→</span>
+                  </NavLink>
+                )}
+
+                {hasDd && (
+                  <div className={`nb-m-dropdown${isExp ? ' open' : ''}`}>
+                    {link.dropdown.map((d) => (
+                      <NavLink
+                        key={d.path}
+                        to={d.path}
+                        className="nb-m-dd-link"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {d.name}
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
+
+        {/* Mobile footer CTA */}
+        <div className="nb-m-footer">
+          <a href={`tel:${PHONE}`} className="nb-m-cta" onClick={() => setMenuOpen(false)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            Call <span className="nb-m-cta-gold">{PHONE_DISPLAY}</span>
+          </a>
+        </div>
       </div>
 
-      {/* Spacer to prevent content hiding under navbar */}
-      <div className="h-16 md:h-20" aria-hidden="true"></div>
+      {/* Spacer */}
+      <div className="nb nb-spacer" aria-hidden="true" />
     </>
   );
 }

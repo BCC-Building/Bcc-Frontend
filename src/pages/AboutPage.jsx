@@ -1,63 +1,115 @@
-import { useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { useScroll } from 'framer-motion';
+/**
+ * AboutPage
+ * ──────────
+ * Assembles all section components into the final About page.
+ *
+ * FOLDER STRUCTURE expected:
+ *   src/
+ *   ├── pages/
+ *   │   └── AboutPage.jsx           ← this file
+ *   ├── components/about/
+ *   │   ├── GlobalStyles.jsx
+ *   │   ├── Shared.jsx
+ *   │   ├── HeroSection.jsx
+ *   │   ├── MarqueeStrip.jsx
+ *   │   ├── StatsSection.jsx
+ *   │   ├── StorySection.jsx
+ *   │   ├── MissionSection.jsx
+ *   │   ├── TimelineSection.jsx
+ *   │   ├── FounderSection.jsx
+ *   │   ├── TeamSection.jsx
+ *   │   ├── TestimonialsSection.jsx
+ *   │   └── CTASection.jsx
+ *   ├── data/
+ *   │   └── aboutData.js
+ *   └── utils/
+ *       └── tokens.js
+ *
+ * ── HOW TO REUSE SECTIONS ON OTHER PAGES ──────────────
+ *
+ *   // e.g. on your Home page show just Stats + Team + CTA:
+ *   import StatsSection       from "../components/about/StatsSection";
+ *   import TeamSection        from "../components/about/TeamSection";
+ *   import CTASection         from "../components/about/CTASection";
+ *   import GlobalStyles       from "../components/about/GlobalStyles";
+ *
+ *   export default function HomePage() {
+ *     return (
+ *       <>
+ *         <GlobalStyles />          // inject once per page
+ *         <div className="bcc">
+ *           <StatsSection />
+ *           <TeamSection featuredCount={3} />
+ *           <CTASection />
+ *         </div>
+ *       </>
+ *     );
+ *   }
+ *
+ * ── LIVE API FOR TEAM ─────────────────────────────────
+ *
+ *   const [team, setTeam]         = useState([]);
+ *   const [loading, setLoading]   = useState(true);
+ *   useEffect(() => {
+ *     publicAPI.getActiveTeamMembers()
+ *       .then(r => setTeam(r.data.data))
+ *       .finally(() => setLoading(false));
+ *   }, []);
+ *   <TeamSection team={team} isLoading={loading} />
+ *
+ * ── SEO ───────────────────────────────────────────────
+ *   Wrap this page with your Helmet/Head component:
+ *   <Helmet>
+ *     <title>About BCC — Building Creators & Consulting</title>
+ *     <meta name="description" content="Learn about BCC India's journey, mission, and expert team delivering 250+ construction projects across 15+ cities since 2010." />
+ *   </Helmet>
+ */
 
-// Components
+import React from "react";
+import { motion, useScroll } from "framer-motion";
 
-import CustomCursor from '../components/common/CustomCursor';
-import ProgressBar from '../components/common/ProgressBar';
-import HeroSection from '../components/about/HeroSection';
-import StatsSection from '../components/about/StatsSection';
-import StorySection from '../components/about/StorySection';
-import MissionSection from '../components/about/MissionSection';
-import TimelineSection from '../components/about/TimelineSection';
-import TeamSection from '../components/about/TeamSection';
-import TestimonialsSection from '../components/about/TestimonialsSection';
-import FounderSection from '../components/about/FounderSection';
-import CTASection from '../components/about/CTASection';
+// ── Global styles & utils ────────────────────────────
+import GlobalStyles from "../components/about/GlobalStyles";
 
-// Styles
-import '../styles/about.css';
+// ── Section components ───────────────────────────────
+import HeroSection         from "../components/about/HeroSection";
+import MarqueeStrip        from "../components/about/MarqueeStrip";
+import StatsSection        from "../components/about/StatsSection";
+import StorySection        from "../components/about/StorySection";
+import MissionSection      from "../components/about/MissionSection";
+import TimelineSection     from "../components/about/TimelineSection";
+import FounderSection      from "../components/about/FounderSection";
+import TeamSection         from "../components/about/TeamSection";
+import TestimonialsSection from "../components/about/TestimonialsSection";
+import CTASection          from "../components/about/CTASection";
 
-const AboutPage = () => {
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
+export default function AboutPage() {
+  const { scrollYProgress } = useScroll();
 
   return (
     <>
-      <Helmet>
-        <title>BCC | India's Premier Construction & Consulting Company | 15+ Years Excellence</title>
-        <meta name="description" content="BCC is India's leading construction and consulting firm with 250+ successful projects, ISO certification, and 100% client satisfaction. Building India's future since 2010." />
-        <meta name="keywords" content="BCC, Building Creators, construction company India, consulting services, soil investigation" />
-        <link rel="canonical" href="https://www.bccindia.com/about" />
-        
-        <meta property="og:title" content="BCC - Building India's Future Since 2010" />
-        <meta property="og:description" content="India's most trusted construction partner with 250+ successful projects." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.bccindia.com/about" />
-        
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="BCC - Excellence in Construction & Consulting" />
-        <meta name="twitter:description" content="Building India's landmarks with quality and integrity." />
-      </Helmet>
+      {/* ── Inject global CSS (fonts, utility classes) ── */}
+      <GlobalStyles />
 
-      <CustomCursor />
-      <ProgressBar targetRef={heroRef} />
+      <div className="bcc">
+        {/* ── Scroll progress bar (top of viewport) ───── */}
+        <motion.div
+          className="bcc-prog"
+          style={{ scaleX: scrollYProgress }}
+        />
 
-      <HeroSection heroRef={heroRef} scrollYProgress={scrollYProgress} />
-      <StatsSection />
-      <StorySection />
-      <MissionSection />
-      <TimelineSection />
-      <TeamSection />
-      <TestimonialsSection />
-      <FounderSection />
-      <CTASection />
+        {/* ── Sections in render order ─────────────────── */}
+        <HeroSection />
+        <MarqueeStrip />
+        <StatsSection />
+        <StorySection />
+        <MissionSection />
+        <TimelineSection />
+        <FounderSection />
+        <TeamSection />
+        <TestimonialsSection />
+        <CTASection />
+      </div>
     </>
   );
-};
-
-export default AboutPage;
+}

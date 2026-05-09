@@ -4,15 +4,18 @@ import { LazyMotion, domAnimation } from 'framer-motion'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 import App from './App.jsx'
+import { AuthProvider } from './context/AuthContext'
+import { ToastProvider } from './components/common/Toast'
+import ErrorBoundary from './components/common/ErrorBoundary'
 
-//  Load Bootstrap JS only when needed (after page load)
+// Load Bootstrap JS only when needed (after page load)
 const loadBootstrap = () => {
   import('bootstrap/dist/js/bootstrap.bundle.min.js').catch(() => {
     // Silently fail in production - Bootstrap JS is optional for most features
   })
 }
 
-//  Load Bootstrap JS after page is interactive
+// Load Bootstrap JS after page is interactive
 if (typeof window !== 'undefined') {
   if (document.readyState === 'complete') {
     loadBootstrap()
@@ -21,13 +24,18 @@ if (typeof window !== 'undefined') {
   }
 }
 
-//  Render without StrictMode in production (double rendering removed)
-// StrictMode only runs in development, but explicitly controlling it helps
+// Render without StrictMode in production (double rendering removed)
 const AppWrapper = () => (
   <BrowserRouter>
-    <LazyMotion features={domAnimation}>
-      <App />
-    </LazyMotion>
+    <ErrorBoundary>
+      <AuthProvider>
+        <ToastProvider>
+          <LazyMotion features={domAnimation}>
+            <App />
+          </LazyMotion>
+        </ToastProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   </BrowserRouter>
 )
 

@@ -1,8 +1,10 @@
-const GradientText = ({ children, className = "", as: Component = "span" }) => {
+const GradientText = ({ children, className = "", as = "span" }) => {
+  const Tag = as;
+
   return (
-    <Component className={`gradient-text ${className}`}>
+    <Tag className={`gradient-text ${className}`}>
       {children}
-    </Component>
+    </Tag>
   );
 };
 

@@ -29,10 +29,10 @@ export const testimonials = [
 ];
 
 export const milestones = [
-  { year: 2010, title: 'Foundation', desc: 'Company established in Mumbai', icon: '🏗️' },
-  { year: 2013, title: 'First Milestone', desc: '50+ projects completed', icon: '🏢' },
-  { year: 2016, title: 'Consulting Launch', desc: 'Added consulting services', icon: '📊' },
-  { year: 2019, title: 'ISO Certified', desc: 'International quality standards', icon: '✅' },
-  { year: 2022, title: '100+ Projects', desc: 'Major expansion phase', icon: '🏆' },
-  { year: 2025, title: 'Industry Leader', desc: 'Top construction company', icon: '👑' }
+  { year: 2017, title: 'Foundation', desc: 'Company established in Rudrapur UttraKhand', icon: '🏗️' },
+  { year: 2019, title: 'First Milestone', desc: '50+ projects completed', icon: '🏢' },
+  { year: 2022, title: 'Consulting Launch', desc: 'Added consulting services', icon: '📊' },
+  { year: 2023, title: 'ISO Certified', desc: 'International quality standards', icon: '✅' },
+  { year: 2025, title: '950+ Projects', desc: 'Major expansion phase', icon: '🏆' },
+  { year: 2026, title: 'Industry Leader', desc: 'Top construction company', icon: '👑' }
 ];

@@ -1,562 +1,800 @@
-// src/pages/BlogPage.jsx - Fully Working
-import React, { useState, useEffect, useMemo } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+// src/pages/BlogPage.jsx
+// Production-Ready | Editorial Magazine Style | BCC Engineering Blog
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { publicAPI } from '../api/endpoints';
+import { getImageUrl } from '../api/clients';
 
-// React Icons - Verified working exports
-import { 
-  FaFacebook, 
-  FaTwitter, 
-  FaLinkedin, 
-  FaHeart, 
-  FaRegHeart,
-  FaBookmark, 
-  FaRegBookmark, 
-  FaShareAlt, 
-  FaSearch, 
-  FaClock, 
-  FaCalendarAlt, 
-  FaUser, 
-  FaTag, 
-  FaComment, 
-  FaArrowLeft, 
-  FaChevronRight, 
-  FaLink,
-  FaChartLine  // ✅ Alternative to FaTrendingUp
-} from 'react-icons/fa';
+// ─── constants ────────────────────────────────────────────────────────────────
+const CATEGORIES = ['All','Architecture','Design','Business','Soil Testing','Survey','Construction','Engineering'];
+const PER_PAGE = 6;
+const FALLBACK = 'https://placehold.co/800x500/1a1a2e/ffffff?text=BCC+Blog';
 
-// --- Blog Data ---
-const CATEGORIES = ["All", "Architecture", "Design", "Business", "Soil Testing", "Survey", "Construction", "Engineering"];
-const BLOG_POSTS = [
-  {
-    id: 1,
-    title: "The Future of Minimalist Architecture in 2026",
-    slug: "future-of-minimalist-architecture-2026",
-    category: "Architecture",
-    author: {
-      name: "Ar. Alex Rivers",
-      avatar: "https://ui-avatars.com/api/?name=Alex+Rivers&background=2d62d4&color=fff",
-      bio: "Senior Architect with 15+ years of experience in sustainable design",
-      role: "Lead Architect"
-    },
-    date: "2026-04-12",
-    readTime: "6 min",
-    excerpt: "Discover how minimalist architecture is evolving with sustainable materials and smart technology integration...",
-    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1600",
-    content: `
-      <p>Minimalist architecture has come a long way from the stark, cold spaces of the past. Today's minimalism embraces warmth, sustainability, and technology.</p>
-      
-      <h2>The Evolution of Minimalist Design</h2>
-      <p>What started as a reaction to ornate Victorian architecture has evolved into a sophisticated design philosophy that prioritizes function, sustainability, and human comfort.</p>
-      
-      <h3>Key Trends in 2026</h3>
-      <ul>
-        <li>Biophilic integration - bringing nature indoors</li>
-        <li>Smart home technology seamlessly hidden</li>
-        <li>Sustainable materials like bamboo and recycled steel</li>
-        <li>Passive solar design for energy efficiency</li>
-      </ul>
-      
-      <p>The future of minimalist architecture lies in creating spaces that are not just visually appealing but also environmentally responsible and technologically advanced.</p>
-    `,
-    tags: ["Architecture", "Minimalism", "Sustainability"],
-    likes: 234,
-    comments: 45,
-    views: 1250
-  },
-  {
-    id: 2,
-    title: "Soil Testing Methods for High-Rise Buildings",
-    slug: "soil-testing-methods-high-rise-buildings",
-    category: "Soil Testing",
-    author: {
-      name: "Dr. Sarah Chen",
-      avatar: "https://ui-avatars.com/api/?name=Sarah+Chen&background=10b981&color=fff",
-      bio: "Geotechnical Engineer with PhD in Soil Mechanics",
-      role: "Senior Geotechnical Engineer"
-    },
-    date: "2026-04-10",
-    readTime: "8 min",
-    excerpt: "Essential soil investigation techniques for ensuring foundation stability in skyscrapers...",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1600",
-    content: "<p>Comprehensive guide to soil testing for tall buildings...</p>",
-    tags: ["Soil Testing", "Geotechnical", "Foundation"],
-    likes: 189,
-    comments: 32,
-    views: 890
-  },
-  {
-    id: 3,
-    title: "Modern Construction Project Management",
-    slug: "modern-construction-project-management",
-    category: "Construction",
-    author: {
-      name: "Michael Torres",
-      avatar: "https://ui-avatars.com/api/?name=Michael+Torres&background=f59e0b&color=fff",
-      bio: "PMP Certified Project Manager",
-      role: "Project Director"
-    },
-    date: "2026-04-08",
-    readTime: "10 min",
-    excerpt: "Leveraging technology for efficient construction project delivery...",
-    image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1600",
-    content: "<p>Modern project management techniques...</p>",
-    tags: ["Construction", "Project Management", "Technology"],
-    likes: 312,
-    comments: 67,
-    views: 2100
-  },
-  {
-    id: 4,
-    title: "Sustainable Urban Design Principles",
-    slug: "sustainable-urban-design-principles",
-    category: "Design",
-    author: {
-      name: "Emma Watson",
-      avatar: "https://ui-avatars.com/api/?name=Emma+Watson&background=8b5cf6&color=fff",
-      bio: "Urban Design Specialist",
-      role: "Urban Planner"
-    },
-    date: "2026-04-05",
-    readTime: "7 min",
-    excerpt: "Creating livable, eco-friendly cities for future generations...",
-    image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1600",
-    content: "<p>Urban design principles...</p>",
-    tags: ["Urban Design", "Sustainability", "Planning"],
-    likes: 267,
-    comments: 41,
-    views: 1560
-  }
-];
-
-// Helper function to format date
-const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString('en-US', options);
+// ─── helpers ──────────────────────────────────────────────────────────────────
+const fmtDate = (d) => {
+  if (!d) return '';
+  return new Date(d).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
 };
+const truncate = (t, n = 130) => !t || t.length <= n ? t : t.slice(0, n).trimEnd() + '…';
+const readTime = (p) => p.readTimeMinutes || p.readTime || '5 min';
 
-// Blog Card Component
-const BlogCard = ({ post, onClick }) => (
-  <motion.article 
-    whileHover={{ y: -8 }}
-    onClick={() => onClick(post)}
-    className="group cursor-pointer bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-800"
-  >
-    <div className="relative aspect-[16/10] overflow-hidden">
-      <img 
-        src={post.image} 
-        alt={post.title}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        loading="lazy"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="absolute top-4 right-4">
-        <span className="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
-          {post.category}
-        </span>
-      </div>
-    </div>
-    
-    <div className="p-6">
-      <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mb-3">
-        <div className="flex items-center gap-1">
-          <FaCalendarAlt size={12} />
-          <span>{formatDate(post.date)}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <FaClock size={12} />
-          <span>{post.readTime} read</span>
+// ─── LoadingSkeleton ───────────────────────────────────────────────────────────
+const Skeleton = () => (
+  <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:24 }}>
+    {[...Array(6)].map((_,i) => (
+      <div key={i} style={{
+        borderRadius:16, overflow:'hidden',
+        background:'#f1f5f9',
+        animation:`bp-pulse 1.5s ease-in-out ${i*0.1}s infinite`,
+      }}>
+        <div style={{ height:200, background:'#e2e8f0' }} />
+        <div style={{ padding:20 }}>
+          {[80,60,100].map((w,j) => (
+            <div key={j} style={{ height:12, background:'#e2e8f0', borderRadius:6, width:`${w}%`, marginBottom:10 }} />
+          ))}
         </div>
       </div>
-      
-      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-        {post.title}
-      </h3>
-      
-      <p className="text-slate-500 dark:text-slate-400 text-sm line-clamp-2 mb-4">
-        {post.excerpt}
-      </p>
-      
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img 
-            src={post.author.avatar} 
-            alt={post.author.name}
-            className="w-8 h-8 rounded-full"
-          />
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            {post.author.name}
-          </span>
-        </div>
-        <div className="flex items-center gap-3 text-slate-400">
-          <span className="flex items-center gap-1 text-xs">
-            <FaHeart size={12} /> {post.likes}
-          </span>
-          <span className="flex items-center gap-1 text-xs">
-            <FaComment size={12} /> {post.comments}
-          </span>
-        </div>
-      </div>
-    </div>
-  </motion.article>
+    ))}
+  </div>
 );
 
-// Main Blog Component
-const BlogPage = () => {
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [isLiked, setIsLiked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [showShareMenu, setShowShareMenu] = useState(false);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [selectedPost]);
-
-  const filteredPosts = useMemo(() => {
-    return BLOG_POSTS.filter(post => {
-      const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = activeCategory === "All" || post.category === activeCategory;
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchQuery, activeCategory]);
-
-  const recentPosts = [...BLOG_POSTS].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
-
-  const handleShare = (platform) => {
-    const url = window.location.href;
-    const text = selectedPost?.title;
-    
-    const shareUrls = {
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-      linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`,
-    };
-    
-    window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+// ─── CategoryPill ─────────────────────────────────────────────────────────────
+const catColor = (cat) => {
+  const m = {
+    Architecture:  ['#fef3c7','#92400e'],
+    Design:        ['#fce7f3','#9d174d'],
+    Business:      ['#dcfce7','#15803d'],
+    'Soil Testing':['#dbeafe','#1d4ed8'],
+    Survey:        ['#ede9fe','#5b21b6'],
+    Construction:  ['#fee2e2','#991b1b'],
+    Engineering:   ['#e0f2fe','#0369a1'],
   };
+  return m[cat] || ['#f1f5f9','#475569'];
+};
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert('Link copied to clipboard!');
-  };
-
+const Pill = ({ cat }) => {
+  const [bg, color] = catColor(cat);
   return (
-    <>
-      <Helmet>
-        <title>{selectedPost ? `${selectedPost.title} | BCC Blog` : "Engineering Insights | BCC Blog"}</title>
-        <meta name="description" content={selectedPost?.excerpt || "Expert insights on architecture, engineering, construction, and design"} />
-      </Helmet>
-
-      <div className="bg-slate-50 dark:bg-slate-950 min-h-screen">
-        
-        <AnimatePresence mode="wait">
-          {!selectedPost ? (
-            // Blog Listing Page
-            <motion.div 
-              key="list" 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
-            >
-              {/* Hero Section */}
-              <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white py-20 overflow-hidden">
-                <div className="absolute inset-0 opacity-30">
-                  <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl"></div>
-                  <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl"></div>
-                </div>
-                
-                <div className="relative max-w-7xl mx-auto px-6">
-                  <motion.div 
-                    initial={{ y: 30, opacity: 0 }} 
-                    animate={{ y: 0, opacity: 1 }} 
-                    transition={{ delay: 0.2 }}
-                    className="text-center max-w-3xl mx-auto"
-                  >
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                      <FaChartLine size={16} />
-                      <span className="text-sm font-semibold">Engineering Insights</span>
-                    </div>
-                    <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter">
-                      Expert <span className="text-blue-400">Engineering</span> Blog
-                    </h1>
-                    <p className="text-xl text-slate-300">
-                      Discover the latest trends, insights, and expertise from industry leaders
-                    </p>
-                  </motion.div>
-                </div>
-              </section>
-
-              {/* Main Content */}
-              <div className="max-w-7xl mx-auto px-6 py-16">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                  
-                  {/* Blog Feed */}
-                  <div className="lg:col-span-8">
-                    <div className="mb-8 flex flex-col sm:flex-row gap-4 justify-between items-center">
-                      <div className="relative w-full sm:w-80">
-                        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                        <input
-                          type="text"
-                          placeholder="Search articles..."
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
-                        />
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-2">
-                        {CATEGORIES.slice(0, 6).map(cat => (
-                          <button
-                            key={cat}
-                            onClick={() => setActiveCategory(cat)}
-                            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                              activeCategory === cat
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
-                            }`}
-                          >
-                            {cat}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="mb-6 text-sm text-slate-500">
-                      Showing {filteredPosts.length} of {BLOG_POSTS.length} articles
-                    </div>
-
-                    {filteredPosts.length === 0 ? (
-                      <div className="text-center py-20">
-                        <p className="text-slate-500">No articles found. Try a different search term.</p>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {filteredPosts.map(post => (
-                          <BlogCard key={post.id} post={post} onClick={setSelectedPost} />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Sidebar */}
-                  <aside className="lg:col-span-4 space-y-8">
-                    {/* Newsletter Card */}
-                    <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-white">
-                      <h3 className="text-xl font-bold mb-2">Subscribe to Newsletter</h3>
-                      <p className="text-blue-100 text-sm mb-4">Get the latest engineering insights delivered to your inbox</p>
-                      <div className="flex gap-2">
-                        <input
-                          type="email"
-                          placeholder="Your email"
-                          className="flex-1 px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder:text-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50"
-                        />
-                        <button className="px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-                          Subscribe
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Recent Posts */}
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
-                      <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                        <FaClock className="text-blue-600" size={18} />
-                        Recent Posts
-                      </h3>
-                      <div className="space-y-4">
-                        {recentPosts.map(post => (
-                          <div 
-                            key={post.id}
-                            onClick={() => setSelectedPost(post)}
-                            className="flex gap-3 cursor-pointer group"
-                          >
-                            <img src={post.image} alt="" className="w-16 h-16 rounded-lg object-cover" />
-                            <div className="flex-1">
-                              <h4 className="font-semibold text-sm group-hover:text-blue-600 transition-colors line-clamp-2">
-                                {post.title}
-                              </h4>
-                              <p className="text-xs text-slate-500 mt-1">{formatDate(post.date)}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Popular Tags */}
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800">
-                      <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                        <FaTag className="text-blue-600" size={18} />
-                        Popular Topics
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        {["Architecture", "Engineering", "Construction", "Design", "Sustainability", "Soil Testing", "Project Management", "Urban Planning"].map(tag => (
-                          <button
-                            key={tag}
-                            className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-                          >
-                            #{tag}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </aside>
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            // Blog Detail Page
-            <motion.article 
-              key="detail" 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
-              className="max-w-4xl mx-auto px-6 py-12"
-            >
-              <button 
-                onClick={() => setSelectedPost(null)} 
-                className="flex items-center gap-2 text-blue-600 font-semibold mb-8 hover:gap-3 transition-all"
-              >
-                <FaArrowLeft size={20} /> Back to all posts
-              </button>
-
-              <div className="flex items-center gap-2 text-sm text-slate-500 mb-6">
-                <Link to="/" className="hover:text-blue-600">Home</Link>
-                <FaChevronRight size={12} />
-                <Link to="/blog" className="hover:text-blue-600">Blog</Link>
-                <FaChevronRight size={12} />
-                <span className="text-slate-800 dark:text-slate-200">{selectedPost.category}</span>
-              </div>
-
-              <header className="mb-8">
-                <div className="flex items-center gap-3 text-sm text-slate-500 mb-4">
-                  <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-full text-xs font-semibold">
-                    {selectedPost.category}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <FaCalendarAlt size={14} />
-                    <span>{formatDate(selectedPost.date)}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FaClock size={14} />
-                    <span>{selectedPost.readTime} read</span>
-                  </div>
-                </div>
-                
-                <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6">
-                  {selectedPost.title}
-                </h1>
-                
-                <div className="flex items-center justify-between py-6 border-t border-b border-slate-200 dark:border-slate-800">
-                  <div className="flex items-center gap-4">
-                    <img 
-                      src={selectedPost.author.avatar} 
-                      alt={selectedPost.author.name}
-                      className="w-12 h-12 rounded-full"
-                    />
-                    <div>
-                      <div className="font-semibold text-slate-900 dark:text-white">
-                        {selectedPost.author.name}
-                      </div>
-                      <div className="text-sm text-slate-500">{selectedPost.author.role}</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <button 
-                      onClick={() => setIsLiked(!isLiked)}
-                      className={`p-2 rounded-full transition-colors ${
-                        isLiked ? 'text-red-500 bg-red-50' : 'text-slate-400 hover:text-red-500 hover:bg-red-50'
-                      }`}
-                    >
-                      {isLiked ? <FaHeart size={20} /> : <FaRegHeart size={20} />}
-                    </button>
-                    <button 
-                      onClick={() => setIsBookmarked(!isBookmarked)}
-                      className={`p-2 rounded-full transition-colors ${
-                        isBookmarked ? 'text-yellow-500 bg-yellow-50' : 'text-slate-400 hover:text-yellow-500 hover:bg-yellow-50'
-                      }`}
-                    >
-                      {isBookmarked ? <FaBookmark size={20} /> : <FaRegBookmark size={20} />}
-                    </button>
-                    <div className="relative">
-                      <button 
-                        onClick={() => setShowShareMenu(!showShareMenu)}
-                        className="p-2 rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                      >
-                        <FaShareAlt size={20} />
-                      </button>
-                      {showShareMenu && (
-                        <div className="absolute right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-2 z-10">
-                          <button onClick={() => handleShare('facebook')} className="flex items-center gap-2 w-full p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
-                            <FaFacebook size={16} /> Facebook
-                          </button>
-                          <button onClick={() => handleShare('twitter')} className="flex items-center gap-2 w-full p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
-                            <FaTwitter size={16} /> Twitter
-                          </button>
-                          <button onClick={() => handleShare('linkedin')} className="flex items-center gap-2 w-full p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
-                            <FaLinkedin size={16} /> LinkedIn
-                          </button>
-                          <button onClick={copyToClipboard} className="flex items-center gap-2 w-full p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
-                            <FaLink size={16} /> Copy Link
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </header>
-
-              <div className="rounded-3xl overflow-hidden mb-12 shadow-xl">
-                <img 
-                  src={selectedPost.image} 
-                  alt={selectedPost.title}
-                  className="w-full h-auto"
-                />
-              </div>
-
-              <div 
-                className="prose prose-lg prose-slate dark:prose-invert max-w-none mb-12"
-                dangerouslySetInnerHTML={{ __html: selectedPost.content }}
-              />
-
-              <div className="flex flex-wrap gap-2 mb-12 pt-6 border-t border-slate-200 dark:border-slate-800">
-                {selectedPost.tags?.map(tag => (
-                  <span key={tag} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-sm">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="bg-slate-100 dark:bg-slate-800 rounded-2xl p-6 mb-12">
-                <div className="flex gap-4">
-                  <img src={selectedPost.author.avatar} alt="" className="w-16 h-16 rounded-full" />
-                  <div>
-                    <h4 className="font-bold text-lg">{selectedPost.author.name}</h4>
-                    <p className="text-sm text-slate-500 mb-2">{selectedPost.author.role}</p>
-                    <p className="text-slate-600 dark:text-slate-300">{selectedPost.author.bio}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white">
-                <h3 className="text-2xl font-bold mb-2">Never Miss an Update</h3>
-                <p className="mb-4">Subscribe to our newsletter for the latest engineering insights</p>
-                <div className="flex max-w-md mx-auto gap-2">
-                  <input type="email" placeholder="Your email address" className="flex-1 px-4 py-2 rounded-lg text-slate-900" />
-                  <button className="px-6 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-slate-100 transition">
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-            </motion.article>
-          )}
-        </AnimatePresence>
-      </div>
-    </>
+    <span style={{
+      display:'inline-block', padding:'3px 10px',
+      borderRadius:20, fontSize:11, fontWeight:700,
+      letterSpacing:'.4px', textTransform:'uppercase',
+      background:bg, color,
+    }}>{cat}</span>
   );
 };
 
-export default BlogPage;
+// ─── BlogCard ─────────────────────────────────────────────────────────────────
+const BlogCard = ({ post, onClick, index, featured = false }) => {
+  const [img, setImg]     = useState(getImageUrl(post.coverImageUrl) || FALLBACK);
+  const [hover, setHover] = useState(false);
+
+  return (
+    <div
+      onClick={() => onClick(post)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        borderRadius:16, overflow:'hidden',
+        background:'#fff',
+        border:'1.5px solid #e8ecf0',
+        cursor:'pointer',
+        transition:'transform .28s ease, box-shadow .28s ease',
+        transform: hover ? 'translateY(-5px)' : 'translateY(0)',
+        boxShadow: hover ? '0 20px 48px rgba(0,0,0,.12)' : '0 2px 10px rgba(0,0,0,.05)',
+        animation:`bp-fadeup .5s ease ${index*0.07}s both`,
+        gridColumn: featured ? 'span 2' : 'span 1',
+        display:'flex', flexDirection: featured ? 'row' : 'column',
+      }}
+    >
+      {/* image */}
+      <div style={{
+        position:'relative', overflow:'hidden',
+        height: featured ? '100%' : 210,
+        minHeight: featured ? 280 : 210,
+        flex: featured ? '0 0 55%' : 'none',
+      }}>
+        <img src={img} alt={post.title}
+          onError={() => setImg(FALLBACK)}
+          loading="lazy"
+          style={{
+            width:'100%', height:'100%', objectFit:'cover',
+            transition:'transform .45s ease',
+            transform: hover ? 'scale(1.06)' : 'scale(1)',
+            display:'block',
+          }}
+        />
+        {/* dark overlay on hover */}
+        <div style={{
+          position:'absolute', inset:0,
+          background:'linear-gradient(to top,rgba(5,10,30,.6) 0%,transparent 55%)',
+          opacity: hover ? 1 : 0, transition:'opacity .28s',
+        }} />
+        {/* category top-left */}
+        {post.category && (
+          <div style={{ position:'absolute', top:12, left:12 }}>
+            <Pill cat={post.category} />
+          </div>
+        )}
+        {/* read time top-right */}
+        <div style={{
+          position:'absolute', top:12, right:12,
+          background:'rgba(255,255,255,.9)',
+          backdropFilter:'blur(4px)',
+          padding:'3px 10px', borderRadius:20,
+          fontSize:11, fontWeight:700, color:'#0f172a',
+        }}>{readTime(post)} read</div>
+      </div>
+
+      {/* content */}
+      <div style={{ padding: featured ? '32px 28px' : '18px 20px 20px', display:'flex', flexDirection:'column', justifyContent:'center', flex:1 }}>
+        {/* date */}
+        <p style={{ margin:'0 0 8px', fontSize:12, color:'#94a3b8', fontWeight:600 }}>
+          {fmtDate(post.publishedDate || post.date)}
+        </p>
+        {/* title */}
+        <h3 style={{
+          margin:'0 0 10px',
+          fontSize: featured ? 22 : 16,
+          fontWeight:800, color:'#0f172a', lineHeight:1.3,
+          display:'-webkit-box', WebkitLineClamp: featured ? 3 : 2,
+          WebkitBoxOrient:'vertical', overflow:'hidden',
+          transition:'color .2s',
+          ...(hover ? { color:'#2563eb' } : {}),
+        }}>{post.title}</h3>
+        {/* excerpt */}
+        <p style={{
+          margin:'0 0 16px', fontSize:13, color:'#64748b', lineHeight:1.65,
+          display:'-webkit-box', WebkitLineClamp:2,
+          WebkitBoxOrient:'vertical', overflow:'hidden',
+        }}>
+          {post.excerpt || truncate(post.content)}
+        </p>
+        {/* author row */}
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:'auto' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+            <img
+              src={post.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name||post.author||'A')}&background=2563eb&color=fff&size=32`}
+              alt=""
+              onError={e => { e.target.src = 'https://ui-avatars.com/api/?name=A&background=94a3b8&color=fff'; }}
+              style={{ width:28, height:28, borderRadius:'50%', objectFit:'cover' }}
+            />
+            <span style={{ fontSize:12, fontWeight:700, color:'#334155' }}>
+              {post.author?.name || post.author || 'BCC Team'}
+            </span>
+          </div>
+          <span style={{
+            fontSize:12, fontWeight:700,
+            color: hover ? '#2563eb' : '#94a3b8',
+            transition:'color .2s',
+            display:'flex', alignItems:'center', gap:4,
+          }}>
+            Read →
+          </span>
+        </div>
+        {/* accent bar */}
+        <div style={{
+          marginTop:14, height:2, borderRadius:2,
+          background:'linear-gradient(90deg,#2563eb,#0ea5e9)',
+          width: hover ? '100%' : '28px',
+          transition:'width .35s ease',
+        }} />
+      </div>
+    </div>
+  );
+};
+
+// ─── BlogDetail ───────────────────────────────────────────────────────────────
+const BlogDetail = ({ post, onBack }) => {
+  const [img, setImg] = useState(getImageUrl(post.coverImageUrl) || FALLBACK);
+  const [liked, setLiked]           = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [shareOpen, setShareOpen]   = useState(false);
+
+  useEffect(() => { window.scrollTo(0,0); }, []);
+
+  const url  = typeof window !== 'undefined' ? window.location.href : '';
+  const text = post.title || '';
+
+  const shareLinks = [
+    { label:'LinkedIn', href:`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}` },
+    { label:'Twitter',  href:`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}` },
+    { label:'Facebook', href:`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}` },
+  ];
+
+  return (
+    <div style={{ maxWidth:780, margin:'0 auto', padding:'0 24px 80px', animation:'bp-fadein .3s ease' }}>
+      {/* back */}
+      <button onClick={onBack} style={{
+        display:'inline-flex', alignItems:'center', gap:8,
+        marginTop:32, marginBottom:28,
+        background:'none', border:'none',
+        color:'#2563eb', fontWeight:700, fontSize:14,
+        cursor:'pointer', padding:0,
+      }}>
+        ← Back to all articles
+      </button>
+
+      {/* breadcrumb */}
+      <div style={{ fontSize:12, color:'#94a3b8', marginBottom:20, display:'flex', gap:6 }}>
+        <Link to="/" style={{ color:'#94a3b8', textDecoration:'none' }}>Home</Link>
+        <span>/</span>
+        <span style={{ cursor:'pointer', color:'#94a3b8' }} onClick={onBack}>Blog</span>
+        <span>/</span>
+        <span style={{ color:'#0f172a' }}>{post.category}</span>
+      </div>
+
+      {/* category + date */}
+      <div style={{ display:'flex', gap:10, alignItems:'center', marginBottom:18, flexWrap:'wrap' }}>
+        {post.category && <Pill cat={post.category} />}
+        <span style={{ fontSize:13, color:'#94a3b8' }}>{fmtDate(post.publishedDate || post.date)}</span>
+        <span style={{ fontSize:13, color:'#94a3b8' }}>· {readTime(post)} read</span>
+      </div>
+
+      {/* title */}
+      <h1 style={{
+        margin:'0 0 24px', fontSize:'clamp(1.8rem,3.5vw,2.6rem)',
+        fontWeight:900, color:'#0f172a', lineHeight:1.15,
+      }}>{post.title}</h1>
+
+      {/* author + actions */}
+      <div style={{
+        display:'flex', justifyContent:'space-between', alignItems:'center',
+        padding:'16px 0', borderTop:'1px solid #e8ecf0', borderBottom:'1px solid #e8ecf0',
+        marginBottom:32, flexWrap:'wrap', gap:12,
+      }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <img
+            src={post.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name||post.author||'A')}&background=2563eb&color=fff&size=48`}
+            alt=""
+            onError={e => { e.target.src = 'https://ui-avatars.com/api/?name=A&background=94a3b8&color=fff'; }}
+            style={{ width:42, height:42, borderRadius:'50%', objectFit:'cover' }}
+          />
+          <div>
+            <div style={{ fontWeight:800, fontSize:14, color:'#0f172a' }}>
+              {post.author?.name || post.author || 'BCC Team'}
+            </div>
+            <div style={{ fontSize:12, color:'#94a3b8' }}>
+              {post.author?.role || 'BCC Author'}
+            </div>
+          </div>
+        </div>
+        {/* action buttons */}
+        <div style={{ display:'flex', gap:8, position:'relative' }}>
+          {[
+            { icon: liked      ? '❤️' : '🤍', label:'Like',     fn:() => setLiked(l=>!l) },
+            { icon: bookmarked ? '🔖' : '📌', label:'Bookmark', fn:() => setBookmarked(b=>!b) },
+            { icon: '🔗',                      label:'Share',    fn:() => setShareOpen(s=>!s) },
+          ].map(b => (
+            <button key={b.label} onClick={b.fn} title={b.label} style={{
+              width:36, height:36, borderRadius:10,
+              border:'1.5px solid #e2e8f0', background:'#fff',
+              cursor:'pointer', fontSize:16,
+              display:'flex', alignItems:'center', justifyContent:'center',
+            }}>{b.icon}</button>
+          ))}
+          {shareOpen && (
+            <div style={{
+              position:'absolute', top:42, right:0,
+              background:'#fff', borderRadius:12,
+              border:'1.5px solid #e2e8f0',
+              boxShadow:'0 12px 32px rgba(0,0,0,.12)',
+              padding:8, zIndex:50, minWidth:160,
+              animation:'bp-fadein .15s ease',
+            }}>
+              {shareLinks.map(s => (
+                <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
+                  onClick={() => setShareOpen(false)}
+                  style={{
+                    display:'block', padding:'8px 14px',
+                    fontSize:13, fontWeight:600, color:'#334155',
+                    textDecoration:'none', borderRadius:8,
+                  }}
+                  onMouseOver={e => e.target.style.background='#f1f5f9'}
+                  onMouseOut={e => e.target.style.background='transparent'}
+                >{s.label}</a>
+              ))}
+              <button onClick={() => { navigator.clipboard.writeText(url); setShareOpen(false); }}
+                style={{
+                  display:'block', width:'100%', textAlign:'left',
+                  padding:'8px 14px', fontSize:13, fontWeight:600,
+                  color:'#334155', background:'none', border:'none',
+                  cursor:'pointer', borderRadius:8,
+                }}>Copy Link</button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* hero image */}
+      <div style={{ borderRadius:16, overflow:'hidden', marginBottom:36, boxShadow:'0 8px 32px rgba(0,0,0,.1)' }}>
+        <img src={img} alt={post.title}
+          onError={() => setImg(FALLBACK)}
+          style={{ width:'100%', maxHeight:480, objectFit:'cover', display:'block' }}
+        />
+      </div>
+
+      {/* content */}
+      {post.content ? (
+        <div
+          dangerouslySetInnerHTML={{ __html: post.content }}
+          style={{
+            fontSize:16, lineHeight:1.85, color:'#334155',
+            marginBottom:40,
+          }}
+        />
+      ) : (
+        <p style={{ color:'#94a3b8', fontStyle:'italic' }}>Content not available.</p>
+      )}
+
+      {/* tags */}
+      {post.tags?.length > 0 && (
+        <div style={{ display:'flex', gap:8, flexWrap:'wrap', paddingTop:24, borderTop:'1px solid #e8ecf0', marginBottom:32 }}>
+          {post.tags.map(t => (
+            <span key={t} style={{
+              padding:'4px 12px', borderRadius:20,
+              background:'#f1f5f9', color:'#475569',
+              fontSize:12, fontWeight:600,
+            }}>#{t}</span>
+          ))}
+        </div>
+      )}
+
+      {/* author bio */}
+      <div style={{
+        background:'#f8fafc', borderRadius:16,
+        padding:'24px 20px', display:'flex', gap:16,
+        border:'1.5px solid #e8ecf0', marginBottom:40,
+      }}>
+        <img
+          src={post.author?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author?.name||post.author||'A')}&background=2563eb&color=fff&size=64`}
+          alt="" onError={e => { e.target.src = 'https://ui-avatars.com/api/?name=A&background=94a3b8&color=fff'; }}
+          style={{ width:56, height:56, borderRadius:'50%', objectFit:'cover', flexShrink:0 }}
+        />
+        <div>
+          <div style={{ fontWeight:800, color:'#0f172a', marginBottom:3 }}>
+            {post.author?.name || post.author || 'BCC Team'}
+          </div>
+          <div style={{ fontSize:12, color:'#94a3b8', marginBottom:6 }}>
+            {post.author?.role || 'Author at BCC'}
+          </div>
+          <p style={{ fontSize:13, color:'#64748b', margin:0, lineHeight:1.6 }}>
+            {post.author?.bio || 'Expert contributor at Building Creators & Consulting.'}
+          </p>
+        </div>
+      </div>
+
+      {/* newsletter CTA */}
+      <div style={{
+        background:'linear-gradient(135deg,#0a0f1e,#1e3a5f)',
+        borderRadius:16, padding:'36px 32px',
+        textAlign:'center', color:'#fff',
+      }}>
+        <h3 style={{ margin:'0 0 10px', fontSize:20, fontWeight:900 }}>Never Miss an Insight</h3>
+        <p style={{ margin:'0 0 24px', color:'rgba(255,255,255,.65)', fontSize:14 }}>
+          Get the latest engineering articles and industry news in your inbox.
+        </p>
+        <NewsletterBox />
+      </div>
+    </div>
+  );
+};
+
+// ─── Newsletter ───────────────────────────────────────────────────────────────
+const NewsletterBox = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle');
+
+  const handleSub = async e => {
+    e.preventDefault();
+    if (!email.includes('@')) { setStatus('error'); return; }
+    setStatus('loading');
+    await new Promise(r => setTimeout(r, 900));
+    setStatus('success');
+    setEmail('');
+  };
+
+  return (
+    <form onSubmit={handleSub} style={{ display:'flex', gap:10, maxWidth:400, margin:'0 auto', flexWrap:'wrap' }}>
+      <input
+        type="email" value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder="your@email.com"
+        style={{
+          flex:1, minWidth:200,
+          padding:'11px 16px', borderRadius:10,
+          border:'none', fontSize:14, color:'#0f172a',
+          outline:'none',
+        }}
+      />
+      <button type="submit" disabled={status==='loading'} style={{
+        padding:'11px 22px', borderRadius:10,
+        background:'linear-gradient(135deg,#2563eb,#0ea5e9)',
+        color:'#fff', border:'none',
+        fontWeight:700, fontSize:14, cursor:'pointer',
+        whiteSpace:'nowrap',
+      }}>
+        {status==='loading' ? '…' : status==='success' ? '✅ Subscribed!' : 'Subscribe'}
+      </button>
+    </form>
+  );
+};
+
+// ─── Sidebar ──────────────────────────────────────────────────────────────────
+const Sidebar = ({ recent, onPost, search, setSearch }) => (
+  <aside style={{ display:'flex', flexDirection:'column', gap:24 }}>
+    {/* search */}
+    <div style={{
+      background:'#fff', borderRadius:14,
+      border:'1.5px solid #e8ecf0', padding:'18px 20px',
+    }}>
+      <h4 style={{ margin:'0 0 12px', fontSize:13, fontWeight:800, color:'#0f172a', textTransform:'uppercase', letterSpacing:'.5px' }}>Search</h4>
+      <div style={{ position:'relative' }}>
+        <input
+          type="text" value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search articles..."
+          style={{
+            width:'100%', padding:'9px 36px 9px 12px',
+            borderRadius:10, border:'1.5px solid #e2e8f0',
+            fontSize:13, color:'#0f172a', outline:'none',
+          }}
+        />
+        <span style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', color:'#94a3b8' }}>🔍</span>
+      </div>
+    </div>
+
+    {/* newsletter */}
+    <div style={{
+      background:'linear-gradient(135deg,#1e3a5f,#0a0f1e)',
+      borderRadius:14, padding:'22px 20px', color:'#fff',
+    }}>
+      <h4 style={{ margin:'0 0 6px', fontSize:15, fontWeight:900 }}>Newsletter</h4>
+      <p style={{ margin:'0 0 14px', fontSize:12, color:'rgba(255,255,255,.6)', lineHeight:1.6 }}>
+        Get the latest engineering insights delivered weekly.
+      </p>
+      <NewsletterBox />
+    </div>
+
+    {/* recent posts */}
+    {recent.length > 0 && (
+      <div style={{
+        background:'#fff', borderRadius:14,
+        border:'1.5px solid #e8ecf0', padding:'18px 20px',
+      }}>
+        <h4 style={{ margin:'0 0 16px', fontSize:13, fontWeight:800, color:'#0f172a', textTransform:'uppercase', letterSpacing:'.5px' }}>
+          Recent Articles
+        </h4>
+        <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+          {recent.map(p => (
+            <div key={p.id} onClick={() => onPost(p)}
+              style={{ display:'flex', gap:10, cursor:'pointer' }}
+            >
+              <img
+                src={getImageUrl(p.coverImageUrl) || FALLBACK}
+                alt="" onError={e => { e.target.src = FALLBACK; }}
+                style={{ width:56, height:46, borderRadius:8, objectFit:'cover', flexShrink:0 }}
+              />
+              <div>
+                <p style={{
+                  margin:'0 0 3px', fontSize:12, fontWeight:700, color:'#0f172a',
+                  lineHeight:1.4,
+                  display:'-webkit-box', WebkitLineClamp:2,
+                  WebkitBoxOrient:'vertical', overflow:'hidden',
+                }}>{p.title}</p>
+                <span style={{ fontSize:11, color:'#94a3b8' }}>{fmtDate(p.publishedDate || p.date)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* topics */}
+    <div style={{
+      background:'#fff', borderRadius:14,
+      border:'1.5px solid #e8ecf0', padding:'18px 20px',
+    }}>
+      <h4 style={{ margin:'0 0 14px', fontSize:13, fontWeight:800, color:'#0f172a', textTransform:'uppercase', letterSpacing:'.5px' }}>
+        Topics
+      </h4>
+      <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+        {['Architecture','Engineering','Construction','Design','Soil Testing','Survey','Project Management','Urban Planning'].map(t => (
+          <button key={t} onClick={() => setSearch(t)} style={{
+            padding:'5px 12px', borderRadius:20,
+            background:'#f1f5f9', border:'none',
+            fontSize:12, fontWeight:600, color:'#475569',
+            cursor:'pointer', transition:'all .2s',
+          }}
+            onMouseOver={e => { e.target.style.background='#dbeafe'; e.target.style.color='#1d4ed8'; }}
+            onMouseOut={e => { e.target.style.background='#f1f5f9'; e.target.style.color='#475569'; }}
+          >#{t}</button>
+        ))}
+      </div>
+    </div>
+  </aside>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+export default function BlogPage() {
+  const [posts,    setPosts]    = useState([]);
+  const [loading,  setLoading]  = useState(true);
+  const [apiError, setApiError] = useState(null);
+  const [selected, setSelected] = useState(null);
+  const [search,   setSearch]   = useState('');
+  const [category, setCategory] = useState('All');
+  const [page,     setPage]     = useState(1);
+  const { slug } = useParams();
+  const topRef = useRef(null);
+
+  const fetchPosts = useCallback(async () => {
+    setLoading(true); setApiError(null);
+    try {
+      if (slug) {
+        const res = await publicAPI.getBlogBySlug(slug);
+        if (res.data?.success) setSelected(res.data.data);
+        else throw new Error('Post not found');
+      } else {
+        const res = await publicAPI.getBlogs();
+        if (res.data?.success) setPosts(res.data.data || []);
+        else throw new Error(res.data?.message || 'Failed');
+      }
+    } catch(e) {
+      console.error(e);
+      setApiError('Failed to load articles. Please try again.');
+    } finally { setLoading(false); }
+  }, [slug]);
+
+  useEffect(() => { fetchPosts(); }, [fetchPosts]);
+  useEffect(() => { setPage(1); }, [category, search]);
+  useEffect(() => { window.scrollTo(0,0); }, [selected, page]);
+
+  const filtered = useMemo(() => {
+    let r = category === 'All' ? posts : posts.filter(p => p.category?.toLowerCase() === category.toLowerCase());
+    if (search.trim()) {
+      const t = search.toLowerCase();
+      r = r.filter(p => p.title?.toLowerCase().includes(t) || p.excerpt?.toLowerCase().includes(t) || p.content?.toLowerCase().includes(t));
+    }
+    return r;
+  }, [posts, category, search]);
+
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const current    = filtered.slice((page-1)*PER_PAGE, page*PER_PAGE);
+  const recent     = useMemo(() =>
+    [...posts].sort((a,b) => new Date(b.publishedDate||b.date) - new Date(a.publishedDate||a.date)).slice(0,4),
+  [posts]);
+
+  const handlePost = (post) => {
+    setSelected(post);
+    if (post.slug) window.history.pushState(null,'',`/blog/${post.slug}`);
+  };
+  const handleBack = () => {
+    setSelected(null);
+    window.history.pushState(null,'','/blog');
+  };
+
+  return (
+    <div style={{ background:'#f8fafc', minHeight:'100vh' }} ref={topRef}>
+
+      {/* ── detail view ── */}
+      {selected && <BlogDetail post={selected} onBack={handleBack} />}
+
+      {/* ── listing view ── */}
+      {!selected && (
+        <>
+          {/* HERO */}
+          <section style={{
+            position:'relative',
+            background:'linear-gradient(135deg,#050a1a 0%,#0d1b3e 55%,#050a1a 100%)',
+            padding:'90px 0 70px', overflow:'hidden',
+          }}>
+            {/* grid */}
+            <div style={{
+              position:'absolute',inset:0,opacity:.06,
+              backgroundImage:'linear-gradient(rgba(255,255,255,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px)',
+              backgroundSize:'60px 60px',
+            }} />
+            {/* glow */}
+            <div style={{
+              position:'absolute',top:'-15%',right:'8%',
+              width:450,height:450,borderRadius:'50%',
+              background:'radial-gradient(circle,rgba(37,99,235,.2) 0%,transparent 70%)',
+              pointerEvents:'none',
+            }} />
+            <div className="bp-container" style={{ position:'relative',zIndex:2,textAlign:'center' }}>
+              <div style={{
+                display:'inline-flex',alignItems:'center',gap:8,
+                background:'rgba(37,99,235,.15)',border:'1px solid rgba(37,99,235,.3)',
+                padding:'6px 18px',borderRadius:30,marginBottom:24,
+              }}>
+                <span style={{ width:6,height:6,borderRadius:'50%',background:'#60a5fa',display:'inline-block' }} />
+                <span style={{ color:'#93c5fd',fontSize:12,fontWeight:700,letterSpacing:'.7px',textTransform:'uppercase' }}>
+                  Engineering Insights
+                </span>
+              </div>
+              <h1 style={{
+                color:'#fff',
+                fontSize:'clamp(2.2rem,5vw,3.6rem)',
+                fontWeight:900,lineHeight:1.1,
+                margin:'0 0 18px',
+              }}>
+                Expert{' '}
+                <span style={{
+                  background:'linear-gradient(90deg,#60a5fa,#38bdf8)',
+                  WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',
+                }}>Engineering</span>
+                {' '}Blog
+              </h1>
+              <p style={{
+                color:'rgba(255,255,255,.65)',
+                fontSize:'clamp(.95rem,1.8vw,1.1rem)',
+                lineHeight:1.7,maxWidth:560,
+                margin:'0 auto 40px',
+              }}>
+                Discover the latest trends, construction insights, and expert knowledge from BCC's senior engineers and architects.
+              </p>
+              {/* stats */}
+              <div style={{
+                display:'inline-flex',gap:0,
+                background:'rgba(255,255,255,.06)',
+                border:'1px solid rgba(255,255,255,.1)',
+                borderRadius:14,overflow:'hidden',
+              }}>
+                {[
+                  { n:`${posts.length}+`, label:'Articles' },
+                  { n:'8+',              label:'Topics'   },
+                  { n:'Weekly',          label:'Updates'  },
+                ].map((s,i) => (
+                  <div key={i} style={{
+                    padding:'14px 24px',textAlign:'center',
+                    borderRight:i<2?'1px solid rgba(255,255,255,.08)':'none',
+                  }}>
+                    <div style={{ color:'#fff',fontSize:'1.5rem',fontWeight:900,lineHeight:1 }}>{s.n}</div>
+                    <div style={{ color:'rgba(255,255,255,.5)',fontSize:11,marginTop:4,letterSpacing:'.4px',textTransform:'uppercase' }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* MAIN CONTENT */}
+          <div className="bp-container" style={{ padding:'48px 24px 80px' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 300px', gap:32, alignItems:'start' }}>
+
+              {/* left — feed */}
+              <div>
+                {/* category filter */}
+                <div style={{
+                  display:'flex', gap:8, flexWrap:'wrap',
+                  marginBottom:28,
+                  background:'#fff', borderRadius:12,
+                  border:'1.5px solid #e8ecf0', padding:'12px 14px',
+                }}>
+                  {CATEGORIES.map(c => (
+                    <button key={c} onClick={() => setCategory(c)} style={{
+                      padding:'7px 16px', borderRadius:30,
+                      border: category===c ? 'none' : '1.5px solid #e2e8f0',
+                      background: category===c ? 'linear-gradient(135deg,#2563eb,#0ea5e9)' : '#fff',
+                      color: category===c ? '#fff' : '#475569',
+                      fontSize:13, fontWeight:700,
+                      cursor:'pointer', transition:'all .2s',
+                      whiteSpace:'nowrap',
+                    }}>{c}</button>
+                  ))}
+                </div>
+
+                {/* count */}
+                {!loading && !apiError && (
+                  <p style={{ margin:'0 0 20px', fontSize:14, color:'#64748b' }}>
+                    <strong style={{ color:'#0f172a' }}>{filtered.length}</strong> article{filtered.length!==1?'s':''}
+                    {category!=='All'||search ? ' — filtered' : ''}
+                  </p>
+                )}
+
+                {/* states */}
+                {loading && <Skeleton />}
+
+                {!loading && apiError && (
+                  <div style={{ textAlign:'center', padding:'60px 20px' }}>
+                    <div style={{ fontSize:48,marginBottom:16 }}>⚠️</div>
+                    <h3 style={{ color:'#0f172a',marginBottom:8 }}>Failed to Load</h3>
+                    <p style={{ color:'#64748b',marginBottom:20 }}>{apiError}</p>
+                    <button onClick={fetchPosts} style={{
+                      padding:'10px 24px',borderRadius:8,
+                      background:'linear-gradient(135deg,#2563eb,#0ea5e9)',
+                      color:'#fff',border:'none',fontWeight:700,cursor:'pointer',
+                    }}>Try Again</button>
+                  </div>
+                )}
+
+                {!loading && !apiError && filtered.length===0 && (
+                  <div style={{ textAlign:'center', padding:'60px 20px', background:'#fff', borderRadius:16, border:'1.5px solid #e8ecf0' }}>
+                    <div style={{ fontSize:48,marginBottom:16 }}>📝</div>
+                    <h3 style={{ color:'#0f172a',marginBottom:8 }}>No Articles Found</h3>
+                    <p style={{ color:'#64748b',marginBottom:20 }}>
+                      {search ? `No results for "${search}".` : 'No articles in this category yet.'}
+                    </p>
+                    <button onClick={() => { setSearch(''); setCategory('All'); }} style={{
+                      padding:'10px 24px',borderRadius:8,
+                      background:'linear-gradient(135deg,#2563eb,#0ea5e9)',
+                      color:'#fff',border:'none',fontWeight:700,cursor:'pointer',
+                    }}>Clear Filters</button>
+                  </div>
+                )}
+
+                {!loading && !apiError && current.length>0 && (
+                  <>
+                    <div style={{
+                      display:'grid',
+                      gridTemplateColumns:'repeat(2,1fr)',
+                      gap:20,
+                    }}>
+                      {current.map((post,i) => (
+                        <BlogCard
+                          key={post.id} post={post}
+                          onClick={handlePost} index={i}
+                          featured={i===0 && page===1 && category==='All' && !search}
+                        />
+                      ))}
+                    </div>
+
+                    {/* pagination */}
+                    {totalPages>1 && (
+                      <div style={{ display:'flex',justifyContent:'center',alignItems:'center',gap:10,marginTop:40 }}>
+                        <button
+                          disabled={page===1}
+                          onClick={() => setPage(p=>p-1)}
+                          style={pgBtnStyle(page===1)}
+                        >← Prev</button>
+                        {[...Array(totalPages)].map((_,i) => (
+                          <button key={i} onClick={() => setPage(i+1)} style={{
+                            width:36,height:36,borderRadius:8,
+                            border: page===i+1?'none':'1.5px solid #e2e8f0',
+                            background: page===i+1?'linear-gradient(135deg,#2563eb,#0ea5e9)':'#fff',
+                            color: page===i+1?'#fff':'#475569',
+                            fontWeight:700,fontSize:14,cursor:'pointer',
+                          }}>{i+1}</button>
+                        ))}
+                        <button
+                          disabled={page===totalPages}
+                          onClick={() => setPage(p=>p+1)}
+                          style={pgBtnStyle(page===totalPages)}
+                        >Next →</button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* sidebar */}
+              <Sidebar recent={recent} onPost={handlePost} search={search} setSearch={setSearch} />
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* global styles */}
+      <style>{`
+        .bp-container { max-width:1200px; margin:0 auto; padding-left:24px; padding-right:24px; }
+        @keyframes bp-fadeup  { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes bp-fadein  { from{opacity:0} to{opacity:1} }
+        @keyframes bp-pulse   { 0%,100%{opacity:1} 50%{opacity:.45} }
+        @media(max-width:900px){
+          .bp-main-grid { grid-template-columns:1fr !important; }
+        }
+        @media(max-width:640px){
+          .bp-card-grid { grid-template-columns:1fr !important; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+const pgBtnStyle = (disabled) => ({
+  padding:'8px 16px', borderRadius:8,
+  border:'1.5px solid #e2e8f0', background:'#fff',
+  color: disabled?'#cbd5e1':'#475569',
+  fontWeight:700, fontSize:13,
+  cursor: disabled?'not-allowed':'pointer',
+  opacity: disabled?.5:1,
+});

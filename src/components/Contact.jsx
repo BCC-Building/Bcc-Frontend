@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
+import { publicAPI } from '../api/endpoints'; // 👈 ADD THIS IMPORT
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -11,39 +12,69 @@ export default function Contact() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);        // 👈 NEW
+  const [error, setError] = useState('');               // 👈 NEW
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  // 👇 UPDATED SUBMIT HANDLER
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Basic validation
     if (
-      formData.fullName &&
-      formData.email &&
-      formData.phone &&
-      formData.service !== 'Choose a service' &&
-      formData.message
+      !formData.fullName ||
+      !formData.email ||
+      !formData.phone ||
+      formData.service === 'Choose a service' ||
+      !formData.message
     ) {
-      setSubmitted(true);
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        service: 'Choose a service',
-        message: '',
-      });
-      setTimeout(() => setSubmitted(false), 5000);
-    } else {
-      alert('Please fill out all fields');
+      setError('Please fill out all fields');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const payload = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        message: formData.message,
+      };
+
+      const response = await publicAPI.submitContact(payload);
+
+      if (response.data.success) {
+        setSubmitted(true);
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          service: 'Choose a service',
+          message: '',
+        });
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        setError(response.data.message || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setError('Network error. Please check your connection and try again.');
+      console.error('Contact form error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main aria-label="Contact page" id="contact" className="contact-page">
       
-      {/* HERO SECTION */}
+      {/* HERO SECTION - EXACTLY SAME */}
       <section className="contact-hero text-white position-relative" aria-label="Contact hero">
         <div className="container py-5">
           <div className="row align-items-center">
@@ -113,7 +144,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* CONTACT INFO CARDS */}
+      {/* CONTACT INFO CARDS - EXACTLY SAME */}
       <section className="container py-5" aria-label="Contact information">
         <h2 className="visually-hidden">Contact Details</h2>
         <div className="row gy-4">
@@ -186,9 +217,17 @@ export default function Contact() {
             >
               <h2 className="h4 mb-4">Send Us a Message</h2>
 
+              {/* SUCCESS MESSAGE - UPDATED */}
               {submitted && (
                 <div className="alert alert-success" role="alert">
-                  ✅ Message sent successfully! We&apos;ll get back to you soon.
+                  ✅ Thank you! Your message has been received. We'll get back to you soon.
+                </div>
+              )}
+
+              {/* ERROR MESSAGE - NEW */}
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  ❌ {error}
                 </div>
               )}
 
@@ -205,6 +244,7 @@ export default function Contact() {
                     aria-required="true"
                     required
                     autoComplete="name"
+                    disabled={loading} 
                   />
                 </div>
 
@@ -221,6 +261,7 @@ export default function Contact() {
                     aria-required="true"
                     required
                     autoComplete="email"
+                    disabled={loading}
                   />
                 </div>
 
@@ -237,6 +278,7 @@ export default function Contact() {
                     aria-required="true"
                     required
                     autoComplete="tel"
+                    disabled={loading}
                   />
                 </div>
 
@@ -250,6 +292,7 @@ export default function Contact() {
                     onChange={handleChange}
                     aria-required="true"
                     required
+                    disabled={loading}
                   >
                     <option value="Choose a service">Choose a service</option>
                     <option value="Residential">Residential</option>
@@ -272,20 +315,23 @@ export default function Contact() {
                     rows="4"
                     aria-required="true"
                     required
+                    disabled={loading}
                   ></textarea>
                 </div>
 
                 <button 
                   type="submit"
-                  className="btn btn-primary w-100"
+                  className={`btn btn-primary w-100 ${loading ? 'disabled' : ''}`}
                   aria-label="Submit contact form"
+                  disabled={loading}  
                 >
-                  Send Message
+                  {loading ? 'Sending...' : 'Send Message'}  
                 </button>
               </form>
             </motion.div>
           </div>
 
+          {/* MAP - EXACTLY SAME */}
           <div className="col-xl-7">
             <motion.div
               className="map-card rounded-4 overflow-hidden shadow-lg"

@@ -1,10 +1,17 @@
-// src/pages/GalleryPage.jsx - Fixed Working Version
-import { useState, useEffect, useMemo, useRef } from "react";
+// src/pages/GalleryPage.jsx - Production-Ready with Backend Integration
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { getMediaUrl } from "../utils/media";
+import { publicAPI } from "../api/endpoints"; // 👈 Backend API
 
-// Categories Data
+// ==================== CONSTANTS ====================
+
+/**
+ * Category filter options
+ * To add new category: Add object with id, name, icon
+ */
 const CATEGORIES = [
   { id: "all", name: "All Projects", icon: "🎯" },
   { id: "Construction", name: "Construction", icon: "🏗️" },
@@ -13,161 +20,144 @@ const CATEGORIES = [
   { id: "Testing", name: "Testing", icon: "🔬" },
 ];
 
-// Gallery Data with working images
-const GALLERY_DATA = [
-  {
-    id: 1,
-    src: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&h=600&fit=crop",
-    thumbnail: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop",
-    category: "Construction",
-    title: "High Rise Commercial Tower",
-    location: "Pune, Maharashtra",
-    date: "2024",
-    description: "45-story commercial tower with sustainable design",
-    tags: ["Commercial", "High-Rise", "Modern"]
-  },
-  {
-    id: 2,
-    src: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=800&h=600&fit=crop",
-    thumbnail: "https://images.unsplash.com/photo-1492724441997-5dc865305da7?w=400&h=300&fit=crop",
-    category: "Interior",
-    title: "Luxury Penthouse Interior",
-    location: "Mumbai, Maharashtra",
-    date: "2024",
-    description: "Modern minimalist interior with premium finishes",
-    tags: ["Luxury", "Modern", "Residential"]
-  },
-  {
-    id: 3,
-    src: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop",
-    thumbnail: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop",
-    category: "Survey",
-    title: "Topographical Land Survey",
-    location: "Delhi NCR",
-    date: "2024",
-    description: "Precision land surveying using drone technology",
-    tags: ["Survey", "Drone", "Technology"]
-  },
-  {
-    id: 4,
-    src: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&h=600&fit=crop",
-    thumbnail: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=400&h=300&fit=crop",
-    category: "Interior",
-    title: "5-Star Hotel Lobby",
-    location: "Goa",
-    date: "2024",
-    description: "Elegant hotel lobby design with natural elements",
-    tags: ["Hotel", "Luxury", "Commercial"]
-  },
-  {
-    id: 5,
-    src: "https://images.unsplash.com/photo-1529429611270-5b6d27bdf3a5?w=800&h=600&fit=crop",
-    thumbnail: "https://images.unsplash.com/photo-1529429611270-5b6d27bdf3a5?w=400&h=300&fit=crop",
-    category: "Construction",
-    title: "Luxury Residential Villa",
-    location: "Bangalore, Karnataka",
-    date: "2024",
-    description: "Modern villa with sustainable architecture",
-    tags: ["Villa", "Residential", "Luxury"]
-  },
-  {
-    id: 6,
-    src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=600&fit=crop",
-    thumbnail: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop",
-    category: "Construction",
-    title: "Corporate Office Complex",
-    location: "Pune, Maharashtra",
-    date: "2024",
-    description: "LEED-certified commercial building",
-    tags: ["Commercial", "Corporate", "Green Building"]
-  }
-];
+// Items per page for pagination
+const ITEMS_PER_PAGE = 6;
 
-// Simple Image Component - No complex lazy loading
-const GalleryCard = ({ item, onClick }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
+// ==================== SUB-COMPONENTS ====================
+
+/**
+ * ImageWithFallback Component
+ * Handles lazy loading, loading skeleton, and broken image fallback
+ */
+const ImageWithFallback = ({ src, alt, className, onLoad }) => {
+  const [status, setStatus] = useState("loading"); // loading | loaded | error
   const imgRef = useRef(null);
+  const observerRef = useRef(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    // Cleanup previous observer
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    const img = imgRef.current;
+    if (!img) return;
+
+    // Intersection Observer for lazy loading
+    observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && imgRef.current) {
-            const img = imgRef.current;
-            img.src = item.thumbnail;
-            observer.unobserve(img);
+          if (entry.isIntersecting) {
+            img.src = src; // Actually load image now
+            observerRef.current.unobserve(img);
           }
         });
       },
-      { rootMargin: "50px" }
+      { rootMargin: "100px" } // Start loading 100px before visible
     );
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
-    }
+    observerRef.current.observe(img);
 
-    return () => observer.disconnect();
-  }, [item.thumbnail]);
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [src]);
 
+  return (
+    <div className="relative w-full h-full">
+      {/* Loading Skeleton */}
+      {status === "loading" && (
+        <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+
+      {/* Broken Image Fallback */}
+      {status === "error" && (
+        <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 flex flex-col items-center justify-center">
+          <span className="text-4xl mb-2">🖼️</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">Image unavailable</span>
+        </div>
+      )}
+
+      {/* Actual Image */}
+      <img
+        ref={imgRef}
+        alt={alt}
+        className={`${className} ${status === "loaded" ? "opacity-100" : "opacity-0"} transition-opacity duration-500`}
+        onLoad={() => {
+          setStatus("loaded");
+          onLoad?.();
+        }}
+        onError={() => setStatus("error")}
+      />
+    </div>
+  );
+};
+
+/**
+ * GalleryCard Component
+ * Displays a single gallery item with hover effects and tags
+ */
+const GalleryCard = ({ item, onClick }) => {
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -6 }}
       className="group cursor-pointer"
       onClick={() => onClick(item)}
+      role="button"
+      aria-label={`View details of ${item.title}`}
+      tabIndex={0}
+      onKeyDown={(e) => e.key === "Enter" && onClick(item)}
     >
-      <div className="relative overflow-hidden rounded-2xl shadow-lg bg-white dark:bg-slate-800">
+      <div className="relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+        
         {/* Image Container */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-gray-200 dark:bg-slate-700">
-          {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          )}
-          <img
-            ref={imgRef}
-            data-src={item.thumbnail}
+        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100 dark:bg-gray-700">
+          <ImageWithFallback
+            src={getMediaUrl(item.imageUrl || item.thumbnail)}
             alt={item.title}
-            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-110 ${
-              imageLoaded ? "opacity-100" : "opacity-0"
-            }`}
-            onLoad={() => setImageLoaded(true)}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
-          
+
           {/* Category Badge */}
-          <div className="absolute top-4 left-4">
-            <span className="px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full shadow-lg">
+          <div className="absolute top-3 left-3 z-10">
+            <span className="px-3 py-1.5 bg-blue-600/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full shadow-lg">
               {item.category}
             </span>
           </div>
-          
-          {/* Overlay on Hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="absolute bottom-4 left-4 right-4">
-              <h3 className="text-white font-bold text-lg mb-1">{item.title}</h3>
-              <p className="text-gray-200 text-sm">{item.location}</p>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {item.tags?.slice(0, 2).map(tag => (
-                  <span key={tag} className="text-xs px-2 py-1 bg-white/20 rounded-full text-white">
+
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+            <h3 className="text-white font-bold text-lg mb-1">{item.title}</h3>
+            <p className="text-gray-200 text-sm mb-2">{item.location}</p>
+            {item.tags?.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {item.tags.slice(0, 3).map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs px-2 py-1 bg-white/20 rounded-full text-white backdrop-blur-sm"
+                  >
                     {tag}
                   </span>
                 ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
-        
+
         {/* Info Footer */}
         <div className="p-4">
-          <h3 className="font-semibold text-gray-800 dark:text-white mb-1 truncate">
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-1 truncate">
             {item.title}
           </h3>
-          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-            <span className="truncate">{item.location}</span>
-            <span>{item.date}</span>
+          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+            <span className="truncate flex-1 mr-2">📍 {item.location}</span>
+            <span className="flex-shrink-0">{item.date}</span>
           </div>
         </div>
       </div>
@@ -175,103 +165,213 @@ const GalleryCard = ({ item, onClick }) => {
   );
 };
 
-// Main Gallery Component
+/**
+ * LoadingSkeleton Component
+ * Shown while API data is being fetched
+ */
+const LoadingSkeleton = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {Array.from({ length: 6 }).map((_, i) => (
+      <div key={i} className="rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-md">
+        <div className="aspect-[4/3] bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        <div className="p-4 space-y-3">
+          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+// ==================== MAIN COMPONENT ====================
+
+/**
+ * GalleryPage Component
+ * Displays project gallery with filters, search, pagination, and lightbox
+ * 
+ * Backend API: GET /api/gallery (all items)
+ * Backend API: GET /api/gallery/category/{category} (filtered)
+ * Backend API: GET /api/gallery/featured (featured items)
+ * 
+ * To change items per page: Update ITEMS_PER_PAGE constant
+ * To add new category: Update CATEGORIES array
+ */
 export default function GalleryPage() {
+  // ==================== STATE ====================
+  const [galleryData, setGalleryData] = useState([]);      // All gallery items from API
   const [activeCategory, setActiveCategory] = useState("all");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null); // Lightbox state
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 6;
+  const [isLoading, setIsLoading] = useState(true);         // API loading state
+  const [apiError, setApiError] = useState(null);           // API error state
 
-  // Filter images based on category and search
-  const filteredImages = useMemo(() => {
-    let filtered = GALLERY_DATA;
+  // ==================== DATA FETCHING ====================
+  
+  /**
+   * Fetches gallery data from backend API
+   * Falls back to empty array on error
+   */
+  const fetchGalleryData = useCallback(async () => {
+    setIsLoading(true);
+    setApiError(null);
     
-    if (activeCategory !== "all") {
-      filtered = filtered.filter(item => item.category === activeCategory);
+    try {
+      // Fetch from backend - change endpoint if needed
+      const response = await publicAPI.getGallery();
+      
+      if (response.data?.success) {
+        setGalleryData(response.data.data || []);
+      } else {
+        throw new Error(response.data?.message || "Failed to load gallery");
+      }
+    } catch (err) {
+      console.error("Gallery fetch error:", err);
+      setApiError("Failed to load gallery items. Please try again later.");
+      setGalleryData([]);
+    } finally {
+      setIsLoading(false);
     }
-    
-    if (searchTerm) {
-      filtered = filtered.filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.location.toLowerCase().includes(searchTerm.toLowerCase())
+  }, []);
+
+  // Fetch on mount
+  useEffect(() => {
+    fetchGalleryData();
+  }, [fetchGalleryData]);
+
+  // ==================== FILTERING & SEARCH ====================
+  
+  /**
+   * Filters gallery items by category and search term
+   * Memoized to prevent unnecessary re-calculations
+   */
+  const filteredImages = useMemo(() => {
+    let filtered = galleryData;
+
+    // Filter by category
+    if (activeCategory !== "all") {
+      filtered = filtered.filter(
+        (item) => item.category?.toLowerCase() === activeCategory.toLowerCase()
       );
     }
-    
-    return filtered;
-  }, [activeCategory, searchTerm]);
 
-  // Pagination
-  const totalPages = Math.ceil(filteredImages.length / itemsPerPage);
-  const currentImages = filteredImages.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    // Filter by search term (title or location)
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (item) =>
+          item.title?.toLowerCase().includes(term) ||
+          item.location?.toLowerCase().includes(term)
+      );
+    }
+
+    return filtered;
+  }, [galleryData, activeCategory, searchTerm]);
+
+  // ==================== PAGINATION ====================
+  
+  const totalPages = Math.ceil(filteredImages.length / ITEMS_PER_PAGE);
+  
+  const currentImages = useMemo(
+    () =>
+      filteredImages.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+      ),
+    [filteredImages, currentPage]
   );
 
-  // Reset page when filter changes
+  // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [activeCategory, searchTerm]);
 
+  // ==================== LIGHTBOX ====================
+  
   // Prevent body scroll when lightbox is open
   useEffect(() => {
     if (selectedImage) {
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [selectedImage]);
 
+  // Close lightbox on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && selectedImage) {
+        setSelectedImage(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedImage]);
+
+  // ==================== RENDER ====================
+  
   return (
     <>
+      {/* SEO Meta Tags */}
       <Helmet>
         <title>Project Gallery | Building Creators & Consulting</title>
-        <meta name="description" content="Explore our portfolio of engineering and construction projects. View our completed works including residential, commercial, and industrial projects." />
-        <meta name="keywords" content="construction gallery, engineering projects, architecture portfolio, interior design projects" />
-        <link rel="canonical" href="https://buildingcreators.com/gallery" />
+        <meta
+          name="description"
+          content="Explore our portfolio of engineering and construction projects. View completed works including residential, commercial, and industrial projects."
+        />
+        <meta
+          name="keywords"
+          content="construction gallery, engineering projects, architecture portfolio, interior design projects"
+        />
+        <link rel="canonical" href="https://bcc.net.in/gallery" />
         <meta property="og:title" content="Project Gallery | BCC Engineering Portfolio" />
         <meta property="og:description" content="View our completed engineering and construction projects" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://buildingcreators.com/gallery" />
-        <meta property="og:image" content={GALLERY_DATA[0]?.src} />
+        <meta property="og:url" content="https://bcc.net.in/gallery" />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white py-20 overflow-hidden">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full filter blur-3xl"></div>
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl"></div>
+        {/* ==================== HERO SECTION ==================== */}
+        <section className="relative bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white py-20 lg:py-24 overflow-hidden">
+          {/* Background decorative elements */}
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl" />
           </div>
-          
+
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
+              {/* Hero Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
                 <span className="text-2xl">📸</span>
-                <span className="text-sm font-semibold">Our Portfolio</span>
+                <span className="text-sm font-semibold tracking-wide">Our Portfolio</span>
               </div>
-              
-              <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                Project <span className="text-blue-400">Gallery</span>
+
+              <h1 className="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">
+                Project{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">
+                  Gallery
+                </span>
               </h1>
-              
-              <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+
+              <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8">
                 Explore our finest work across engineering, construction, and design
               </p>
-              
-              <div className="mt-8 flex flex-wrap justify-center gap-3">
+
+              {/* Stats */}
+              <div className="flex flex-wrap justify-center gap-3">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
                   <span>✅</span>
-                  <span className="text-sm">{GALLERY_DATA.length}+ Projects</span>
+                  <span className="text-sm">{galleryData.length}+ Projects</span>
                 </div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
                   <span>📍</span>
@@ -279,197 +379,283 @@ export default function GalleryPage() {
                 </div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
                   <span>⭐</span>
-                  <span className="text-sm">98% Satisfaction</span>
+                  <span className="text-sm">98% Client Satisfaction</span>
                 </div>
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Filter Section */}
-        <section className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-gray-200 dark:border-slate-800 py-4">
+        {/* ==================== FILTER SECTION ==================== */}
+        <section className="sticky top-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 py-4 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
             {/* Search Bar */}
             <div className="max-w-md mx-auto mb-4">
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="🔍 Search projects by title or location..."
+                  placeholder="Search by title or location..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-5 py-3 pl-12 rounded-full border-2 border-gray-200 dark:border-slate-700 focus:border-blue-500 focus:outline-none transition-all bg-white dark:bg-slate-800"
+                  className="w-full pl-11 pr-10 py-3 rounded-full border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all"
+                  aria-label="Search gallery projects"
                 />
-                <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {/* Search Icon */}
+                <svg
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
+                {/* Clear Search Button */}
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                    aria-label="Clear search"
                   >
                     ✕
                   </button>
                 )}
               </div>
             </div>
-            
-            {/* Category Filters */}
-            <div className="flex flex-wrap justify-center gap-2">
+
+            {/* Category Filter Tabs */}
+            <nav className="flex flex-wrap justify-center gap-2" aria-label="Gallery categories">
               {CATEGORIES.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`px-5 py-2 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${
+                  className={`px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-300 flex items-center gap-2 ${
                     activeCategory === category.id
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30 scale-105"
-                      : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-700"
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-500/25 scale-105"
+                      : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                   }`}
+                  aria-pressed={activeCategory === category.id}
+                  aria-label={`Filter by ${category.name}`}
                 >
-                  <span>{category.icon}</span>
+                  <span aria-hidden="true">{category.icon}</span>
                   <span>{category.name}</span>
                 </button>
               ))}
-            </div>
+            </nav>
           </div>
         </section>
 
-        {/* Gallery Grid */}
+        {/* ==================== GALLERY CONTENT ==================== */}
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Results Info */}
-            <div className="mb-6 text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-full shadow-sm">
-                <span>📷</span>
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Showing <strong className="text-blue-600">{currentImages.length}</strong> of <strong>{filteredImages.length}</strong> projects
-                </span>
-              </div>
-            </div>
+            
+            {/* Loading State */}
+            {isLoading && <LoadingSkeleton />}
 
-            {/* No Results */}
-            {filteredImages.length === 0 ? (
+            {/* API Error State */}
+            {!isLoading && apiError && (
               <div className="text-center py-20">
-                <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">No projects found</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  We couldn't find any projects matching "{searchTerm}"
-                </p>
+                <div className="text-6xl mb-4">⚠️</div>
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                  Failed to Load Gallery
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">{apiError}</p>
                 <button
-                  onClick={() => {
-                    setSearchTerm("");
-                    setActiveCategory("all");
-                  }}
+                  onClick={fetchGalleryData}
                   className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
                 >
-                  Clear filters
+                  Try Again
                 </button>
               </div>
-            ) : (
+            )}
+
+            {/* Gallery Content (when data loaded) */}
+            {!isLoading && !apiError && (
               <>
-                {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <AnimatePresence mode="popLayout">
-                    {currentImages.map((item) => (
-                      <GalleryCard key={item.id} item={item} onClick={setSelectedImage} />
-                    ))}
-                  </AnimatePresence>
+                {/* Results Count */}
+                <div className="mb-8 text-center">
+                  <div className="inline-flex items-center gap-2 px-5 py-2 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
+                    <span>📷</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      Showing{" "}
+                      <strong className="text-blue-600 dark:text-blue-400">
+                        {currentImages.length}
+                      </strong>{" "}
+                      of{" "}
+                      <strong className="text-blue-600 dark:text-blue-400">
+                        {filteredImages.length}
+                      </strong>{" "}
+                      projects
+                    </span>
+                  </div>
                 </div>
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-3 mt-12">
+                {/* Empty State */}
+                {filteredImages.length === 0 ? (
+                  <div className="text-center py-20">
+                    <div className="text-6xl mb-4">🔍</div>
+                    <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                      No projects found
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-6">
+                      We couldn't find any projects matching "{searchTerm}"
+                    </p>
                     <button
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                      className="px-5 py-2 rounded-lg bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-500 disabled:opacity-50 transition-all"
+                      onClick={() => {
+                        setSearchTerm("");
+                        setActiveCategory("all");
+                      }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
                     >
-                      ← Previous
-                    </button>
-                    
-                    <div className="flex gap-2">
-                      {[...Array(Math.min(5, totalPages))].map((_, i) => {
-                        let pageNum;
-                        if (totalPages <= 5) {
-                          pageNum = i + 1;
-                        } else if (currentPage <= 3) {
-                          pageNum = i + 1;
-                        } else if (currentPage >= totalPages - 2) {
-                          pageNum = totalPages - 4 + i;
-                        } else {
-                          pageNum = currentPage - 2 + i;
-                        }
-                        
-                        if (pageNum > 0 && pageNum <= totalPages) {
-                          return (
-                            <button
-                              key={pageNum}
-                              onClick={() => setCurrentPage(pageNum)}
-                              className={`w-10 h-10 rounded-lg transition-all ${
-                                currentPage === pageNum
-                                  ? "bg-blue-600 text-white shadow-md"
-                                  : "bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-500"
-                              }`}
-                            >
-                              {pageNum}
-                            </button>
-                          );
-                        }
-                        return null;
-                      })}
-                    </div>
-                    
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                      className="px-5 py-2 rounded-lg bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-500 disabled:opacity-50 transition-all"
-                    >
-                      Next →
+                      Clear All Filters
                     </button>
                   </div>
+                ) : (
+                  <>
+                    {/* Gallery Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <AnimatePresence mode="popLayout">
+                        {currentImages.map((item) => (
+                          <GalleryCard
+                            key={item.id}
+                            item={item}
+                            onClick={setSelectedImage}
+                          />
+                        ))}
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                      <nav
+                        className="flex justify-center items-center gap-3 mt-12"
+                        aria-label="Gallery pagination"
+                      >
+                        {/* Previous Button */}
+                        <button
+                          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                          disabled={currentPage === 1}
+                          className="px-5 py-2.5 rounded-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all font-medium"
+                          aria-label="Previous page"
+                        >
+                          ← Previous
+                        </button>
+
+                        {/* Page Numbers */}
+                        <div className="flex gap-1.5">
+                          {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+                            let pageNum;
+                            if (totalPages <= 5) {
+                              pageNum = i + 1;
+                            } else if (currentPage <= 3) {
+                              pageNum = i + 1;
+                            } else if (currentPage >= totalPages - 2) {
+                              pageNum = totalPages - 4 + i;
+                            } else {
+                              pageNum = currentPage - 2 + i;
+                            }
+
+                            if (pageNum > 0 && pageNum <= totalPages) {
+                              return (
+                                <button
+                                  key={pageNum}
+                                  onClick={() => setCurrentPage(pageNum)}
+                                  className={`w-10 h-10 rounded-lg font-medium transition-all ${
+                                    currentPage === pageNum
+                                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/25"
+                                      : "bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-500"
+                                  }`}
+                                  aria-label={`Go to page ${pageNum}`}
+                                  aria-current={currentPage === pageNum ? "page" : undefined}
+                                >
+                                  {pageNum}
+                                </button>
+                              );
+                            }
+                            return null;
+                          })}
+                        </div>
+
+                        {/* Next Button */}
+                        <button
+                          onClick={() =>
+                            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                          }
+                          disabled={currentPage === totalPages}
+                          className="px-5 py-2.5 rounded-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all font-medium"
+                          aria-label="Next page"
+                        >
+                          Next →
+                        </button>
+                      </nav>
+                    )}
+                  </>
                 )}
               </>
             )}
           </div>
         </section>
 
-        {/* Lightbox Modal */}
+        {/* ==================== LIGHTBOX MODAL ==================== */}
         <AnimatePresence>
           {selectedImage && (
             <motion.div
-              className="fixed inset-0 z-[9999] flex items-center justify-center"
+              className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedImage(null)}
-              style={{ backgroundColor: "rgba(0,0,0,0.95)" }}
+              style={{ backgroundColor: "rgba(0, 0, 0, 0.95)" }}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Viewing ${selectedImage.title}`}
             >
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: "spring", damping: 25 }}
                 className="relative max-w-[90vw] max-h-[90vh]"
                 onClick={(e) => e.stopPropagation()}
               >
+                {/* Lightbox Image */}
                 <img
-                  src={selectedImage.src}
+                  src={getMediaUrl(selectedImage.imageUrl || selectedImage.src)}
                   alt={selectedImage.title}
-                  className="max-w-full max-h-[85vh] object-contain rounded-lg"
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
                 />
+
+                {/* Image Info Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
-                  <h3 className="text-white text-xl font-bold mb-1">{selectedImage.title}</h3>
-                  <p className="text-gray-300">{selectedImage.location}</p>
-                  <p className="text-gray-400 text-sm mt-2">{selectedImage.description}</p>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {selectedImage.tags?.map(tag => (
-                      <span key={tag} className="text-xs px-2 py-1 bg-white/20 rounded-full text-white">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
+                  <h3 className="text-white text-xl font-bold mb-1">
+                    {selectedImage.title}
+                  </h3>
+                  <p className="text-gray-300 text-sm">{selectedImage.location}</p>
+                  {selectedImage.description && (
+                    <p className="text-gray-400 text-sm mt-2">
+                      {selectedImage.description}
+                    </p>
+                  )}
+                  {selectedImage.tags?.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {selectedImage.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-xs px-2.5 py-1 bg-white/20 rounded-full text-white backdrop-blur-sm"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                {/* Close Button */}
                 <button
                   onClick={() => setSelectedImage(null)}
-                  className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/70 transition"
+                  className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 rounded-full w-10 h-10 flex items-center justify-center text-lg transition-colors"
+                  aria-label="Close lightbox"
                 >
                   ✕
                 </button>
@@ -478,25 +664,25 @@ export default function GalleryPage() {
           )}
         </AnimatePresence>
 
-        {/* CTA Section */}
-        <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16 mt-12">
+        {/* ==================== CTA SECTION ==================== */}
+        <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Have a Project in Mind?
             </h2>
-            <p className="text-lg mb-8 text-blue-100">
+            <p className="text-lg mb-8 text-blue-100 max-w-xl mx-auto">
               Let's bring your vision to life. Get a free consultation today.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
                 to="/contact"
-                className="px-8 py-3 bg-white text-blue-600 rounded-full font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                className="px-8 py-3.5 bg-white text-blue-600 rounded-full font-semibold hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
               >
                 Start Your Project →
               </Link>
               <Link
                 to="/services"
-                className="px-8 py-3 border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-all"
+                className="px-8 py-3.5 border-2 border-white/80 text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300"
               >
                 Explore Services
               </Link>

@@ -1,5 +1,4 @@
 import { useScroll, useSpring } from 'framer-motion';
-import { useRef } from 'react';
 
 export const useScrollProgress = (ref, offset = ["start start", "end start"]) => {
   const { scrollYProgress } = useScroll({

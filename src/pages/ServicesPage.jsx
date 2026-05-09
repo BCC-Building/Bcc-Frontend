@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
-import { Helmet } from 'react-helmet-async';
+// src/pages/ServicesPage.jsx - Production-Ready
+import { useState, useEffect, useMemo } from 'react';
+import SEO from '../components/SEO';
 import { services } from '../data/ServicesData';
 import ServicesHero from '../components/services/ServicesHero';
 import ServiceFilter from '../components/services/ServiceFilter';
@@ -7,73 +8,103 @@ import ServicesGrid from '../components/services/ServicesGrid';
 import ServicesPagination from '../components/services/ServicesPagination';
 import ServicesCTA from '../components/services/ServicesCTA';
 
-function ServicesPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchTerm, setSearchTerm] = useState("");
+/**
+ * ServicesPage Component
+ * Lists all services with filtering, search, and pagination
+ * 
+ * To add new services: Edit ../data/ServicesData.js
+ * To change categories: Update ServiceFilter component
+ * To change services per page: Update SERVICES_PER_PAGE constant
+ */
+
+/** Number of services shown per page */
+const SERVICES_PER_PAGE = 6;
+
+export default function ServicesPage() {
+  // ==================== STATE ====================
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const servicesPerPage = 6;
 
-  // Filter services
-  const filteredServices = services.filter(service => {
-    const matchesCategory = selectedCategory === "All" || service.category === selectedCategory;
-    const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          service.shortDesc.toLowerCase().includes(searchTerm.toLowerCase());
+  // ==================== FILTERING ====================
+
+  /** Filter services by category and search term */
+  const filteredServices = useMemo(() => services.filter((service) => {
+    const matchesCategory =
+      selectedCategory === 'All' || service.category === selectedCategory;
+    const matchesSearch =
+      service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.shortDesc.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  }), [selectedCategory, searchTerm]);
 
-  const totalPages = Math.ceil(filteredServices.length / servicesPerPage);
+  // ==================== PAGINATION ====================
+
+  const totalPages = Math.ceil(filteredServices.length / SERVICES_PER_PAGE);
   const currentServices = filteredServices.slice(
-    (currentPage - 1) * servicesPerPage,
-    currentPage * servicesPerPage
+    (currentPage - 1) * SERVICES_PER_PAGE,
+    currentPage * SERVICES_PER_PAGE
   );
 
-  // Reset to first page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedCategory, searchTerm]);
-
+  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // ==================== HANDLERS ====================
+
   const handleClearFilters = () => {
-    setSearchTerm("");
-    setSelectedCategory("All");
+    setSearchTerm('');
+    setSelectedCategory('All');
+    setCurrentPage(1);
   };
 
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  // ==================== RENDER ====================
   return (
     <>
-      <Helmet>
-        <title>Our Services | Architecture, Soil Testing, NDT, Survey & More | BCC Rudrapur</title>
-        <meta name="description" content="BCC offers 14+ expert services in Rudrapur, Uttarakhand — Architecture, Structure Design, Interior Design, Soil Investigation, NDT, Material Testing, Survey, Bridge Design, Irrigation, Water Supply, Plate Load Test & Estimation Consultancy." />
-        <meta name="keywords" content="architecture Rudrapur, soil testing Uttarakhand, NDT testing Rudrapur, land survey Uttarakhand, structure design Rudrapur, interior design Rudrapur, bridge design Uttarakhand, material testing Rudrapur, irrigation design, water supply design, plate load test, estimation consultancy Rudrapur" />
-        <link rel="canonical" href="https://yoursite.com/services" />
-        <meta property="og:title" content="Services | BCC Building Creators & Consulting Rudrapur" />
-        <meta property="og:description" content="14+ professional services — Architecture, Soil Testing, NDT, Survey Work, Bridge Design & more in Rudrapur, Uttarakhand." />
-        <meta property="og:url" content="https://yoursite.com/services" />
-      </Helmet>
+      {/* SEO */}
+      <SEO
+        title="Our Services | Architecture, Soil Testing, NDT, Survey & More | BCC"
+        description="BCC offers 14+ expert services in Rudrapur, Uttarakhand — Architecture, Structure Design, Soil Investigation, NDT, Material Testing, Survey, Bridge Design & more."
+        keywords="architecture Rudrapur, soil testing Uttarakhand, NDT testing, land survey, structure design, interior design, bridge design, material testing"
+        url="https://bcc.net.in/services"
+      />
 
       <div className="font-sans overflow-x-hidden">
+        {/* Hero */}
         <ServicesHero totalServices={services.length} />
-        
-        <ServiceFilter 
+
+        {/* Filters */}
+        <ServiceFilter
           selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
+          setSelectedCategory={handleCategoryChange}
           searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+          setSearchTerm={handleSearchChange}
           services={services}
         />
 
+        {/* Services Grid */}
         <section className="py-16 md:py-20 bg-gray-50">
           <div className="container mx-auto px-4 md:px-6">
-            <ServicesGrid 
+            <ServicesGrid
               services={currentServices}
               filteredCount={filteredServices.length}
               searchTerm={searchTerm}
               onClearFilters={handleClearFilters}
             />
-            
-            <ServicesPagination 
+
+            {/* Pagination */}
+            <ServicesPagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
@@ -81,11 +112,11 @@ function ServicesPage() {
           </div>
         </section>
 
+        {/* CTA */}
         <ServicesCTA />
       </div>
 
-
-
+      {/* Utility Styles */}
       <style>{`
         .line-clamp-1 {
           display: -webkit-box;
@@ -113,5 +144,3 @@ function ServicesPage() {
     </>
   );
 }
-
-export default ServicesPage;

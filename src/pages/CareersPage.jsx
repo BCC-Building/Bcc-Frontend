@@ -1,1786 +1,665 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
+// src/pages/CareersPage.jsx
+// Production-Ready | Bechtel + Skanska + Turner Style | BCC
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { publicAPI } from '../api/endpoints';
 
+// ─── constants ────────────────────────────────────────────────────────────────
+const FALLBACK_IMG = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80';
+
+const BENEFITS = [
+  { icon: '🚀', title: 'Fast-Track Growth',   desc: 'Structured career paths with leadership programs and mentorship from senior engineers.' },
+  { icon: '📚', title: 'Learning Budget',      desc: '₹50,000/year for certifications, workshops and industry conferences.' },
+  { icon: '💰', title: 'Top Compensation',     desc: 'Industry-best CTC with performance bonuses and equity-linked incentives.' },
+  { icon: '⚖️', title: 'Work-Life Balance',    desc: 'Flexible work hours, hybrid options, and 30 days of annual paid leave.' },
+  { icon: '🏆', title: 'Recognition',          desc: 'Annual excellence awards, peer recognition and public project credits.' },
+  { icon: '💊', title: 'Health & Wellness',    desc: 'Comprehensive medical insurance covering self, spouse, children and parents.' },
+];
+
+const PROCESS = [
+  { step: '01', title: 'Apply Online',       desc: 'Submit your resume and cover letter through our simple form below.' },
+  { step: '02', title: 'Screening Call',     desc: 'A 20-min call with our HR team to discuss your background and goals.' },
+  { step: '03', title: 'Technical Round',    desc: 'Role-specific assessment — design challenge, case study or coding test.' },
+  { step: '04', title: 'Final Interview',    desc: 'Meet the team lead and senior management for a culture fit discussion.' },
+  { step: '05', title: 'Offer & Onboarding', desc: 'Receive your offer within 48 hrs and join a world-class team.' },
+];
+
+const POSITIONS = [
+  'Architect','Site Engineer','Surveyor','Soil Investigation Engineer',
+  'Structural Engineer','Project Manager','Quality Control Engineer',
+  'BIM Modeler','Interior Designer','Safety Officer',
+  'Construction Manager','Geotechnical Engineer',
+  'Quantity Surveyor','Urban Planner','Landscape Architect',
+];
+
+const PER_PAGE = 6;
+
+const TYPEWRITER_WORDS = ['Infrastructure', 'Skyline', 'Innovation'];
+
+// ─── tiny helpers ─────────────────────────────────────────────────────────────
+const Tag = ({ children, color = '#e0e7ff', textColor = '#3730a3' }) => (
+  <span style={{
+    display: 'inline-block', padding: '3px 10px',
+    borderRadius: 20, fontSize: 11, fontWeight: 700,
+    letterSpacing: '.4px', textTransform: 'uppercase',
+    background: color, color: textColor,
+  }}>{children}</span>
+);
+
+const typeColor = (type) => {
+  const map = {
+    'Full-time': { bg: '#dcfce7', c: '#15803d' },
+    'Part-time': { bg: '#fef9c3', c: '#854d0e' },
+    'Contract':  { bg: '#fce7f3', c: '#9d174d' },
+    'Remote':    { bg: '#ede9fe', c: '#5b21b6' },
+  };
+  return map[type] || { bg: '#e0e7ff', c: '#3730a3' };
+};
+
+// ─── Helper for safe array handling ────────────────────────────────────────
+function toLines(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return value.split('\n').filter(line => line.trim().length > 0);
+}
+
+// ─── Job Card ─────────────────────────────────────────────────────────────────
+const JobCard = ({ job, onView, onApply, index }) => {
+  const [hovered, setHovered] = useState(false);
+  const tc = typeColor(job.type);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: '#fff',
+        border: hovered ? '1.5px solid #6366f1' : '1.5px solid #e8ecf0',
+        borderRadius: 16,
+        padding: '24px 26px',
+        transition: 'all .25s ease',
+        boxShadow: hovered ? '0 12px 36px rgba(99,102,241,.12)' : '0 2px 8px rgba(0,0,0,.05)',
+        transform: hovered ? 'translateY(-3px)' : 'none',
+        animation: 'cc-fadeup .4s ease both',
+        animationDelay: `${index * 0.07}s`,
+        display: 'flex', flexDirection: 'column', gap: 14,
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
+        <div>
+          <h3 style={{ margin: '0 0 6px', fontSize: 16, fontWeight: 800, color: '#0f172a', lineHeight: 1.3 }}>
+            {job.title}
+          </h3>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {job.department && <Tag>{job.department}</Tag>}
+            {job.type && <Tag color={tc.bg} textColor={tc.c}>{job.type}</Tag>}
+          </div>
+        </div>
+        <div style={{
+          fontSize: 13, fontWeight: 700,
+          color: hovered ? '#6366f1' : '#94a3b8',
+          transition: 'color .2s', whiteSpace: 'nowrap', minWidth: 80, textAlign: 'right',
+        }}>
+          {hovered && job.salary ? job.salary : '💼 Competitive'}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+        {job.location && (
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#64748b' }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" strokeWidth="2" fill="none"/>
+              <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+            {job.location}
+          </span>
+        )}
+        {job.experience && (
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#64748b' }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            {job.experience}
+          </span>
+        )}
+      </div>
+
+      {job.description && (
+        <p style={{ margin: 0, fontSize: 13, color: '#64748b', lineHeight: 1.65,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {job.description}
+        </p>
+      )}
+
+      <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+        <button onClick={() => onView(job)} style={{
+          flex: 1, padding: '9px 0',
+          borderRadius: 10, border: '1.5px solid #6366f1',
+          background: 'transparent', color: '#6366f1',
+          fontWeight: 700, fontSize: 13, cursor: 'pointer',
+          transition: 'all .2s',
+        }}
+          onMouseOver={e => { e.target.style.background = '#6366f1'; e.target.style.color = '#fff'; }}
+          onMouseOut={e => { e.target.style.background = 'transparent'; e.target.style.color = '#6366f1'; }}
+        >
+          View Details
+        </button>
+        <button onClick={() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });   // 👈 add this line
+  onView(job);
+}} style={{
+          flex: 1, padding: '9px 0',
+          borderRadius: 10, border: 'none',
+          background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+          color: '#fff', fontWeight: 700, fontSize: 13, cursor: 'pointer',
+        }}>
+          Quick Apply →
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ─── Job Modal ────────────────────────────────────────────────────────────────
+const JobModal = ({ job, onClose, onApply }) => {
+  useEffect(() => {
+    const esc = e => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', esc);
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', esc); document.body.style.overflow = ''; };
+  }, [onClose]);
+
+  const tc = typeColor(job.type);
+  const respLines = toLines(job.responsibilities);
+  const reqLines  = toLines(job.requirements);
+
+  return (
+    <div onClick={onClose} style={{
+     position: 'fixed', inset: 0, zIndex: 9999,  // ← changed
+  background: 'rgba(5,10,30,.7)', backdropFilter: 'blur(4px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: 20, animation: 'cc-fadein .2s ease',
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        background: '#fff', borderRadius: 20,
+        width: '100%', maxWidth: 660,
+        maxHeight: '90vh', overflow: 'auto',
+        padding: '32px 36px',
+        position: 'relative',
+        animation: 'cc-slideup .25s ease',
+      }}>
+        <button onClick={onClose} style={{
+          position: 'absolute', top: 16, right: 16,
+          width: 34, height: 34, borderRadius: '50%',
+          border: '1px solid #e2e8f0', background: '#fff',
+          fontSize: 18, cursor: 'pointer', color: '#64748b',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>×</button>
+
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
+          {job.department && <Tag>{job.department}</Tag>}
+          {job.type && <Tag color={tc.bg} textColor={tc.c}>{job.type}</Tag>}
+        </div>
+
+        <h2 style={{ margin: '0 0 16px', fontSize: 22, fontWeight: 900, color: '#0f172a' }}>{job.title}</h2>
+
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))',
+          gap: 12, padding: '14px 16px',
+          background: '#f8fafc', borderRadius: 10, marginBottom: 20,
+        }}>
+          {[
+            { label: 'Location',   val: job.location   },
+            { label: 'Experience', val: job.experience },
+            { label: 'Salary',     val: job.salary     },
+            { label: 'Type',       val: job.type       },
+          ].filter(m => m.val).map(m => (
+            <div key={m.label}>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px', color: '#94a3b8', marginBottom: 3 }}>{m.label}</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>{m.val}</div>
+            </div>
+          ))}
+        </div>
+
+        {job.description && (
+          <Section title="About this Role"><p style={{ color: '#475569', lineHeight: 1.7, fontSize: 14 }}>{job.description}</p></Section>
+        )}
+
+        {respLines.length > 0 && (
+          <Section title="Key Responsibilities">
+            <ul style={{ paddingLeft: 18, color: '#475569', lineHeight: 1.8, fontSize: 14 }}>
+              {respLines.map((line, i) => <li key={i}>{line.trim()}</li>)}
+            </ul>
+          </Section>
+        )}
+
+        {reqLines.length > 0 && (
+          <Section title="Requirements">
+            <ul style={{ paddingLeft: 18, color: '#475569', lineHeight: 1.8, fontSize: 14 }}>
+              {reqLines.map((line, i) => <li key={i}>{line.trim()}</li>)}
+            </ul>
+          </Section>
+        )}
+
+        <button onClick={() => { onClose(); onApply(job); }} style={{
+          width: '100%', marginTop: 20,
+          padding: '13px 0',
+          background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+          color: '#fff', border: 'none', borderRadius: 12,
+          fontWeight: 800, fontSize: 15, cursor: 'pointer',
+          letterSpacing: '.2px',
+        }}>
+          Apply for this Position →
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Section = ({ title, children }) => (
+  <div style={{ marginBottom: 18 }}>
+    <h4 style={{ margin: '0 0 8px', fontSize: 14, fontWeight: 800, color: '#0f172a', letterSpacing: '.2px' }}>{title}</h4>
+    {children}
+  </div>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 export default function CareersPage() {
+  const [jobs,        setJobs]        = useState([]);
+  const [loading,     setLoading]     = useState(true);
+  const [jobsError,   setJobsError]   = useState('');
   const [selectedJob, setSelectedJob] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    position: '',
-    experience: '',
-    currentCompany: '',
-    portfolio: '',
-    message: ''
+  const [showModal,   setShowModal]   = useState(false);
+  const [search,      setSearch]      = useState('');
+  const [dept,        setDept]        = useState('All');
+  const [page,        setPage]        = useState(1);
+
+  const [form,        setForm]        = useState({
+    fullName: '', email: '', phone: '', position: '',
+    experience: '', currentCompany: '', portfolio: '', message: '',
   });
-  const [errors, setErrors] = useState({});
-  const [fileName, setFileName] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showSalary, setShowSalary] = useState({});
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const fileInputRef = useRef(null);
-  const jobsPerPage = 6;
+  const [errors,      setErrors]      = useState({});
+  const [fileName,    setFileName]    = useState('');
+  const [submitting,  setSubmitting]  = useState(false);
+  const [success,     setSuccess]     = useState(false);
+  const fileRef = useRef(null);
+  const applyRef = useRef(null);
 
-  // Job openings data
-  const jobs = [
-    {
-      id: 1,
-      title: "Senior Structural Engineer",
-      department: "Engineering",
-      experience: "5-8 Years",
-      location: "Pune (On-site)",
-      type: "Full-time",
-      salary: "₹12-18 LPA",
-      description: "Lead structural design projects for commercial and residential buildings. Expertise in STAAD Pro, ETABS, and Indian codes required.",
-      requirements: [
-        "BE/MTech in Civil Engineering",
-        "5-8 years of experience in structural design",
-        "Proficiency in STAAD Pro, ETABS, AutoCAD",
-        "Knowledge of Indian building codes",
-        "Experience with seismic design"
-      ],
-      responsibilities: [
-        "Lead structural design team",
-        "Review and approve design calculations",
-        "Coordinate with architects and clients",
-        "Ensure compliance with safety standards",
-        "Mentor junior engineers"
-      ]
-    },
-    {
-      id: 2,
-      title: "Senior Architect",
-      department: "Architecture",
-      experience: "4-7 Years",
-      location: "Remote (India)",
-      type: "Full-time",
-      salary: "₹10-15 LPA",
-      description: "Lead architectural design projects from concept to completion. Strong portfolio in residential and commercial projects required.",
-      requirements: [
-        "B.Arch degree (M.Arch preferred)",
-        "4-7 years of architectural experience",
-        "Proficiency in Revit, SketchUp, AutoCAD",
-        "Strong portfolio of built projects",
-        "Experience with sustainable design"
-      ],
-      responsibilities: [
-        "Develop architectural concepts",
-        "Create detailed drawings and specifications",
-        "Coordinate with structural and MEP teams",
-        "Present designs to clients",
-        "Site visits and construction oversight"
-      ]
-    },
-    {
-      id: 3,
-      title: "Site Engineer",
-      department: "Construction",
-      experience: "2-4 Years",
-      location: "Multiple Locations",
-      type: "Full-time",
-      salary: "₹4-7 LPA",
-      description: "Manage day-to-day construction activities, quality control, and site coordination.",
-      requirements: [
-        "Diploma/BE in Civil Engineering",
-        "2-4 years of site experience",
-        "Knowledge of construction methods",
-        "Strong communication skills",
-        "Willing to relocate"
-      ],
-      responsibilities: [
-        "Supervise construction activities",
-        "Maintain quality standards",
-        "Coordinate with contractors",
-        "Prepare daily progress reports",
-        "Ensure safety compliance"
-      ]
-    },
-    {
-      id: 4,
-      title: "Quality Control Engineer",
-      department: "Quality Assurance",
-      experience: "3-6 Years",
-      location: "Mumbai",
-      type: "Full-time",
-      salary: "₹6-9 LPA",
-      description: "Implement quality control procedures, conduct material testing, and ensure project quality standards.",
-      requirements: [
-        "BE in Civil Engineering",
-        "3-6 years in quality control",
-        "Knowledge of testing methods",
-        "ISO certification knowledge",
-        "Attention to detail"
-      ],
-      responsibilities: [
-        "Develop QC procedures",
-        "Conduct material testing",
-        "Prepare quality reports",
-        "Train site staff on QC",
-        "Handle third-party inspections"
-      ]
-    },
-    {
-      id: 5,
-      title: "Interior Designer",
-      department: "Design",
-      experience: "2-5 Years",
-      location: "Bangalore",
-      type: "Full-time",
-      salary: "₹5-8 LPA",
-      description: "Create innovative interior designs for residential and commercial spaces.",
-      requirements: [
-        "Degree in Interior Design",
-        "2-5 years of experience",
-        "Proficiency in 3DS Max, AutoCAD",
-        "Strong portfolio",
-        "Knowledge of materials and finishes"
-      ],
-      responsibilities: [
-        "Develop interior concepts",
-        "Create 3D visualizations",
-        "Select materials and finishes",
-        "Coordinate with vendors",
-        "Site supervision"
-      ]
-    },
-    {
-      id: 6,
-      title: "BIM Modeler",
-      department: "Digital Engineering",
-      experience: "2-4 Years",
-      location: "Hyderabad",
-      type: "Full-time",
-      salary: "₹5-7 LPA",
-      description: "Create and manage BIM models for architectural and structural projects.",
-      requirements: [
-        "Diploma/BE in Civil/Architecture",
-        "2-4 years of BIM experience",
-        "Proficiency in Revit, Navisworks",
-        "Knowledge of clash detection",
-        "Understanding of LOD requirements"
-      ],
-      responsibilities: [
-        "Create detailed BIM models",
-        "Coordinate with multiple disciplines",
-        "Perform clash detection",
-        "Generate construction documents",
-        "Maintain BIM standards"
-      ]
-    },
-    {
-      id: 7,
-      title: "Project Manager",
-      department: "Engineering",
-      experience: "8-12 Years",
-      location: "Delhi NCR",
-      type: "Full-time",
-      salary: "₹20-25 LPA",
-      description: "Lead multiple construction projects from inception to completion.",
-      requirements: [
-        "BE/MTech in Civil Engineering",
-        "PMP certification preferred",
-        "8-12 years of project management experience",
-        "Strong leadership skills",
-        "Budget and timeline management expertise"
-      ],
-      responsibilities: [
-        "Manage project lifecycle",
-        "Coordinate with stakeholders",
-        "Resource allocation and management",
-        "Risk assessment and mitigation",
-        "Client relationship management"
-      ]
-    },
-    {
-      id: 8,
-      title: "Safety Officer",
-      department: "Quality Assurance",
-      experience: "3-5 Years",
-      location: "Chennai",
-      type: "Full-time",
-      salary: "₹5-7 LPA",
-      description: "Ensure workplace safety and compliance with regulations.",
-      requirements: [
-        "Diploma in Safety Management",
-        "3-5 years of safety experience",
-        "Knowledge of OSHA standards",
-        "First aid certification",
-        "Strong communication skills"
-      ],
-      responsibilities: [
-        "Conduct safety audits",
-        "Train staff on safety protocols",
-        "Investigate incidents",
-        "Maintain safety documentation",
-        "Emergency response planning"
-      ]
-    }
-  ];
+  const [wordIdx, setWordIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
 
-  // Departments for filtering
-  const departments = ["All", "Engineering", "Architecture", "Construction", "Quality Assurance", "Design", "Digital Engineering"];
-
-  // Load saved form data from localStorage
   useEffect(() => {
-    const savedForm = localStorage.getItem('careerFormData');
-    if (savedForm) {
-      setFormData(JSON.parse(savedForm));
-    }
-  }, []);
-
-  // Save form data to localStorage
-  useEffect(() => {
-    localStorage.setItem('careerFormData', JSON.stringify(formData));
-  }, [formData]);
-
-  // Track analytics (simulated)
-  const trackEvent = useCallback((action, label) => {
-    console.log(`[Analytics] ${action}: ${label}`);
-    // In production, integrate with actual analytics like Google Analytics
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', action, { event_label: label });
-    }
-  }, []);
-
-  const [activeDepartment, setActiveDepartment] = useState("All");
-
-  // Memoized filtered jobs
-  const filteredJobs = useMemo(() => {
-    let result = activeDepartment === "All" 
-      ? jobs 
-      : jobs.filter(job => job.department === activeDepartment);
-    
-    if (searchTerm) {
-      result = result.filter(job => 
-        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        job.department.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    return result;
-  }, [activeDepartment, searchTerm]);
-
-  // Pagination
-  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
-  const currentJobs = useMemo(() => {
-    const indexOfLastJob = currentPage * jobsPerPage;
-    return filteredJobs.slice(indexOfLastJob - jobsPerPage, indexOfLastJob);
-  }, [filteredJobs, currentPage]);
-
-  // Reset page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeDepartment, searchTerm]);
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
-    } else if (formData.fullName.length < 2) {
-      newErrors.fullName = 'Name must be at least 2 characters';
-    }
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!formData.email.includes('@') || !formData.email.includes('.')) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.phone) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!/^[6-9]\d{9}$/.test(formData.phone)) {
-      newErrors.phone = 'Please enter a valid 10-digit Indian mobile number';
-    }
-    
-    if (!formData.position) {
-      newErrors.position = 'Please select a position';
-    }
-    
-    if (!formData.experience) {
-      newErrors.experience = 'Please select years of experience';
-    }
-    
-    if (!fileName && !fileInputRef.current?.files?.length) {
-      newErrors.resume = 'Please upload your resume';
-    }
-    
-    return newErrors;
-  };
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-    // Clear error for this field when user starts typing
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: '' });
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      if (validTypes.includes(file.type)) {
-        setFileName(file.name);
-        if (errors.resume) {
-          setErrors({ ...errors, resume: '' });
-        }
-        trackEvent('file_upload', `Resume uploaded: ${file.name}`);
-      } else {
-        setErrors({ ...errors, resume: 'Please upload PDF or DOC file' });
+    (async () => {
+      try {
+        setLoading(true);
+        const res = await publicAPI.getActiveJobPostings();
+        if (res.data?.success) setJobs(res.data.data || []);
+        else setJobs([]);
+      } catch (e) {
+        console.error(e);
+        setJobsError('Failed to load positions. Please try again.');
+      } finally {
+        setLoading(false);
       }
-    }
-  };
+    })();
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      trackEvent('form_error', 'Validation failed');
-      return;
+  useEffect(() => {
+    const currentWord = TYPEWRITER_WORDS[wordIdx];
+    if (charIdx < currentWord.length) {
+      const timeout = setTimeout(() => setCharIdx(prev => prev + 1), 100);
+      return () => clearTimeout(timeout);
+    } else {
+      const timeout = setTimeout(() => {
+        setCharIdx(0);
+        setWordIdx(prev => (prev + 1) % TYPEWRITER_WORDS.length);
+      }, 2000);
+      return () => clearTimeout(timeout);
     }
-    
-    setIsSubmitting(true);
-    trackEvent('form_submit', `Applying for: ${formData.position}`);
-    
-    // Simulate API call with FormData
-    const formDataToSend = new FormData();
-    Object.keys(formData).forEach(key => formDataToSend.append(key, formData[key]));
-    if (fileInputRef.current?.files[0]) {
-      formDataToSend.append('resume', fileInputRef.current.files[0]);
-    }
-    
-    try {
-      // Replace with actual API endpoint
-      const response = await fetch('/api/careers/apply', {
-        method: 'POST',
-        body: formDataToSend
-      });
-      
-      if (!response.ok) throw new Error('Submission failed');
-      
-      setShowSuccess(true);
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        position: '',
-        experience: '',
-        currentCompany: '',
-        portfolio: '',
-        message: ''
-      });
-      setFileName("");
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      localStorage.removeItem('careerFormData');
-      
-      setTimeout(() => setShowSuccess(false), 5000);
-      trackEvent('form_success', 'Application submitted successfully');
-    } catch (error) {
-      console.error('Submission error:', error);
-      setErrors({ submit: 'Failed to submit application. Please try again.' });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  }, [charIdx, wordIdx]);
+
+  const departments = useMemo(() => {
+    const s = new Set(jobs.map(j => j.department).filter(Boolean));
+    return ['All', ...Array.from(s).sort()];
+  }, [jobs]);
+
+  const filtered = useMemo(() => {
+    let r = dept === 'All' ? jobs : jobs.filter(j => j.department === dept);
+    if (search) r = r.filter(j =>
+      j.title?.toLowerCase().includes(search.toLowerCase()) ||
+      j.department?.toLowerCase().includes(search.toLowerCase()) ||
+      j.location?.toLowerCase().includes(search.toLowerCase())
+    );
+    return r;
+  }, [jobs, dept, search]);
+
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  const current    = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  useEffect(() => { setPage(1); }, [dept, search]);
 
   const handleApply = (job) => {
     setSelectedJob(job);
-    setFormData({...formData, position: job.title});
+    setForm(f => ({ ...f, position: job.title || '' }));
     setShowModal(false);
-    trackEvent('click', `Apply for ${job.title}`);
-    document.getElementById('apply-section').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => applyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   };
 
-  const toggleSalary = (jobId) => {
-    setShowSalary(prev => ({ ...prev, [jobId]: !prev[jobId] }));
+  const handleChange = e => {
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    if (errors[e.target.name]) setErrors(er => ({ ...er, [e.target.name]: '' }));
   };
 
-  // Scroll to top on mount
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  const validate = () => {
+    const e = {};
+    if (!form.fullName.trim()) e.fullName = 'Full name required';
+    if (!form.email)           e.email    = 'Email required';
+    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = 'Invalid email';
+    if (!form.phone)           e.phone    = 'Phone required';
+    else if (!/^[6-9]\d{9}$/.test(form.phone)) e.phone = '10-digit Indian number';
+    if (!form.position)        e.position = 'Select a position';
+    if (!form.experience)      e.experience = 'Select experience';
+    if (!fileName && !fileRef.current?.files?.length) e.resume = 'Resume required';
+    return e;
+  };
 
-  // Job Details Modal Component
-  const JobDetailsModal = ({ job, onClose, onApply }) => (
-    <motion.div 
-      className="modal-overlay" 
-      onClick={onClose}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <motion.div 
-        className="modal-content" 
-        onClick={e => e.stopPropagation()}
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-      >
-        <button className="modal-close" onClick={onClose} aria-label="Close modal">×</button>
-        <h2 className="modal-title">{job.title}</h2>
-        <div className="modal-meta">
-          <span className="modal-department">{job.department}</span>
-          <span className="modal-type">{job.type}</span>
-          <span className="modal-location">📍 {job.location}</span>
-        </div>
-        
-        <div className="modal-section">
-          <h3>Job Description</h3>
-          <p>{job.description}</p>
-        </div>
-        
-        <div className="modal-section">
-          <h3>Key Responsibilities</h3>
-          <ul>
-            {job.responsibilities.map((resp, idx) => (
-              <li key={idx}>{resp}</li>
-            ))}
-          </ul>
-        </div>
-        
-        <div className="modal-section">
-          <h3>Requirements</h3>
-          <ul>
-            {job.requirements.map((req, idx) => (
-              <li key={idx}>{req}</li>
-            ))}
-          </ul>
-        </div>
-        
-        <div className="modal-salary">
-          <strong>Salary Range:</strong> {job.salary}
-        </div>
-        
-        <button 
-          className="modal-apply-btn"
-          onClick={() => onApply(job)}
-        >
-          Apply Now →
-        </button>
-      </motion.div>
-    </motion.div>
-  );
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const ve = validate();
+    if (Object.keys(ve).length) { setErrors(ve); return; }
+    setSubmitting(true);
+    try {
+      const fd = new FormData();
+      fd.append('application', new Blob([JSON.stringify({
+        name: form.fullName, email: form.email, phone: form.phone,
+        position: form.position, experience: form.experience,
+        currentCompany: form.currentCompany, portfolio: form.portfolio,
+        coverLetter: form.message,
+      })], { type: 'application/json' }));
+      if (fileRef.current?.files[0]) fd.append('resume', fileRef.current.files[0]);
+      const res = await publicAPI.submitJobApplication(fd);
+      if (res.data?.success) {
+        setSuccess(true);
+        setForm({ fullName:'',email:'',phone:'',position:'',experience:'',currentCompany:'',portfolio:'',message:'' });
+        setFileName('');
+        if (fileRef.current) fileRef.current.value = '';
+        setTimeout(() => setSuccess(false), 6000);
+      } else throw new Error(res.data?.message || 'Submission failed');
+    } catch (err) {
+      setErrors({ submit: err.message });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
+  // ─────────────────────────────────────────────────────────────────────────
   return (
     <>
-      {/* SEO Schema Markup */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "Careers at Building Creators and Consulting",
-          "description": "Join our team of engineering and construction professionals. Explore career opportunities at BCC.",
-          "url": window.location.href,
-          "mainEntity": {
-            "@type": "ItemList",
-            "itemListElement": jobs.map((job, index) => ({
-              "@type": "JobPosting",
-              "position": index + 1,
-              "url": window.location.href,
-              "title": job.title,
-              "description": job.description,
-              "employmentType": job.type,
-              "jobLocation": {
-                "@type": "Place",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": job.location.split(" ")[0],
-                  "addressCountry": "India"
-                }
-              }
-            }))
-          }
-        })}
-      </script>
+      {/* ══ HERO ══════════════════════════════════════════════════════════════ */}
+      <section style={{
+        position: 'relative', minHeight: '88vh',
+        display: 'flex', alignItems: 'center',
+        overflow: 'hidden',
+        background: '#050a1a',
+      }}>
+        <img src={FALLBACK_IMG} alt=""
+          style={{ position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:.2 }} />
+        <div style={{
+          position:'absolute',inset:0,opacity:.06,
+          backgroundImage:'linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px)',
+          backgroundSize:'64px 64px',
+        }} />
+        <div style={{position:'absolute',top:'-10%',right:'10%',width:500,height:500,borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%)',pointerEvents:'none'}} />
+        <div style={{position:'absolute',bottom:'-5%',left:'5%',width:350,height:350,borderRadius:'50%',background:'radial-gradient(circle,rgba(139,92,246,.2) 0%,transparent 70%)',pointerEvents:'none'}} />
 
-      {/* Hero Section with Attractive Image */}
-      <section className="careers-hero">
-        <div className="hero-overlay">
-          <img 
-            src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80"
-            alt="Modern construction site with engineers planning"
-            className={`hero-bg-image ${imageLoaded ? 'loaded' : ''}`}
-            onLoad={() => setImageLoaded(true)}
-          />
-        </div>
-        <div className="hero-gradient"></div>
-        <div className="container">
-          <motion.div 
-            className="hero-content"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <motion.span 
-              className="hero-badge"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              Join Our Team
-            </motion.span>
-            <motion.h1 
-              className="hero-title"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              Build Your Future With<br />
-              <span className="gradient-text">Building Creators</span>
-            </motion.h1>
-            <motion.p 
-              className="hero-description"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              Join India's fastest-growing construction and engineering company. 
-              Work on landmark projects that shape the future of infrastructure.
-            </motion.p>
-            <motion.div 
-              className="hero-stats"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <div className="stat">
-                <span className="stat-number">50+</span>
-                <span className="stat-label">Open Positions</span>
+        <div className="cc-container" style={{ position:'relative',zIndex:2, paddingTop: 80, paddingBottom: 80 }}>
+          <div style={{
+            display:'inline-flex',alignItems:'center',gap:8,
+            background:'rgba(99,102,241,.15)',
+            border:'1px solid rgba(99,102,241,.3)',
+            padding:'6px 18px',borderRadius:30,
+            marginBottom:28,
+          }}>
+            <span style={{width:7,height:7,borderRadius:'50%',background:'#818cf8',display:'inline-block',boxShadow:'0 0 8px rgba(129,140,248,.8)'}} />
+            <span style={{color:'#a5b4fc',fontSize:12,fontWeight:700,letterSpacing:'.7px',textTransform:'uppercase'}}>We're Hiring</span>
+          </div>
+
+          <h1 style={{color:'#fff',fontSize:'clamp(2.2rem,5vw,3.8rem)',fontWeight:900,lineHeight:1.1,margin:'0 0 22px',maxWidth:720}}>
+            Build the Future of{' '}
+            <span style={{background:'linear-gradient(135deg,#818cf8,#c084fc,#f472b6)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>
+              {TYPEWRITER_WORDS[wordIdx].substring(0, charIdx)}
+              <span className="cursor">|</span>
+            </span>
+          </h1>
+
+          <p style={{color:'rgba(255,255,255,.65)',fontSize:'clamp(1rem,1.8vw,1.15rem)',lineHeight:1.75,maxWidth:600,margin:'0 0 42px'}}>
+            Join BCC — where engineers, architects and visionaries come together to design and deliver projects that define skylines. Work on landmark projects with a team that invests in your future.
+          </p>
+
+          <div style={{display:'flex',gap:0,flexWrap:'wrap',background:'rgba(255,255,255,.06)',border:'1px solid rgba(255,255,255,.1)',borderRadius:14,overflow:'hidden',maxWidth:480,marginBottom:40}}>
+            {[
+              { n: `${jobs.length}+`, label: 'Open Roles' },
+              { n: '8+',             label: 'Locations' },
+              { n: '1000+',          label: 'Team Members' },
+            ].map((s, i) => (
+              <div key={i} style={{flex:1,padding:'16px 20px',textAlign:'center',borderRight:i<2?'1px solid rgba(255,255,255,.08)':'none'}}>
+                <div style={{color:'#fff',fontSize:'clamp(1.4rem,2.5vw,2rem)',fontWeight:900,lineHeight:1}}>{s.n}</div>
+                <div style={{color:'rgba(255,255,255,.5)',fontSize:11,marginTop:4,letterSpacing:'.4px',textTransform:'uppercase'}}>{s.label}</div>
               </div>
-              <div className="stat">
-                <span className="stat-number">8+</span>
-                <span className="stat-label">Locations</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">1000+</span>
-                <span className="stat-label">Team Members</span>
-              </div>
-              <div className="stat">
-                <span className="stat-number">200+</span>
-                <span className="stat-label">Projects Completed</span>
-              </div>
-            </motion.div>
-            <motion.div 
-              className="hero-buttons"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <a href="#openings" className="btn-primary">View Openings</a>
-              <a href="#why-join" className="btn-secondary">Why Join Us</a>
-            </motion.div>
-          </motion.div>
+            ))}
+          </div>
+
+          <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
+            <a href="#openings" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'13px 28px',borderRadius:12,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',fontWeight:800,fontSize:15,textDecoration:'none',boxShadow:'0 8px 24px rgba(99,102,241,.35)'}}>
+              View Openings
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </a>
+            <a href="#why-join" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'12px 26px',borderRadius:12,border:'2px solid rgba(255,255,255,.25)',color:'#fff',fontWeight:700,fontSize:15,textDecoration:'none',background:'transparent'}}>Why BCC?</a>
+          </div>
         </div>
       </section>
 
-      {/* Why Join Us Section */}
-      <section id="why-join" className="why-join">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Why BCC</span>
-            <h2 className="section-title">Why Join <span className="gradient-text">Building Creators</span></h2>
-            <p className="section-subtitle">We offer an environment that fosters growth, innovation, and excellence</p>
+      {/* ══ WHY JOIN ══════════════════════════════════════════════════════════ */}
+      <section id="why-join" style={{ padding:'90px 0', background:'#f8fafc' }}>
+        <div className="cc-container">
+          <SectionHeader eyebrow="Our Culture" title="Why Top Talent Chooses BCC" sub="We don't just build structures — we build careers that last a lifetime." />
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:24}}>
+            {BENEFITS.map((b, i) => <BenefitCard key={i} b={b} index={i} />)}
           </div>
+        </div>
+      </section>
 
-          <div className="benefits-grid">
-            {[
-              { icon: "🚀", title: "Career Growth", desc: "Fast-track promotions and leadership development programs" },
-              { icon: "📚", title: "Learning & Development", desc: "Continuous learning with certifications and workshops worth ₹50k/year" },
-              { icon: "💰", title: "Competitive Salary", desc: "Industry-best compensation with performance bonuses up to 30%" },
-              { icon: "🌍", title: "Work-Life Balance", desc: "Flexible hours, hybrid work model, and 30 days annual leave" },
-              { icon: "🏆", title: "Recognition", desc: "Annual awards, employee of the month, and performance recognition programs" },
-              { icon: "💊", title: "Health Benefits", desc: "Comprehensive medical insurance for family and wellness programs" }
-            ].map((benefit, index) => (
-              <motion.div 
-                key={index}
-                className="benefit-card"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className="benefit-icon">{benefit.icon}</div>
-                <h3 className="benefit-title">{benefit.title}</h3>
-                <p className="benefit-desc">{benefit.desc}</p>
-              </motion.div>
+      {/* ══ HIRING PROCESS ════════════════════════════════════════════════════ */}
+      <section style={{ padding:'90px 0', background:'#fff' }}>
+        <div className="cc-container">
+          <SectionHeader eyebrow="Our Process" title="How We Hire" sub="A transparent, respectful hiring journey — from application to offer in under 2 weeks." />
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:20,position:'relative'}}>
+            {PROCESS.map((p, i) => (
+              <div key={i} style={{background:'#f8fafc',border:'1.5px solid #e8ecf0',borderRadius:14,padding:'24px 20px',animation:'cc-fadeup .5s ease both',animationDelay:`${i*0.1}s`,position:'relative'}}>
+                <div style={{fontSize:28,fontWeight:900,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',marginBottom:10}}>{p.step}</div>
+                <h4 style={{margin:'0 0 8px',fontSize:14,fontWeight:800,color:'#0f172a'}}>{p.title}</h4>
+                <p style={{margin:0,fontSize:13,color:'#64748b',lineHeight:1.6}}>{p.desc}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Open Positions Section */}
-      <section id="openings" className="open-positions">
-        <div className="container">
-          <div className="section-header">
-            <span className="section-tag">Current Openings</span>
-            <h2 className="section-title">Explore <span className="gradient-text">Career Opportunities</span></h2>
-            <p className="section-subtitle">Find the perfect role that matches your skills and aspirations</p>
-          </div>
-
-          {/* Search and Filter Bar */}
-          <div className="search-filter-bar">
-            <div className="search-box">
-              <input 
-                type="text" 
-                placeholder="🔍 Search by title, department, or keywords..." 
-                className="search-input"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                aria-label="Search jobs"
-              />
+      {/* ══ OPEN POSITIONS ════════════════════════════════════════════════════ */}
+      <section id="openings" style={{ padding:'90px 0', background:'#f8fafc' }}>
+        <div className="cc-container">
+          <SectionHeader eyebrow="Current Openings" title="Find Your Role at BCC" sub="Filter by department or search to find the perfect opportunity." />
+          <div style={{background:'#fff',border:'1.5px solid #e8ecf0',borderRadius:14,padding:'18px 20px',marginBottom:32,display:'flex',flexDirection:'column',gap:14}}>
+            <div style={{ position:'relative', maxWidth:400 }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style={{position:'absolute',left:12,top:'50%',transform:'translateY(-50%)',color:'#94a3b8'}}><circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              <input type="text" placeholder="Search by title, department, location..." value={search} onChange={e => setSearch(e.target.value)} style={{paddingLeft:36,paddingRight:14,paddingTop:10,paddingBottom:10,borderRadius:10,border:'1.5px solid #e2e8f0',fontSize:14,width:'100%',color:'#0f172a',outline:'none'}} />
             </div>
-            
-            <div className="filter-tabs">
-              {departments.map(dept => (
-                <button
-                  key={dept}
-                  className={`filter-tab ${activeDepartment === dept ? 'active' : ''}`}
-                  onClick={() => setActiveDepartment(dept)}
-                  aria-label={`Filter by ${dept}`}
-                >
-                  {dept}
-                </button>
-              ))}
+            {departments.length > 1 && (
+              <div style={{ display:'flex',gap:8,flexWrap:'wrap' }}>
+                {departments.map(d => (
+                  <button key={d} onClick={() => setDept(d)} style={{padding:'6px 16px',borderRadius:30,border:dept===d?'none':'1.5px solid #e2e8f0',background:dept===d?'linear-gradient(135deg,#6366f1,#8b5cf6)':'#fff',color:dept===d?'#fff':'#475569',fontSize:13,fontWeight:600,cursor:'pointer',transition:'all .2s',whiteSpace:'nowrap'}}>{d}</button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {!loading && !jobsError && (
+            <div style={{ marginBottom:20, color:'#64748b', fontSize:14 }}>
+              <strong style={{ color:'#0f172a' }}>{filtered.length}</strong> position{filtered.length !== 1 ? 's' : ''} found
             </div>
-          </div>
+          )}
 
-          {/* Results Count */}
-          <div className="results-count">
-            Found {filteredJobs.length} position{filteredJobs.length !== 1 ? 's' : ''}
-          </div>
-
-          {/* Jobs Grid */}
-          <div className="jobs-grid">
-            <AnimatePresence>
-              {currentJobs.map((job, index) => (
-                <motion.div
-                  key={job.id}
-                  className="job-card"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ y: -5 }}
-                >
-                  <div className="job-header">
-                    <div>
-                      <h3 className="job-title">{job.title}</h3>
-                      <div className="job-meta">
-                        <span className="job-department">{job.department}</span>
-                        <span className="job-type">{job.type}</span>
-                      </div>
-                    </div>
-                    <div className="job-salary-wrapper">
-                      <div className="job-salary">
-                        {showSalary[job.id] ? job.salary : 'Confidential'}
-                      </div>
-                      <button 
-                        className="salary-toggle"
-                        onClick={() => toggleSalary(job.id)}
-                        aria-label={showSalary[job.id] ? "Hide salary" : "Show salary"}
-                      >
-                        {showSalary[job.id] ? '👁️‍🗨️' : '👁️'}
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="job-details">
-                    <div className="job-info">
-                      <span>📍 {job.location}</span>
-                      <span>⏱️ {job.experience}</span>
-                    </div>
-                    <p className="job-description">{job.description.substring(0, 100)}...</p>
-                  </div>
-
-                  <div className="job-actions">
-                    <button 
-                      className="job-view-btn"
-                      onClick={() => {
-                        setSelectedJob(job);
-                        setShowModal(true);
-                        trackEvent('view_details', job.title);
-                      }}
-                    >
-                      View Details →
-                    </button>
-                    <button 
-                      className="job-apply-btn"
-                      onClick={() => handleApply(job)}
-                    >
-                      Quick Apply
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="pagination">
-              <button 
-                className="page-btn"
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                aria-label="Previous page"
-              >
-                ← Previous
-              </button>
-              <span className="page-info">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button 
-                className="page-btn"
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                aria-label="Next page"
-              >
-                Next →
-              </button>
+          {loading && (
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))', gap:24 }}>
+              {[...Array(6)].map((_,i) => <div key={i} style={{height:200,borderRadius:16,background:'#e2e8f0',animation:'cc-pulse 1.4s ease-in-out infinite',animationDelay:`${i*.1}s`}} />)}
             </div>
+          )}
+
+          {!loading && jobsError && (
+            <div style={{ textAlign:'center',padding:'60px 20px' }}>
+              <div style={{ fontSize:48,marginBottom:16 }}>⚠️</div>
+              <h3 style={{ color:'#0f172a',marginBottom:8 }}>Could Not Load Jobs</h3>
+              <p style={{ color:'#64748b',marginBottom:20 }}>{jobsError}</p>
+              <button onClick={() => window.location.reload()} style={{padding:'10px 24px',borderRadius:8,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',border:'none',fontWeight:700,cursor:'pointer'}}>Retry</button>
+            </div>
+          )}
+
+          {!loading && !jobsError && filtered.length === 0 && (
+            <div style={{textAlign:'center',padding:'60px 24px',background:'#fff',borderRadius:16,border:'1.5px solid #e8ecf0'}}>
+              <div style={{ fontSize:48,marginBottom:16 }}>📭</div>
+              <h3 style={{ color:'#0f172a',marginBottom:8,fontSize:18 }}>No Openings Found</h3>
+              <p style={{ color:'#64748b',maxWidth:400,margin:'0 auto 24px',lineHeight:1.6 }}>We don't have matching positions right now, but we're always looking for great talent. Send us an open application!</p>
+              <Link to="/contact" style={{display:'inline-block',padding:'11px 24px',borderRadius:10,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',textDecoration:'none',fontWeight:700}}>Send Open Application</Link>
+            </div>
+          )}
+
+          {!loading && !jobsError && current.length > 0 && (
+            <>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:20}}>
+                {current.map((job, i) => <JobCard key={job.id} job={job} index={i} onView={j => { setSelectedJob(j); setShowModal(true); }} onApply={handleApply} />)}
+              </div>
+              {totalPages > 1 && (
+                <div style={{ display:'flex',justifyContent:'center',alignItems:'center',gap:10,marginTop:40 }}>
+                  <button disabled={page===1} onClick={() => setPage(p=>p-1)} style={pgBtn(page===1)}>← Previous</button>
+                  {[...Array(totalPages)].map((_,i) => <button key={i} onClick={() => setPage(i+1)} style={{width:38,height:38,borderRadius:8,border:page===i+1?'none':'1.5px solid #e2e8f0',background:page===i+1?'linear-gradient(135deg,#6366f1,#8b5cf6)':'#fff',color:page===i+1?'#fff':'#475569',fontWeight:700,fontSize:14,cursor:'pointer'}}>{i+1}</button>)}
+                  <button disabled={page===totalPages} onClick={() => setPage(p=>p+1)} style={pgBtn(page===totalPages)}>Next →</button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
 
-      {/* Application Form Section */}
-      <section id="apply-section" className="application-form">
-        <div className="container">
-          <div className="form-wrapper">
-            <div className="form-header">
-              <span className="section-tag">Start Your Journey</span>
-              <h2 className="section-title">Apply <span className="gradient-text">Now</span></h2>
-              <p className="section-subtitle">Fill out the form below and our recruitment team will get back to you within 48 hours</p>
-            </div>
-
-            {showSuccess && (
-              <motion.div 
-                className="success-message"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                role="alert"
-              >
-                ✅ Application submitted successfully! Our team will contact you soon.
-              </motion.div>
-            )}
-
-            {errors.submit && (
-              <div className="error-message" role="alert">
-                ❌ {errors.submit}
+      {/* ══ APPLICATION FORM ══════════════════════════════════════════════════ */}
+      <section id="apply-section" ref={applyRef} style={{ padding:'90px 0', background:'#fff' }}>
+        <div className="cc-container">
+          <SectionHeader eyebrow="Apply Now" title={selectedJob ? `Applying for: ${selectedJob.title}` : 'Submit Your Application'} sub="Our recruitment team responds within 48 hours of receiving your application." />
+          <div style={{maxWidth:780,margin:'0 auto',background:'#f8fafc',border:'1.5px solid #e8ecf0',borderRadius:20,padding:'36px 40px'}}>
+            {success && <div style={{padding:'14px 20px',background:'#dcfce7',color:'#15803d',borderRadius:10,marginBottom:24,display:'flex',alignItems:'center',gap:10,fontWeight:600,fontSize:14}}>✅ Application submitted! We'll be in touch within 48 hours.</div>}
+            {errors.submit && <div style={{padding:'14px 20px',background:'#fee2e2',color:'#991b1b',borderRadius:10,marginBottom:24,fontWeight:600,fontSize:14}}>❌ {errors.submit}</div>}
+            <form onSubmit={handleSubmit}>
+              <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px 20px' }}>
+                <FormField label="Full Name *" error={errors.fullName}><input name="fullName" value={form.fullName} onChange={handleChange} placeholder="Rahul Sharma" style={inputStyle} /></FormField>
+                <FormField label="Email Address *" error={errors.email}><input name="email" type="email" value={form.email} onChange={handleChange} placeholder="rahul@example.com" style={inputStyle} /></FormField>
+                <FormField label="Phone Number *" error={errors.phone}><input name="phone" value={form.phone} onChange={handleChange} placeholder="9876543210" style={inputStyle} /></FormField>
+                <FormField label="Position Applying For *" error={errors.position}><select name="position" value={form.position} onChange={handleChange} style={inputStyle}><option value="">Select position</option>{POSITIONS.map(p => <option key={p} value={p}>{p}</option>)}</select></FormField>
+                <FormField label="Years of Experience *" error={errors.experience}><select name="experience" value={form.experience} onChange={handleChange} style={inputStyle}><option value="">Select experience</option>{['Fresher (0-1 years)','1-3 years','3-6 years','6-10 years','10+ years'].map(e => <option key={e} value={e}>{e}</option>)}</select></FormField>
+                <FormField label="Current Company"><input name="currentCompany" value={form.currentCompany} onChange={handleChange} placeholder="Optional" style={inputStyle} /></FormField>
+                <div style={{ gridColumn:'span 2' }}><FormField label="Portfolio / LinkedIn URL"><input name="portfolio" value={form.portfolio} onChange={handleChange} placeholder="https://linkedin.com/in/yourprofile" style={inputStyle} /></FormField></div>
+                <div style={{ gridColumn:'span 2' }}><FormField label="Resume / CV *" error={errors.resume}>
+                  <label style={{display:'flex',alignItems:'center',gap:12,padding:'12px 16px',border:'2px dashed',borderColor:errors.resume?'#ef4444':'#cbd5e1',borderRadius:10,cursor:'pointer',background:'#fff'}}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#6366f1" strokeWidth="2"/><path d="M14 2v6h6M12 12v6M9 15l3-3 3 3" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    <span style={{ fontSize:14, color: fileName ? '#0f172a' : '#94a3b8', fontWeight: fileName ? 600 : 400 }}>{fileName || 'Upload PDF or DOC (max 5MB)'}</span>
+                    <input type="file" ref={fileRef} accept=".pdf,.doc,.docx" style={{ display:'none' }} onChange={e => { const f = e.target.files[0]; if (f) { const ok = ['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document']; if (ok.includes(f.type)) { setFileName(f.name); setErrors(er => ({...er,resume:''})); } else setErrors(er => ({...er,resume:'Only PDF, DOC, DOCX allowed'})); } }} />
+                  </label>
+                </FormField></div>
+                <div style={{ gridColumn:'span 2' }}><FormField label="Cover Letter (optional)"><textarea name="message" rows={4} value={form.message} onChange={handleChange} placeholder="Tell us why you're the perfect fit for this role..." style={{ ...inputStyle, resize:'vertical', minHeight:100 }} /></FormField></div>
               </div>
-            )}
-
-            <form onSubmit={handleSubmit} noValidate>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Full Name *</label>
-                  <input 
-                    type="text" 
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    required 
-                    placeholder="Enter your full name"
-                    aria-invalid={!!errors.fullName}
-                  />
-                  {errors.fullName && <span className="error-text">{errors.fullName}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label>Email Address *</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required 
-                    placeholder="your.email@example.com"
-                    aria-invalid={!!errors.email}
-                  />
-                  {errors.email && <span className="error-text">{errors.email}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label>Phone Number *</label>
-                  <input 
-                    type="tel" 
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required 
-                    placeholder="+91 XXXXX XXXXX"
-                    aria-invalid={!!errors.phone}
-                  />
-                  {errors.phone && <span className="error-text">{errors.phone}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label>Position Applying For *</label>
-                  <select 
-                    name="position"
-                    value={formData.position}
-                    onChange={handleInputChange}
-                    required
-                    aria-invalid={!!errors.position}
-                  >
-                    <option value="">Select a position</option>
-                    {jobs.map(job => (
-                      <option key={job.id} value={job.title}>{job.title}</option>
-                    ))}
-                  </select>
-                  {errors.position && <span className="error-text">{errors.position}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label>Years of Experience *</label>
-                  <select 
-                    name="experience"
-                    value={formData.experience}
-                    onChange={handleInputChange}
-                    required
-                    aria-invalid={!!errors.experience}
-                  >
-                    <option value="">Select experience</option>
-                    <option>Fresher (0-1 years)</option>
-                    <option>1-3 years</option>
-                    <option>3-6 years</option>
-                    <option>6-10 years</option>
-                    <option>10+ years</option>
-                  </select>
-                  {errors.experience && <span className="error-text">{errors.experience}</span>}
-                </div>
-
-                <div className="form-group">
-                  <label>Current Company</label>
-                  <input 
-                    type="text" 
-                    name="currentCompany"
-                    value={formData.currentCompany}
-                    onChange={handleInputChange}
-                    placeholder="Current employer (if any)"
-                  />
-                </div>
-
-                <div className="form-group full-width">
-                  <label>Portfolio / LinkedIn Profile</label>
-                  <input 
-                    type="url" 
-                    name="portfolio"
-                    value={formData.portfolio}
-                    onChange={handleInputChange}
-                    placeholder="https://linkedin.com/in/yourprofile"
-                  />
-                </div>
-
-                <div className="form-group full-width">
-                  <label>Resume/CV *</label>
-                  <div className="file-upload">
-                    <input 
-                      type="file" 
-                      id="resume" 
-                      ref={fileInputRef}
-                      onChange={handleFileChange}
-                      accept=".pdf,.doc,.docx"
-                      required
-                      aria-invalid={!!errors.resume}
-                    />
-                    <label htmlFor="resume" className="file-label">
-                      📄 {fileName || "Click to upload resume (PDF, DOC, DOCX)"}
-                    </label>
-                  </div>
-                  {errors.resume && <span className="error-text">{errors.resume}</span>}
-                  <small className="file-hint">Max file size: 5MB. Accepted formats: PDF, DOC, DOCX</small>
-                </div>
-
-                <div className="form-group full-width">
-                  <label>Cover Letter / Message</label>
-                  <textarea 
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows="4"
-                    placeholder="Tell us why you'd be a great fit for this role..."
-                  ></textarea>
-                </div>
-              </div>
-
-              <button 
-                type="submit" 
-                className="submit-btn" 
-                disabled={isSubmitting}
-                aria-label={isSubmitting ? "Submitting application" : "Submit application"}
-              >
-                {isSubmitting ? "Submitting..." : "Submit Application →"}
-              </button>
+              <button type="submit" disabled={submitting} style={{width:'100%',marginTop:24,padding:'14px 0',background:submitting?'#94a3b8':'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',border:'none',borderRadius:12,fontWeight:800,fontSize:16,cursor:submitting?'not-allowed':'pointer',letterSpacing:'.2px',transition:'opacity .2s'}}>{submitting ? 'Submitting...' : 'Submit Application →'}</button>
             </form>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="container">
-          <motion.div 
-            className="cta-content"
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="cta-title">Don't See the Right Role?</h2>
-            <p className="cta-text">Send us your resume and we'll reach out when a position matches your profile</p>
-            <Link to="/contact" className="cta-button" onClick={() => trackEvent('click', 'Open application CTA')}>
-              Send Open Application →
-            </Link>
-          </motion.div>
+      {/* ══ CTA BANNER ════════════════════════════════════════════════════════ */}
+      <section style={{background:'linear-gradient(135deg,#0f0c29,#302b63,#24243e)',padding:'80px 0',textAlign:'center'}}>
+        <div className="cc-container">
+          <h2 style={{ color:'#fff',fontSize:'clamp(1.6rem,3vw,2.4rem)',fontWeight:900,marginBottom:14 }}>Don't See the Right Role?</h2>
+          <p style={{ color:'rgba(255,255,255,.6)',fontSize:'1.05rem',maxWidth:480,margin:'0 auto 32px',lineHeight:1.7 }}>Send us your resume and we'll reach out the moment a position matches your profile.</p>
+          <Link to="/contact" style={{display:'inline-flex',alignItems:'center',gap:10,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',padding:'14px 32px',borderRadius:12,fontWeight:800,fontSize:15,textDecoration:'none',boxShadow:'0 8px 24px rgba(99,102,241,.4)'}}>Send Open Application →</Link>
         </div>
       </section>
 
-      {/* Job Details Modal */}
-      <AnimatePresence>
-        {showModal && selectedJob && (
-          <JobDetailsModal 
-            job={selectedJob} 
-            onClose={() => setShowModal(false)} 
-            onApply={handleApply}
-          />
-        )}
-      </AnimatePresence>
+      {/* ══ MODAL ══════════════════════════════════════════════════════════════ */}
+      {showModal && selectedJob && <JobModal job={selectedJob} onClose={() => setShowModal(false)} onApply={handleApply} />}
 
       <style>{`
-        /* Global Reset */
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        .container {
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 24px;
-        }
-
-        /* Hero Section */
-        .careers-hero {
-          position: relative;
-          min-height: 90vh;
-          display: flex;
-          align-items: center;
-          overflow: hidden;
-        }
-
-        .hero-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 1;
-        }
-
-        .hero-bg-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
-
-        .hero-bg-image.loaded {
-          opacity: 0.4;
-        }
-
-        .hero-gradient {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-          opacity: 0.85;
-          z-index: 2;
-        }
-
-        .hero-content {
-          position: relative;
-          z-index: 3;
-          text-align: center;
-          color: white;
-          padding: 80px 0;
-        }
-
-        .hero-badge {
-          display: inline-block;
-          padding: 8px 20px;
-          background: rgba(102, 126, 234, 0.2);
-          backdrop-filter: blur(10px);
-          border-radius: 50px;
-          font-size: 14px;
-          font-weight: 600;
-          margin-bottom: 24px;
-          border: 1px solid rgba(102, 126, 234, 0.5);
-        }
-
-        .hero-title {
-          font-size: clamp(2rem, 5vw, 4rem);
-          font-weight: 800;
-          margin-bottom: 20px;
-          line-height: 1.2;
-        }
-
-        .gradient-text {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .hero-description {
-          font-size: 1.1rem;
-          max-width: 600px;
-          margin: 0 auto 40px;
-          opacity: 0.95;
-          line-height: 1.6;
-        }
-
-        .hero-stats {
-          display: flex;
-          justify-content: center;
-          gap: 60px;
-          margin-bottom: 40px;
-          flex-wrap: wrap;
-        }
-
-        .stat {
-          text-align: center;
-        }
-
-        .stat-number {
-          display: block;
-          font-size: 2rem;
-          font-weight: 800;
-          color: #667eea;
-        }
-
-        .stat-label {
-          font-size: 0.9rem;
-          opacity: 0.8;
-        }
-
-        .hero-buttons {
-          display: flex;
-          gap: 20px;
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-
-        .btn-primary, .btn-secondary {
-          padding: 12px 32px;
-          border-radius: 50px;
-          text-decoration: none;
-          font-weight: 600;
-          transition: all 0.3s ease;
-          display: inline-block;
-        }
-
-        .btn-primary {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          border: none;
-        }
-
-        .btn-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(102,126,234,0.4);
-        }
-
-        .btn-secondary {
-          border: 2px solid white;
-          color: white;
-          background: transparent;
-        }
-
-        .btn-secondary:hover {
-          background: white;
-          color: #0f172a;
-        }
-
-        /* Why Join Section */
-        .why-join {
-          padding: 80px 0;
-          background: #f8fafc;
-        }
-
-        .section-header {
-          text-align: center;
-          margin-bottom: 60px;
-        }
-
-        .section-tag {
-          display: inline-block;
-          padding: 6px 16px;
-          background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-          color: #667eea;
-          border-radius: 50px;
-          font-size: 14px;
-          font-weight: 600;
-          margin-bottom: 16px;
-        }
-
-        .section-title {
-          font-size: clamp(1.8rem, 4vw, 2.5rem);
-          font-weight: 800;
-          color: #0f172a;
-          margin-bottom: 16px;
-        }
-
-        .section-subtitle {
-          color: #64748b;
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        .benefits-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 30px;
-        }
-
-        .benefit-card {
-          background: white;
-          padding: 30px;
-          border-radius: 20px;
-          text-align: center;
-          transition: all 0.3s ease;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-        .benefit-card:hover {
-          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .benefit-icon {
-          font-size: 3rem;
-          margin-bottom: 20px;
-        }
-
-        .benefit-title {
-          font-size: 1.25rem;
-          font-weight: 700;
-          margin-bottom: 12px;
-          color: #0f172a;
-        }
-
-        .benefit-desc {
-          color: #64748b;
-          line-height: 1.5;
-        }
-
-        /* Open Positions */
-        .open-positions {
-          padding: 80px 0;
-          background: white;
-        }
-
-        .search-filter-bar {
-          margin-bottom: 30px;
-        }
-
-        .search-box {
-          margin-bottom: 20px;
-        }
-
-        .search-input {
-          width: 100%;
-          padding: 14px 20px;
-          border: 2px solid #e2e8f0;
-          border-radius: 12px;
-          font-size: 16px;
-          transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-          outline: none;
-          border-color: #667eea;
-          box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-        }
-
-        .filter-tabs {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 12px;
-          margin-bottom: 20px;
-        }
-
-        .filter-tab {
-          padding: 10px 24px;
-          border: 2px solid #e2e8f0;
-          background: white;
-          border-radius: 50px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-weight: 500;
-        }
-
-        .filter-tab:hover {
-          border-color: #667eea;
-          color: #667eea;
-        }
-
-        .filter-tab.active {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          border-color: transparent;
-        }
-
-        .results-count {
-          text-align: center;
-          color: #64748b;
-          margin-bottom: 30px;
-          font-size: 14px;
-        }
-
-        .jobs-grid {
-          display: grid;
-          gap: 20px;
-        }
-
-        .job-card {
-          background: white;
-          border: 1px solid #e2e8f0;
-          border-radius: 16px;
-          padding: 24px;
-          transition: all 0.3s ease;
-        }
-
-        .job-card:hover {
-          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-          border-color: transparent;
-        }
-
-        .job-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: start;
-          flex-wrap: wrap;
-          margin-bottom: 16px;
-        }
-
-        .job-title {
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: #0f172a;
-          margin-bottom: 8px;
-        }
-
-        .job-meta {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-        }
-
-        .job-department, .job-type {
-          font-size: 12px;
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-weight: 600;
-        }
-
-        .job-department {
-          background: #e0e7ff;
-          color: #4338ca;
-        }
-
-        .job-type {
-          background: #dcfce7;
-          color: #15803d;
-        }
-
-        .job-salary-wrapper {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .job-salary {
-          font-weight: 700;
-          color: #667eea;
-        }
-
-        .salary-toggle {
-          background: none;
-          border: none;
-          cursor: pointer;
-          font-size: 18px;
-          padding: 4px;
-          border-radius: 50%;
-          transition: background 0.3s ease;
-        }
-
-        .salary-toggle:hover {
-          background: #f1f5f9;
-        }
-
-        .job-info {
-          display: flex;
-          gap: 20px;
-          margin-bottom: 12px;
-          font-size: 14px;
-          color: #64748b;
-        }
-
-        .job-description {
-          color: #475569;
-          margin-bottom: 20px;
-          line-height: 1.5;
-        }
-
-        .job-actions {
-          display: flex;
-          gap: 16px;
-          justify-content: flex-end;
-        }
-
-        .job-view-btn, .job-apply-btn {
-          padding: 8px 20px;
-          border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .job-view-btn {
-          background: none;
-          border: 2px solid #667eea;
-          color: #667eea;
-        }
-
-        .job-view-btn:hover {
-          background: #667eea;
-          color: white;
-        }
-
-        .job-apply-btn {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
-          color: white;
-        }
-
-        .job-apply-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(102,126,234,0.3);
-        }
-
-        /* Pagination */
-        .pagination {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 20px;
-          margin-top: 40px;
-        }
-
-        .page-btn {
-          padding: 10px 20px;
-          border: 2px solid #e2e8f0;
-          background: white;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-weight: 600;
-        }
-
-        .page-btn:hover:not(:disabled) {
-          border-color: #667eea;
-          color: #667eea;
-        }
-
-        .page-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .page-info {
-          color: #64748b;
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.8);
-          backdrop-filter: blur(5px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          padding: 20px;
-        }
-
-        .modal-content {
-          background: white;
-          border-radius: 24px;
-          max-width: 700px;
-          width: 100%;
-          max-height: 85vh;
-          overflow-y: auto;
-          padding: 32px;
-          position: relative;
-        }
-
-        .modal-close {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          background: #f1f5f9;
-          border: none;
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          font-size: 24px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-          background: #e2e8f0;
-        }
-
-        .modal-title {
-          font-size: 1.75rem;
-          font-weight: 800;
-          color: #0f172a;
-          margin-bottom: 16px;
-          padding-right: 40px;
-        }
-
-        .modal-meta {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          margin-bottom: 24px;
-        }
-
-        .modal-department, .modal-type, .modal-location {
-          font-size: 12px;
-          padding: 6px 14px;
-          border-radius: 20px;
-          font-weight: 600;
-        }
-
-        .modal-department {
-          background: #e0e7ff;
-          color: #4338ca;
-        }
-
-        .modal-type {
-          background: #dcfce7;
-          color: #15803d;
-        }
-
-        .modal-location {
-          background: #fef3c7;
-          color: #92400e;
-        }
-
-        .modal-section {
-          margin-bottom: 24px;
-        }
-
-        .modal-section h3 {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: #0f172a;
-          margin-bottom: 12px;
-        }
-
-        .modal-section ul {
-          list-style: none;
-          padding-left: 0;
-        }
-
-        .modal-section li {
-          padding: 8px 0 8px 24px;
-          position: relative;
-          color: #475569;
-        }
-
-        .modal-section li:before {
-          content: "▹";
-          position: absolute;
-          left: 0;
-          color: #667eea;
-        }
-
-        .modal-salary {
-          padding: 16px;
-          background: #f8fafc;
-          border-radius: 12px;
-          margin-bottom: 24px;
-        }
-
-        .modal-apply-btn {
-          width: 100%;
-          padding: 14px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          font-size: 16px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .modal-apply-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(102,126,234,0.4);
-        }
-
-        /* Application Form */
-        .application-form {
-          padding: 80px 0;
-          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        }
-
-        .form-wrapper {
-          max-width: 800px;
-          margin: 0 auto;
-          background: white;
-          border-radius: 24px;
-          padding: 48px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .success-message, .error-message {
-          padding: 16px;
-          border-radius: 12px;
-          margin-bottom: 24px;
-          text-align: center;
-        }
-
-        .success-message {
-          background: #dcfce7;
-          color: #15803d;
-        }
-
-        .error-message {
-          background: #fee2e2;
-          color: #991b1b;
-        }
-
-        .form-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 20px;
-        }
-
-        .full-width {
-          grid-column: span 2;
-        }
-
-        .form-group {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .form-group label {
-          font-weight: 600;
-          margin-bottom: 8px;
-          color: #0f172a;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-          padding: 12px;
-          border: 2px solid #e2e8f0;
-          border-radius: 12px;
-          font-size: 14px;
-          transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-          outline: none;
-          border-color: #667eea;
-        }
-
-        .form-group input[aria-invalid="true"],
-        .form-group select[aria-invalid="true"] {
-          border-color: #ef4444;
-        }
-
-        .error-text {
-          color: #ef4444;
-          font-size: 12px;
-          margin-top: 4px;
-        }
-
-        .file-upload input {
-          display: none;
-        }
-
-        .file-label {
-          display: block;
-          padding: 40px;
-          border: 2px dashed #cbd5e1;
-          border-radius: 12px;
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .file-label:hover {
-          border-color: #667eea;
-          background: #f8fafc;
-        }
-
-        .file-hint {
-          font-size: 12px;
-          color: #64748b;
-          margin-top: 8px;
-        }
-
-        .submit-btn {
-          width: 100%;
-          padding: 14px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          font-size: 16px;
-          font-weight: 600;
-          margin-top: 24px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(174, 198, 245, 0.94);
-        }
-
-        .submit-btn:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-
-        /* CTA Section */
-        .cta-section {
-          padding: 80px 0;
-          background: linear-gradient(135deg, #fbb1b1 0%, #3d4f6c 100%);
-        }
-
-        .cta-content {
-          text-align: center;
-          color: white;
-        }
-
-        .cta-title {
-          font-size: clamp(1.5rem, 4vw, 2rem);
-          font-weight: 800;
-          margin-bottom: 16px;
-        }
-
-        .cta-text {
-          margin-bottom: 32px;
-          opacity: 10;
-          
-        }
-
-        .cta-button {
-          display: inline-block;
-          padding: 14px 32px;
-         background: linear-gradient(135deg, #6b81b5 0%, #4f78b9 50%, #0f172a 100%);
-          color: white;
-          text-decoration: none;
-          border-radius: 50px;
-          font-weight: 600;
-          transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(244, 100, 38, 0.89);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .form-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .full-width {
-            grid-column: span 1;
-          }
-          
-          .form-wrapper {
-            padding: 24px;
-          }
-          
-          .hero-stats {
-            gap: 30px;
-          }
-          
-          .benefits-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .filter-tabs {
-            gap: 8px;
-          }
-          
-          .filter-tab {
-            padding: 8px 16px;
-            font-size: 12px;
-          }
-          
-          .modal-content {
-            padding: 20px;
-          }
-          
-          .modal-title {
-            font-size: 1.25rem;
-          }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-          width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-          background: #f1f5f9;
-        }
-
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-          background: #5a67d8;
-        }
+        .cc-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        @keyframes cc-fadeup  { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes cc-fadein  { from{opacity:0} to{opacity:1} }
+        @keyframes cc-slideup { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes cc-pulse   { 0%,100%{opacity:1} 50%{opacity:.45} }
+        .cursor { display: inline-block; font-weight: 100; color: #c084fc; margin-left: 2px; animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        @media(max-width:640px){ .cc-form-grid { grid-template-columns:1fr !important; } }
       `}</style>
     </>
   );
 }
+
+// ─── small sub-components ─────────────────────────────────────────────────────
+function SectionHeader({ eyebrow, title, sub }) {
+  return (
+    <div style={{ textAlign:'center', marginBottom:52 }}>
+      <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'#ede9fe',border:'1px solid #ddd6fe',padding:'4px 16px',borderRadius:30,marginBottom:14}}>
+        <span style={{width:6,height:6,borderRadius:'50%',background:'#7c3aed',display:'inline-block'}} />
+        <span style={{color:'#5b21b6',fontSize:11,fontWeight:700,letterSpacing:'.6px',textTransform:'uppercase'}}>{eyebrow}</span>
+      </div>
+      <h2 style={{ margin:'0 0 12px',fontSize:'clamp(1.6rem,3vw,2.2rem)',fontWeight:900,color:'#0f172a',lineHeight:1.2 }}>{title}</h2>
+      {sub && <p style={{ margin:0,color:'#64748b',fontSize:'1rem',maxWidth:520,marginInline:'auto',lineHeight:1.65 }}>{sub}</p>}
+    </div>
+  );
+}
+
+function BenefitCard({ b, index }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{background:'#fff',border:hovered?'1.5px solid #6366f1':'1.5px solid #e8ecf0',borderRadius:16,padding:'28px 24px',transition:'all .25s ease',boxShadow:hovered?'0 12px 32px rgba(99,102,241,.1)':'0 2px 8px rgba(0,0,0,.04)',transform:hovered?'translateY(-4px)':'none',animation:'cc-fadeup .5s ease both',animationDelay:`${index*.08}s`}}>
+      <div style={{ fontSize:32, marginBottom:14 }}>{b.icon}</div>
+      <h3 style={{ margin:'0 0 8px',fontSize:15,fontWeight:800,color:'#0f172a' }}>{b.title}</h3>
+      <p style={{ margin:0,fontSize:13,color:'#64748b',lineHeight:1.65 }}>{b.desc}</p>
+    </div>
+  );
+}
+
+function FormField({ label, error, children }) {
+  return (
+    <div style={{ display:'flex',flexDirection:'column',gap:5 }}>
+      <label style={{ fontSize:13,fontWeight:700,color:'#334155' }}>{label}</label>
+      {children}
+      {error && <span style={{ fontSize:11,color:'#dc2626',fontWeight:600 }}>{error}</span>}
+    </div>
+  );
+}
+
+const inputStyle = {
+  padding:'10px 14px',
+  borderRadius:10,
+  border:'1.5px solid #e2e8f0',
+  fontSize:14,
+  color:'#0f172a',
+  background:'#fff',
+  outline:'none',
+  width:'100%',
+};
+
+const pgBtn = (disabled) => ({
+  padding:'8px 18px',borderRadius:8,
+  border:'1.5px solid #e2e8f0',
+  background:'#fff',
+  color:disabled?'#cbd5e1':'#475569',
+  fontWeight:700,fontSize:13,
+  cursor:disabled?'not-allowed':'pointer',
+  opacity:disabled?.5:1,
+});

@@ -1,22 +1,36 @@
+// src/components/home/Hero.jsx - Production-Ready Hero Section
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useState, useMemo } from 'react';
-
-// Optimized Counter Component
-function Counter({ target, suffix }) {
+import { publicAPI } from '../api/endpoints'; // 👈 Backend API for dynamic stats
+/**
+ * AnimatedCounter Component
+ * Counts up from 0 to target value with smooth easing
+ * Uses requestAnimationFrame for optimal performance
+ * 
+ * @param {object} props
+ * @param {number} props.target - Final count number
+ * @param {string} props.suffix - Suffix to show after count (+, %, etc.)
+ * @param {number} props.duration - Animation duration in ms (default: 1500)
+ */
+function AnimatedCounter({ target, suffix, duration = 1500 }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     let animationId;
     let startTime = null;
-    const duration = 1500;
 
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing: cubic ease-out (starts fast, slows down)
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.floor(eased * target);
+      
       setCount(current);
+      
       if (progress < 1) {
         animationId = requestAnimationFrame(animate);
       }
@@ -24,54 +38,216 @@ function Counter({ target, suffix }) {
 
     animationId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationId);
-  }, [target]);
+  }, [target, duration]);
 
   return (
-    <h3 className="mb-0 text-white" style={{ minHeight: '36px' }}>
+    <h3 className="mb-0 text-white fw-bold" style={{ minHeight: '36px', fontSize: 'clamp(1.5rem, 3vw, 2rem)' }}>
       {count}{suffix}
     </h3>
   );
 }
 
-export default function Hero() {
-  const texts = useMemo(() => [
-    "Engineering Excellence",
-    "Smart Construction Solutions",
-    "Precision & Trust"
-  ], []);
-
-  const [index, setIndex] = useState(0);
-  const [displayText, setDisplayText] = useState('');
-  const [charIndex, setCharIndex] = useState(0);
+/**
+ * TypingText Component
+ * Creates a typewriter effect with cycling text
+ * 
+ * @param {object} props
+ * @param {string[]} props.texts - Array of texts to cycle through
+ * @param {number} props.typeSpeed - Typing speed in ms per character (default: 60)
+ * @param {number} props.deleteSpeed - Deleting speed in ms per character (unused)
+ * @param {number} props.pauseDuration - Pause after text completes in ms (default: 2000)
+ */
+function TypingText({ texts, typeSpeed = 60, pauseDuration = 2000 }) {
+  const [index, setIndex] = useState(0);          // Current text index
+  const [displayText, setDisplayText] = useState(''); // Currently displayed text
+  const [charIndex, setCharIndex] = useState(0);  // Current character index
 
   useEffect(() => {
     let timeout;
+    
+    // If still typing current text
     if (charIndex < texts[index].length) {
       timeout = setTimeout(() => {
-        setDisplayText(prev => prev + texts[index][charIndex]);
-        setCharIndex(prev => prev + 1);
-      }, 60);
+        setDisplayText((prev) => prev + texts[index][charIndex]);
+        setCharIndex((prev) => prev + 1);
+      }, typeSpeed);
     } else {
+      // Text complete - pause then move to next
       timeout = setTimeout(() => {
         setDisplayText('');
         setCharIndex(0);
         setIndex((prev) => (prev + 1) % texts.length);
-      }, 2000);
+      }, pauseDuration);
     }
+    
     return () => clearTimeout(timeout);
-  }, [charIndex, index, texts]);
+  }, [charIndex, index, texts, typeSpeed, pauseDuration]);
+
+  return (
+    <span>
+      {displayText}
+      <span
+        aria-hidden="true"
+        style={{
+          borderRight: '3px solid #ffc107',
+          marginLeft: '4px',
+          height: '0.8em',
+          display: 'inline-block',
+          animation: 'blink 1s step-end infinite',
+        }}
+      />
+    </span>
+  );
+}
+
+/**
+ * StatCard Component
+ * Glassmorphism card on right side with dynamic data
+ */
+function StatCard({ stats }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 60 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.7, duration: 0.5 }}
+      className="p-4 p-xl-5 rounded-4"
+      style={{
+        background: 'rgba(255,255,255,0.12)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.25)',
+        minHeight: '200px',
+        boxShadow: '0 8px 40px rgba(0,0,0,0.3)',
+      }}
+    >
+      <div className="text-center mb-3">
+        <span style={{ fontSize: '3rem' }} role="img" aria-label="building">🏢</span>
+      </div>
+      <h2 className="h5 text-white mb-3 text-center fw-bold">
+        Trusted by Leading Clients
+      </h2>
+
+      <p style={{ color: 'rgba(255,255,255,0.9)', minHeight: '48px', textAlign: 'center', lineHeight: 1.6 }}>
+        Delivering premium engineering & consulting solutions with unmatched precision since 2018.
+      </p>
+
+      {/* Quick Stats inside card */}
+      <div className="d-flex justify-content-center gap-4 mt-4 mb-3">
+        {stats.slice(0, 3).map((stat, i) => (
+          <div key={i} className="text-center">
+            <div className="text-warning fw-bold" style={{ fontSize: '1.2rem' }}>
+              {stat.value}{stat.suffix}
+            </div>
+            <small className="text-white-50" style={{ fontSize: '0.7rem' }}>
+              {stat.label}
+            </small>
+          </div>
+        ))}
+      </div>
+
+      <div className="d-flex gap-2 justify-content-center mt-4">
+        <Link
+          className="btn btn-warning btn-sm fw-bold px-4"
+          to="/services"
+          aria-label="View our services"
+          style={{ borderRadius: '50px' }}
+        >
+          Our Services
+        </Link>
+        <Link
+          className="btn btn-outline-light btn-sm px-4"
+          to="/contact"
+          aria-label="Contact us"
+          style={{ borderRadius: '50px' }}
+        >
+          Contact Us
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
+
+// ==================== MAIN COMPONENT ====================
+
+/**
+ * Hero Component
+ * Home page hero section with typing animation, counters, and CTA
+ * 
+ * Features:
+ * - Full-screen hero with background image
+ * - Typewriter text animation (cycling through taglines)
+ * - Animated counters (projects, engineers, satisfaction)
+ * - Glassmorphism stat card
+ * - Optimized with requestAnimationFrame
+ * - Accessible with ARIA labels
+ * 
+ * To change hero image: Update the img src URL
+ * To change taglines: Update `taglines` array
+ * To change stats: Update `heroStats` array
+ */
+export default function Hero() {
+  // ==================== STATE ====================
+  const [projectCount, setProjectCount] = useState(0);
+  const [apiLoaded, setApiLoaded] = useState(false);
+
+  // ==================== DATA ====================
+
+  /**
+   * Hero taglines for typing animation
+   * Edit these to change what text cycles in the hero
+   */
+  const taglines = useMemo(() => [
+    "Engineering Excellence",
+    "Smart Construction Solutions",
+    "Precision & Trust",
+  ], []);
+
+  /**
+   * Hero stats (fallback values - overridden by API if available)
+   * Edit these to change default stat numbers
+   */
+  const heroStats = useMemo(() => [
+    { target: apiLoaded ? projectCount : 150, suffix: '+', label: 'Projects Completed', icon: '🏗️' },
+    { target: 20, suffix: '+', label: 'Expert Engineers', icon: '👷' },
+    { target: 98, suffix: '%', label: 'Client Satisfaction', icon: '⭐' },
+  ], [apiLoaded, projectCount]);
+
+  // ==================== API FETCHING ====================
+
+  /**
+   * Fetch project count from backend to show real stats
+   * Falls back to default values if API fails
+   */
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await publicAPI.getProjects();
+        if (response.data?.success) {
+          const projects = response.data.data || [];
+          setProjectCount(projects.length);
+          setApiLoaded(true);
+        }
+      } catch {
+        // Silently fail - use default stats
+        console.debug('Hero stats: Using default values');
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  // ==================== RENDER ====================
 
   return (
     <section
       className="hero d-flex align-items-center position-relative overflow-hidden"
       style={{
         minHeight: 'calc(100vh - 70px)',
-        position: 'relative',
-        background: '#0a0a1a', // Fallback dark blue (not black)
+        background: '#0a0a1a', // Fallback dark blue
       }}
       aria-label="Hero section"
     >
-      {/* HERO IMAGE - Light overlay so image is visible */}
+      {/* ==================== HERO BACKGROUND IMAGE ==================== */}
       <img
         src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80"
         alt="Construction site with engineers"
@@ -90,7 +266,7 @@ export default function Hero() {
         }}
       />
 
-      {/* LIGHTER Overlay - Image dikhegi */}
+      {/* ==================== GRADIENT OVERLAY ==================== */}
       <div
         aria-hidden="true"
         style={{
@@ -101,12 +277,14 @@ export default function Hero() {
         }}
       />
 
+      {/* ==================== CONTENT ==================== */}
       <div className="container py-5 position-relative" style={{ zIndex: 2 }}>
         <div className="row align-items-center gy-5">
 
-          {/* LEFT CONTENT */}
+          {/* ==================== LEFT COLUMN ==================== */}
           <div className="col-lg-7">
-
+            
+            {/* Subheading */}
             <motion.span
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -130,23 +308,12 @@ export default function Hero() {
                 fontWeight: '800',
                 minHeight: 'clamp(80px, 12vw, 140px)',
                 textShadow: '0 2px 20px rgba(0,0,0,0.8)',
-                display: 'flex',
-                alignItems: 'center',
               }}
             >
-              <span style={{ minWidth: '1ch' }}>{displayText}</span>
-              <span 
-                style={{ 
-                  borderRight: '3px solid #ffc107', 
-                  marginLeft: '5px',
-                  height: '0.8em',
-                  display: 'inline-block',
-                  animation: 'blink 1s step-end infinite',
-                }}
-                aria-hidden="true"
-              />
+              <TypingText texts={taglines} />
             </motion.h1>
 
+            {/* Description */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -157,112 +324,99 @@ export default function Hero() {
                 maxWidth: '600px',
                 minHeight: '48px',
                 textShadow: '0 1px 10px rgba(0,0,0,0.5)',
+                lineHeight: 1.6,
               }}
             >
               Premium structural, architectural, geotechnical and survey services for clients who demand quality, speed and clarity.
             </motion.p>
 
-            {/* Buttons */}
-            <motion.div 
+            {/* ==================== CTA BUTTONS ==================== */}
+            <motion.div
               className="d-flex gap-3 flex-wrap mb-5"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
               style={{ minHeight: '56px' }}
             >
-              <Link 
-                className="btn btn-warning btn-lg fw-bold px-4" 
+              <Link
+                className="btn btn-warning btn-lg fw-bold px-4"
                 to="/contact"
                 aria-label="Get a free quote for your project"
-                style={{ borderRadius: '50px' }}
+                style={{ borderRadius: '50px', transition: 'all 0.3s ease' }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(255, 193, 7, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = 'none';
+                }}
               >
                 Get Free Quote ✨
               </Link>
-              <a 
-                className="btn btn-outline-light btn-lg px-4" 
+              <a
+                className="btn btn-outline-light btn-lg px-4"
                 href="tel:+919876543210"
                 aria-label="Call us at +91 98765 43210"
-                style={{ borderRadius: '50px' }}
+                style={{ borderRadius: '50px', transition: 'all 0.3s ease' }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.backgroundColor = 'transparent';
+                }}
               >
                 📞 Call Now
               </a>
             </motion.div>
 
-            {/* COUNTERS */}
-            <div 
-              className="d-flex gap-4 flex-wrap"
-              style={{ minHeight: '72px' }}
-            >
-              {[
-                { target: 150, suffix: '+', label: 'Projects Completed' },
-                { target: 20, suffix: '+', label: 'Expert Engineers' },
-                { target: 98, suffix: '%', label: 'Client Satisfaction' },
-              ].map((item, i) => (
-                <div key={i} style={{ minWidth: '100px' }}>
-                  <Counter target={item.target} suffix={item.suffix} />
-                  <small className="text-white-50">{item.label}</small>
-                </div>
+            {/* ==================== ANIMATED COUNTERS ==================== */}
+            <div className="d-flex gap-4 flex-wrap" style={{ minHeight: '72px' }}>
+              {heroStats.map((item, i) => (
+                <motion.div
+                  key={i}
+                  style={{ minWidth: '100px' }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 + i * 0.15 }}
+                >
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <span style={{ fontSize: '1.3rem' }} role="img" aria-hidden="true">
+                      {item.icon}
+                    </span>
+                    <AnimatedCounter target={item.target} suffix={item.suffix} />
+                  </div>
+                  <small className="text-white-50" style={{ paddingLeft: '2rem' }}>
+                    {item.label}
+                  </small>
+                </motion.div>
               ))}
             </div>
           </div>
 
-          {/* RIGHT GLASS CARD */}
+          {/* ==================== RIGHT COLUMN (Glass Card) ==================== */}
           <div className="col-lg-5">
-            <motion.div
-              initial={{ opacity: 0, x: 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-              className="p-4 p-xl-5 rounded-4"
-              style={{
-                background: 'rgba(255,255,255,0.12)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.25)',
-                minHeight: '200px',
-                boxShadow: '0 8px 40px rgba(0,0,0,0.3)',
-              }}
-            >
-              <div className="text-center mb-3">
-                <span style={{ fontSize: '3rem' }}>🏢</span>
-              </div>
-              <h2 className="h5 text-white mb-3 text-center">
-                Trusted by Leading Clients
-              </h2>
-
-              <p style={{ color: 'rgba(255,255,255,0.9)', minHeight: '48px', textAlign: 'center' }}>
-                Delivering premium engineering & consulting solutions with unmatched precision since 2018.
-              </p>
-
-              <div className="d-flex gap-2 justify-content-center mt-4">
-                <Link 
-                  className="btn btn-warning btn-sm fw-bold px-4" 
-                  to="/services"
-                  aria-label="View our services"
-                  style={{ borderRadius: '50px' }}
-                >
-                  Our Services
-                </Link>
-                <Link 
-                  className="btn btn-outline-light btn-sm px-4" 
-                  to="/contact"
-                  aria-label="Contact us"
-                  style={{ borderRadius: '50px' }}
-                >
-                  Contact Us
-                </Link>
-              </div>
-            </motion.div>
+            <StatCard stats={heroStats} />
           </div>
 
         </div>
       </div>
 
-      {/* Blink animation for cursor */}
+      {/* ==================== CSS ANIMATIONS ==================== */}
       <style>{`
         @keyframes blink {
           50% { border-color: transparent; }
         }
+        
+        /* Smooth scroll behavior */
+        @media (prefers-reduced-motion: no-preference) {
+          html {
+            scroll-behavior: smooth;
+          }
+        }
       `}</style>
     </section>
   );
-}
+};

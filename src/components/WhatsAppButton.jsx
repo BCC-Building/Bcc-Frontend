@@ -1,126 +1,112 @@
-// src/components/WhatsAppButton.jsx - Always Visible Version
-import React, { useState, useCallback, useRef } from 'react';
+// src/components/WhatsAppButton.jsx - Production-Ready Enhanced Version
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Configuration - Easy to maintain
+// ==================== CONFIGURATION ====================
+
 const WHATSAPP_CONFIG = {
-  // Single Contact Mode
   singleMode: false,
-  
-  // Multiple Contacts Mode
   contacts: [
     {
       id: 1,
-      name: "Architecture & Design",
-      number: "919876543210",
-      message: "Hi! I'm interested in your architecture and design services. Can you provide more details?",
-      icon: "💰",
-      role: "Sales Executive",
-      available: "Online",
-      responseTime: "< 5 min",
-      department: "Design"
+      name: 'Architecture & Design',
+      number: '919876543210',
+      message: "Hi! I'm interested in your architecture and design services.",
+      icon: '🏗️',
+      role: 'Architecture Specialist',
+      available: 'Online',
+      responseTime: '< 5 min',
+      department: 'Design',
     },
     {
       id: 2,
-      name: "Technical Support",
-      number: "919876543211",
-      message: "Hello! I need technical assistance with my project.",
-      icon: "🛠️",
-      role: "Technical Expert",
-      available: "Online",
-      responseTime: "< 10 min",
-      department: "Support"
+      name: 'Technical Support',
+      number: '919876543211',
+      message: 'Hello! I need technical assistance with my project.',
+      icon: '🛠️',
+      role: 'Technical Expert',
+      available: 'Online',
+      responseTime: '< 10 min',
+      department: 'Support',
     },
     {
       id: 3,
-      name: "Customer Care",
-      number: "919876543212",
-      message: "I have a query about your services.",
-      icon: "💬",
-      role: "Customer Support",
-      available: "24/7",
-      responseTime: "< 2 hours",
-      department: "Customer Service"
+      name: 'Customer Care',
+      number: '919876543212',
+      message: 'I have a query about your services.',
+      icon: '💬',
+      role: 'Customer Support',
+      available: '24/7',
+      responseTime: '< 2 hours',
+      department: 'Customer Service',
     },
     {
       id: 4,
-      name: "Emergency",
-      number: "919876543213",
-      message: "URGENT: Need immediate assistance!",
-      icon: "🚨",
-      role: "Emergency Support",
-      available: "24/7",
-      responseTime: "Immediate",
-      department: "Emergency",
-      urgent: true
-    }
+      name: 'Emergency Support',
+      number: '919876543213',
+      message: 'URGENT: Need immediate assistance!',
+      icon: '🚨',
+      role: 'Emergency Response',
+      available: '24/7',
+      responseTime: 'Immediate',
+      department: 'Emergency',
+      urgent: true,
+    },
   ],
-  
-  // Default Settings
   settings: {
     buttonSize: 56,
-    buttonPosition: "right", // right | left
+    buttonPosition: 'right',
     bottomOffset: 30,
     sideOffset: 30,
     showTooltip: true,
-    tooltipText: "Chat with us 💬",
+    tooltipText: 'Chat with us 💬',
     showOnlineBadge: true,
-    animationDuration: 0.3,
-    enableSound: false,
-    trackAnalytics: true
+    trackAnalytics: true,
+    closeOnOutsideClick: true,
+    closeOnEscape: true,
   },
-  
-  // Pre-written messages
   quickMessages: [
-    "I need a quote for construction",
-    "Tell me about your services",
-    "Schedule a consultation",
-    "Technical support needed"
-  ]
+    'I need a quote for construction',
+    'Tell me about your services',
+    'Schedule a consultation',
+    'Technical support needed',
+  ],
 };
 
-// Custom Hook for Analytics
-const useAnalytics = () => {
+// ==================== ANALYTICS HOOK ====================
+
+const useWhatsAppAnalytics = () => {
   const trackEvent = useCallback((eventName, eventData = {}) => {
     if (!WHATSAPP_CONFIG.settings.trackAnalytics) return;
-    
-    // Google Analytics 4
-    if (window.gtag) {
-      window.gtag('event', eventName, {
-        ...eventData,
-        timestamp: new Date().toISOString()
-      });
+    const payload = {
+      ...eventData,
+      timestamp: new Date().toISOString(),
+      source: 'whatsapp_button',
+    };
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', eventName, payload);
     }
-    
-    // Facebook Pixel
-    if (window.fbq) {
-      window.fbq('track', eventName, eventData);
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', eventName, payload);
     }
-    
-    // Console log for development
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[Analytics] ${eventName}:`, eventData);
+    if (import.meta.env?.DEV) {
+      console.log(`[Analytics] ${eventName}:`, payload);
     }
   }, []);
-  
   return { trackEvent };
 };
 
-// Single Contact Button Component
+// ==================== SINGLE CONTACT BUTTON ====================
+
 const SingleContactButton = ({ config, trackEvent }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const whatsappLink = `https://wa.me/${config.number}?text=${encodeURIComponent(config.message)}`;
-
+  const whatsappUrl = `https://wa.me/${config.number}?text=${encodeURIComponent(config.message)}`;
   const handleClick = () => {
-    trackEvent('whatsapp_click', {
-      type: 'single',
-      department: 'general'
-    });
+    trackEvent('whatsapp_click', { type: 'single', department: config.department });
   };
-
   return (
     <motion.a
-      href={whatsappLink}
+      href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
       onMouseEnter={() => setIsHovered(true)}
@@ -128,12 +114,13 @@ const SingleContactButton = ({ config, trackEvent }) => {
       onClick={handleClick}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className="relative flex items-center justify-center rounded-full shadow-2xl cursor-pointer transition-all duration-300"
+      aria-label={`Chat with ${config.name} on WhatsApp`}
+      className="relative flex items-center justify-center rounded-full shadow-2xl cursor-pointer"
       style={{
         width: WHATSAPP_CONFIG.settings.buttonSize,
         height: WHATSAPP_CONFIG.settings.buttonSize,
         background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
-        boxShadow: '0 10px 25px rgba(37, 211, 102, 0.3)'
+        boxShadow: '0 8px 30px rgba(37, 211, 102, 0.35)',
       }}
     >
       <AnimatePresence>
@@ -143,226 +130,191 @@ const SingleContactButton = ({ config, trackEvent }) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             className="absolute right-full mr-3 whitespace-nowrap z-10"
+            role="tooltip"
           >
             <div className="bg-gray-900 text-white text-sm px-4 py-2 rounded-lg shadow-xl">
               {WHATSAPP_CONFIG.settings.tooltipText}
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      <svg className="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2C6.48 2 2 6.48 2 12C2 13.89 2.58 15.65 3.6 17.12L2 22L7.04 20.22C8.46 21.08 10.11 21.6 12 21.6C17.52 21.6 22 17.12 22 12C22 6.48 17.52 2 12 2Z" fill="white"/>
-        <path d="M16.95 14.53C16.68 14.26 15.92 13.9 15.6 13.8C15.28 13.7 15.05 13.65 14.82 13.92C14.59 14.19 13.95 14.99 13.77 15.2C13.59 15.41 13.41 15.45 13.14 15.28C12.87 15.11 11.97 14.78 10.92 13.86C10.08 13.12 9.53 12.22 9.36 11.95C9.19 11.68 9.35 11.53 9.49 11.39C9.62 11.26 9.78 11.06 9.91 10.89C10.04 10.72 10.09 10.59 10.18 10.39C10.27 10.19 10.22 10.02 10.14 9.85C10.06 9.68 9.52 8.69 9.31 8.26C9.1 7.83 8.89 7.89 8.73 7.88C8.58 7.87 8.4 7.87 8.22 7.87C8.04 7.87 7.75 7.94 7.5 8.22C7.25 8.5 6.5 9.22 6.5 10.68C6.5 12.14 7.57 13.56 7.7 13.74C7.83 13.92 9.52 16.56 12.1 17.6C12.8 17.92 13.34 18.11 13.77 18.25C14.48 18.5 15.13 18.46 15.64 18.37C16.21 18.27 17.4 17.65 17.66 16.97C17.92 16.29 17.92 15.71 17.84 15.57C17.76 15.43 17.22 14.8 16.95 14.53Z" fill="#25D366"/>
+      <svg className="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12c0 1.89.58 3.65 1.6 5.12L2 22l5.04-1.78A9.56 9.56 0 0012 21.6c5.52 0 10-4.48 10-10S17.52 2 12 2z" fill="white"/>
+        <path d="M16.95 14.53c-.27-.27-.76-.63-1.08-.73-.32-.1-.55-.15-.78.12-.23.27-.87 1.07-1.05 1.28-.18.21-.36.25-.63.08-.27-.17-1.17-.5-2.22-1.42-.84-.74-1.39-1.64-1.56-1.91-.17-.27-.01-.42.13-.56.13-.13.29-.33.42-.5.13-.17.18-.3.27-.5.09-.2.04-.37-.04-.54-.08-.17-.62-1.16-.83-1.59-.21-.43-.42-.37-.58-.38-.15-.01-.33-.01-.51-.01s-.47.07-.72.35c-.25.28-1 1-1 2.46 0 1.46 1.07 2.88 1.2 3.06.13.18 2.02 3.04 4.6 4.08.7.32 1.24.51 1.67.65.71.25 1.36.21 1.87.12.57-.1 1.76-.72 2.02-1.4.26-.68.26-1.26.18-1.4-.08-.14-.54-.77-.81-1.04z" fill="#25D366"/>
       </svg>
-
       {WHATSAPP_CONFIG.settings.showOnlineBadge && (
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.5 }}
-          className="absolute -top-1 -right-1 bg-green-500 text-white text-xs font-bold rounded-full px-1.5 py-0.5 border-2 border-white"
-        >
-          ●
-        </motion.div>
+          className="absolute -top-1 -right-1 bg-green-500 w-3.5 h-3.5 rounded-full border-2 border-white"
+          aria-label="Online"
+        />
       )}
     </motion.a>
   );
 };
 
-// Multiple Contacts Menu Component
+// ==================== MULTI CONTACT MENU ====================
+
 const MultiContactMenu = ({ contacts, trackEvent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState('');
+  const menuRef = useRef(null);   // ✅ FIXED: was useState(null)
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape' && WHATSAPP_CONFIG.settings.closeOnEscape) {
+      setIsOpen(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, handleKeyDown]);
 
   const handleContactClick = (contact) => {
     const message = selectedMessage || contact.message;
-    const whatsappLink = `https://wa.me/${contact.number}?text=${encodeURIComponent(message)}`;
-    
-    trackEvent('whatsapp_click', {
-      type: 'multi',
-      department: contact.department,
-      contact_name: contact.name
-    });
-    
-    window.open(whatsappLink, '_blank');
+    const whatsappUrl = `https://wa.me/${contact.number}?text=${encodeURIComponent(message)}`;
+    trackEvent('whatsapp_click', { type: 'multi', department: contact.department, contact_name: contact.name });
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
     setIsOpen(false);
     setSelectedMessage('');
   };
 
   const handleQuickMessage = (message) => {
-    setSelectedMessage(message);
+    setSelectedMessage((prev) => (prev === message ? '' : message));
   };
 
   return (
-    <div className="relative">
-      {/* Floating Menu */}
+    <div className="relative" ref={menuRef}>
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 20 }}
-            className="absolute bottom-full right-0 mb-4 w-80 md:w-96"
+            transition={{ type: 'spring', damping: 22, stiffness: 300 }}
+            className="absolute bottom-full right-0 mb-4 w-80 md:w-96 z-50"
+            role="dialog"
+            aria-label="WhatsApp contact options"
           >
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
-              {/* Header */}
               <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
-                <h3 className="font-bold text-lg flex items-center gap-2">
-                  <span>💬</span>
-                  <span>Chat with us</span>
-                </h3>
-                <p className="text-sm text-green-100 mt-1">
-                  We're here to help! Choose a department
-                </p>
+                <h3 className="font-bold text-lg flex items-center gap-2"><span aria-hidden="true">💬</span><span>Chat with us</span></h3>
+                <p className="text-sm text-green-100 mt-1">Choose a department to connect instantly</p>
               </div>
-
-              {/* Quick Messages */}
               <div className="p-4 border-b border-gray-100">
-                <p className="text-xs text-gray-500 mb-2">Quick messages:</p>
+                <p className="text-xs text-gray-500 mb-2 font-medium">Quick message (optional):</p>
                 <div className="flex flex-wrap gap-2">
                   {WHATSAPP_CONFIG.quickMessages.map((msg, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleQuickMessage(msg)}
-                      className={`text-xs px-3 py-1.5 rounded-full transition-all ${
-                        selectedMessage === msg
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
+                    <button key={idx} onClick={() => handleQuickMessage(msg)}
+                      className={`text-xs px-3 py-1.5 rounded-full transition-all font-medium ${selectedMessage === msg ? 'bg-green-500 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                      aria-pressed={selectedMessage === msg}>
                       {msg}
                     </button>
                   ))}
                 </div>
               </div>
-
-              {/* Contacts List */}
-              <div className="max-h-96 overflow-y-auto">
+              <div className="max-h-80 overflow-y-auto">
                 {contacts.map((contact) => (
-                  <button
-                    key={contact.id}
-                    onClick={() => handleContactClick(contact)}
-                    className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0"
-                  >
-                    {/* Icon */}
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
-                      contact.urgent ? 'bg-red-100' : 'bg-green-100'
-                    }`}>
+                  <button key={contact.id} onClick={() => handleContactClick(contact)}
+                    className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0 text-left"
+                    aria-label={`Chat with ${contact.name} on WhatsApp`}>
+                    <div className={`w-11 h-11 rounded-full flex items-center justify-center text-xl flex-shrink-0 ${contact.urgent ? 'bg-red-100' : 'bg-green-100'}`} aria-hidden="true">
                       {contact.icon}
                     </div>
-                    
-                    {/* Info */}
-                    <div className="flex-1 text-left">
+                    <div className="flex-1 min-w-0">
                       <div className="font-semibold text-gray-800 flex items-center gap-2">
-                        {contact.name}
-                        {contact.urgent && (
-                          <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">
-                            Urgent
-                          </span>
-                        )}
+                        <span className="truncate">{contact.name}</span>
+                        {contact.urgent && <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full flex-shrink-0">Urgent</span>}
                       </div>
                       <div className="text-xs text-gray-500">{contact.role}</div>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs text-green-600">{contact.available}</span>
-                        <span className="text-xs text-gray-400">•</span>
+                        <span className="text-xs text-green-600 font-medium">{contact.available}</span>
+                        <span className="text-xs text-gray-300">•</span>
                         <span className="text-xs text-gray-400">⏱️ {contact.responseTime}</span>
                       </div>
                     </div>
-                    
-                    {/* Arrow */}
-                    <div className="text-gray-400 group-hover:text-green-500 transition-colors">
-                      →
-                    </div>
+                    <span className="text-gray-400 group-hover:text-green-500 transition-colors flex-shrink-0" aria-hidden="true">→</span>
                   </button>
                 ))}
               </div>
-
-              {/* Footer */}
-              <div className="p-3 bg-gray-50 text-center">
-                <p className="text-xs text-gray-500">
-                  Response time: Typically within minutes
-                </p>
+              <div className="p-3 bg-gray-50 text-center border-t border-gray-100">
+                <p className="text-xs text-gray-500">Response time: Typically within minutes</p>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main Button */}
       <motion.button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (!isOpen) {
+            // Scroll down 200px so the full menu is visible
+            window.scrollBy({ top: 200, behavior: 'smooth' });
+          }
+          setIsOpen(!isOpen);
+        }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        animate={{ 
-          rotate: isOpen ? 45 : 0,
-          transition: { duration: 0.3 }
-        }}
-        className="flex items-center justify-center rounded-full shadow-2xl transition-all duration-300"
+        animate={{ rotate: isOpen ? 45 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="flex items-center justify-center rounded-full shadow-2xl relative z-10"
         style={{
           width: WHATSAPP_CONFIG.settings.buttonSize,
           height: WHATSAPP_CONFIG.settings.buttonSize,
           background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
-          boxShadow: '0 10px 25px rgba(37, 211, 102, 0.3)'
+          boxShadow: '0 8px 30px rgba(37, 211, 102, 0.35)',
         }}
+        aria-label={isOpen ? 'Close WhatsApp menu' : 'Open WhatsApp chat options'}
+        aria-expanded={isOpen}
       >
         {isOpen ? (
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
         ) : (
-          <svg className="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2C6.48 2 2 6.48 2 12C2 13.89 2.58 15.65 3.6 17.12L2 22L7.04 20.22C8.46 21.08 10.11 21.6 12 21.6C17.52 21.6 22 17.12 22 12C22 6.48 17.52 2 12 2Z" fill="white"/>
-            <path d="M16.95 14.53C16.68 14.26 15.92 13.9 15.6 13.8C15.28 13.7 15.05 13.65 14.82 13.92C14.59 14.19 13.95 14.99 13.77 15.2C13.59 15.41 13.41 15.45 13.14 15.28C12.87 15.11 11.97 14.78 10.92 13.86C10.08 13.12 9.53 12.22 9.36 11.95C9.19 11.68 9.35 11.53 9.49 11.39C9.62 11.26 9.78 11.06 9.91 10.89C10.04 10.72 10.09 10.59 10.18 10.39C10.27 10.19 10.22 10.02 10.14 9.85C10.06 9.68 9.52 8.69 9.31 8.26C9.1 7.83 8.89 7.89 8.73 7.88C8.58 7.87 8.4 7.87 8.22 7.87C8.04 7.87 7.75 7.94 7.5 8.22C7.25 8.5 6.5 9.22 6.5 10.68C6.5 12.14 7.57 13.56 7.7 13.74C7.83 13.92 9.52 16.56 12.1 17.6C12.8 17.92 13.34 18.11 13.77 18.25C14.48 18.5 15.13 18.46 15.64 18.37C16.21 18.27 17.4 17.65 17.66 16.97C17.92 16.29 17.92 15.71 17.84 15.57C17.76 15.43 17.22 14.8 16.95 14.53Z" fill="#25D366"/>
-          </svg>
+          <svg className="w-7 h-7 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.89.58 3.65 1.6 5.12L2 22l5.04-1.78A9.56 9.56 0 0012 21.6c5.52 0 10-4.48 10-10S17.52 2 12 2z" fill="white"/><path d="M16.95 14.53c-.27-.27-.76-.63-1.08-.73-.32-.1-.55-.15-.78.12-.23.27-.87 1.07-1.05 1.28-.18.21-.36.25-.63.08-.27-.17-1.17-.5-2.22-1.42-.84-.74-1.39-1.64-1.56-1.91-.17-.27-.01-.42.13-.56.13-.13.29-.33.42-.5.13-.17.18-.3.27-.5.09-.2.04-.37-.04-.54-.08-.17-.62-1.16-.83-1.59-.21-.43-.42-.37-.58-.38-.15-.01-.33-.01-.51-.01s-.47.07-.72.35c-.25.28-1 1-1 2.46 0 1.46 1.07 2.88 1.2 3.06.13.18 2.02 3.04 4.6 4.08.7.32 1.24.51 1.67.65.71.25 1.36.21 1.87.12.57-.1 1.76-.72 2.02-1.4.26-.68.26-1.26.18-1.4-.08-.14-.54-.77-.81-1.04z" fill="#25D366"/></svg>
         )}
       </motion.button>
 
-      {/* Pulse Animation */}
       <motion.div
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ repeat: Infinity, duration: 2, repeatDelay: 3 }}
-        className="absolute inset-0 rounded-full -z-10"
-        style={{
-          background: 'rgba(37, 211, 102, 0.3)',
-        }}
+        animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0, 0.4] }}
+        transition={{ repeat: Infinity, duration: 2.5, repeatDelay: 3 }}
+        className="absolute inset-0 rounded-full -z-0"
+        style={{ background: 'rgba(37, 211, 102, 0.25)' }}
+        aria-hidden="true"
       />
     </div>
   );
 };
 
-// Main Component - ALWAYS VISIBLE (No scroll hiding)
+// ==================== MAIN COMPONENT ====================
+
 const WhatsAppButton = () => {
-  const { trackEvent } = useAnalytics();
-  
+  const { trackEvent } = useWhatsAppAnalytics();
   const positionStyles = {
     right: { right: WHATSAPP_CONFIG.settings.sideOffset },
-    left: { left: WHATSAPP_CONFIG.settings.sideOffset }
+    left: { left: WHATSAPP_CONFIG.settings.sideOffset },
   };
-
   return (
     <motion.div
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 100 }}
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5 }}
+      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
       className="fixed z-[9999]"
       style={{
         bottom: WHATSAPP_CONFIG.settings.bottomOffset,
-        ...positionStyles[WHATSAPP_CONFIG.settings.buttonPosition]
+        ...positionStyles[WHATSAPP_CONFIG.settings.buttonPosition],
       }}
     >
       {WHATSAPP_CONFIG.singleMode ? (
-        <SingleContactButton 
-          config={WHATSAPP_CONFIG.contacts[0]} 
-          trackEvent={trackEvent}
-        />
+        <SingleContactButton config={WHATSAPP_CONFIG.contacts[0]} trackEvent={trackEvent} />
       ) : (
-        <MultiContactMenu 
-          contacts={WHATSAPP_CONFIG.contacts} 
-          trackEvent={trackEvent}
-        />
+        <MultiContactMenu contacts={WHATSAPP_CONFIG.contacts} trackEvent={trackEvent} />
       )}
     </motion.div>
   );
