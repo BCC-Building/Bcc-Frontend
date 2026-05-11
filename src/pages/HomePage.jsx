@@ -108,7 +108,7 @@ export default function HomePage() {
         </section>
 
         {/* 4. Company Overview / Stats */}
-        <PageOverview />
+  
 
         {/* 5. Why Choose BCC */}
         <WhyChooseBCC />

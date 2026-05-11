@@ -8,8 +8,8 @@ const stats = [
     label: 'Cityes Served',
     items: ['India', 'UAE', 'Nepal', 'Bangladesh', 'Bhutan', 'Sri Lanka', 'Afghanistan', 'South Africa'],
   },
-  { number: '200+', label: 'Awards' },
-  { number: '1100+', label: 'Publications' },
+  { number: '500+', label: 'Projects Completed' },
+  { number: '09+', label: 'Years of Experience' },
   { number: '50+', label: 'Million sq ft', sub: 'under Green Certification' },
 ];
 
@@ -284,8 +284,8 @@ const AboutSection = () => {
               project execution under one roof.
             </p>
             <p>
-              With a growing portfolio across <strong>8 countries</strong>, <strong>200+ awards</strong>,
-              and <strong>1,100+ publications</strong>, we bring functionality, precision, durability,
+              With a growing portfolio across <strong>8 states</strong>, <strong>500+ projects</strong>,
+              and <strong>09+ years</strong>, we bring functionality, precision, durability,
               and modern aesthetics to every project — from residential homes to large-scale
               infrastructure. Every project reflects our commitment to quality engineering
               and long-term value creation.
