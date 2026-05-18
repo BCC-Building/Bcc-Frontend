@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/img.webp';
 
-/* ─── CONFIG — change these ─── */
+/* ─── CONFIG ─── */
 const COMPANY_FULL  = 'Building Creators And Consulting';
 const COMPANY_SHORT = 'BCC';
 const PHONE         = '+918057540906';
@@ -23,6 +23,8 @@ const NAV_LINKS = [
   { path: '/clients',   name: 'Our Clients'  },
   { path: '/gallery',   name: 'Gallery'      },
   { path: '/projects',  name: 'Projects'     },
+  {path: '/blog',     name: 'Blogs'        },
+  {path: '/faq',  name: 'FAQ'      }, 
   { path: '/careers',   name: 'Career'       },
   { path: '/contact',   name: 'Contact Us'   },
 ];
@@ -46,7 +48,7 @@ export default function Navbar() {
   const [scrolled,    setScrolled]    = useState(false);
   const [searchOpen,  setSearchOpen]  = useState(false);
   const [searchVal,   setSearchVal]   = useState('');
-  const [mobileExp,   setMobileExp]   = useState(null); // expanded mobile dropdown
+  const [mobileExp,   setMobileExp]   = useState(null);
   const location = useLocation();
   const { open: ddOpen, setOpen: setDdOpen, ref: ddRef } = useDropdown();
   const searchRef = useRef(null);
@@ -148,25 +150,35 @@ export default function Navbar() {
           display: flex; align-items: center; gap: 20px;
         }
 
-        /* Logo block */
+        /* Logo block – no circle, clean rectangular logo */
         .nb-logo {
           display: flex; align-items: center; gap: 12px;
           text-decoration: none; flex-shrink: 0;
         }
         .nb-logo-img {
-          width: 52px; height: 52px; border-radius: 50%;
-          object-fit: contain; display: block;
-          border: 2px solid var(--navy);
+          width: auto;
+          height: 48px;                /* adjust as needed */
+          max-width: 180px;
+          object-fit: contain;
+          display: block;
           transition: transform .3s;
+          border: none;                /* removed circular border */
+          border-radius: 0;           /* removed border-radius */
         }
-        .nb-logo:hover .nb-logo-img { transform: rotate(-5deg) scale(1.05); }
+        .nb-logo:hover .nb-logo-img { transform: scale(1.03); }
+
         .nb-logo-fallback {
-          width: 52px; height: 52px; border-radius: 50%;
-          background: var(--navy); border: 2px solid var(--gold);
+          height: 48px;
+          width: 140px;
+          background: var(--navy);
           display: flex; align-items: center; justify-content: center;
           font-family: var(--head); font-weight: 800; font-size: 20px; color: var(--gold);
-          flex-shrink: 0; transition: transform .3s;
+          flex-shrink: 0;
+          transition: transform .3s;
+          border: none;
+          border-radius: 4px;          /* subtle radius, not circle */
         }
+
         .nb-logo-text { display: flex; flex-direction: column; gap: 2px; }
         .nb-logo-name {
           font-family: var(--head); font-weight: 800;
@@ -504,13 +516,13 @@ export default function Navbar() {
           <div className="nb-top" style={{ position: 'relative' }}>
             <div className="nb-top-inner">
 
-              {/* Logo */}
+              {/* Logo – clean, no circle */}
               <Link to="/" className="nb-logo" aria-label={`${COMPANY_FULL} – Homepage`} itemProp="url">
                 <img
                   src={logo}
                   alt={`${COMPANY_SHORT} Logo`}
                   className="nb-logo-img"
-                  width="52" height="52"
+                  width="auto" height="48"
                   loading="eager" fetchPriority="high" decoding="sync"
                   itemProp="image"
                   onError={(e) => {
@@ -705,12 +717,12 @@ export default function Navbar() {
           <Link to="/" className="nb-logo" onClick={() => setMenuOpen(false)}>
             <img
               src={logo} alt="BCC Logo"
-              className="nb-logo-img" style={{ width: 40, height: 40 }}
-              width="40" height="40" loading="lazy" decoding="async"
+              className="nb-logo-img" style={{ height: 40, maxWidth: 140 }}
+              width="auto" height="40" loading="lazy" decoding="async"
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.parentElement.insertAdjacentHTML('afterbegin',
-                  '<div class="nb-logo-fallback" style="width:40px;height:40px;font-size:16px">BCC</div>'
+                  '<div class="nb-logo-fallback" style="height:40px; width:120px; font-size:16px">BCC</div>'
                 );
               }}
             />

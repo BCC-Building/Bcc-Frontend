@@ -15,14 +15,14 @@ const TRUST_BADGES = [
 ];
 
 const HERO_STATS = [
-  { value: "250+", label: "Projects\nCompleted" },
-  { value: "15+", label: "Years\nExcellence" },
-  { value: "100%", label: "Client\nSatisfaction" },
+  { value: "1200+", label: "Projects\nCompleted" },
+  { value: "09 +", label: "Years\nExcellence" },
+  { value: "98%", label: "Client\nSatisfaction" },
 ];
 
 // ═══════════════════════════════════════════════════════════
 // STYLES – same variables as AchievementsPage
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
 

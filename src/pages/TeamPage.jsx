@@ -15,7 +15,7 @@ import { getImageUrl } from '../api/clients';
 
 // ─── constants ────────────────────────────────────────────────────────────
 const FEATURED_COUNT = 3;
-const HERO_IMAGE =
+const HERO_IMAGE = // (no longer used for hero, but kept for fallback if needed)
   'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80';
 
 const TYPEWRITER_WORDS = ['precision', 'dedication', 'excellence'];
@@ -72,7 +72,7 @@ function SkeletonCard() {
   );
 }
 
-// ─── team card (unchanged visually, just color strip always visible) ──────
+// ─── team card ───────────────────────────────────────────────────────────
 function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
   const [bioExpanded, setBioExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -113,7 +113,7 @@ function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
         gap: '0',
       }}
     >
-      {/* dept color strip – now always visible */}
+      {/* dept color strip */}
       <div
         style={{
           position: 'absolute',
@@ -127,7 +127,6 @@ function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
         }}
       />
 
-      {/* top row: avatar + name + role */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
         <div
           style={{
@@ -198,7 +197,6 @@ function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
         </div>
       </div>
 
-      {/* department pill */}
       {member.department && (
         <div style={{ marginBottom: '14px' }}>
           <span
@@ -223,7 +221,6 @@ function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
         </div>
       )}
 
-      {/* detailed extras */}
       {detailed && (
         <>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: rawBio ? '14px' : '0' }}>
@@ -306,7 +303,6 @@ function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
 
       <div style={{ flex: 1 }} />
 
-      {/* socials */}
       {(member.linkedinUrl || member.email) && (
         <div
           style={{
@@ -369,7 +365,7 @@ function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
   );
 }
 
-// ─── stat counter ─────────────────────────────────────────────────────────
+// ─── stat counter (horizontal style for hero) ─────────────────────────────
 function StatCounter({ value, label, index }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
@@ -380,39 +376,120 @@ function StatCounter({ value, label, index }) {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
       style={{
-        textAlign: 'center',
-        padding: '20px 28px',
-        background: '#FFFFFF',
-        border: '1px solid #F1F5F9',
-        borderRadius: '16px',
-        minWidth: '120px',
+        textAlign: 'left',
+        padding: '0 24px 0 0',
+        borderRight: index < 3 ? '1px solid rgba(255,255,255,0.1)' : 'none',
+        minWidth: 'auto',
+        background: 'transparent',
+        borderRadius: 0,
+        border: 'none',
       }}
     >
       <div
         style={{
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-          fontSize: '1.9rem',
-          fontWeight: 800,
-          color: '#0F172A',
+          fontFamily: "'Cormorant Garamond', serif",
+          fontSize: 'clamp(1.8rem, 3vw, 2.6rem)',
+          fontWeight: 300,
+          color: '#c8864a',
           lineHeight: 1,
-          marginBottom: '4px',
+          marginBottom: '5px',
         }}
       >
         {value}
       </div>
       <div
         style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: '0.75rem',
-          fontWeight: 500,
-          color: '#94A3B8',
+          fontFamily: "'Jost', sans-serif",
+          fontSize: '10.5px',
+          fontWeight: 300,
+          color: 'rgba(255,255,255,0.4)',
           textTransform: 'uppercase',
-          letterSpacing: '0.07em',
+          letterSpacing: '0.05em',
+          lineHeight: 1.5,
+          whiteSpace: 'pre-line',
         }}
       >
         {label}
       </div>
     </motion.div>
+  );
+}
+
+// ─── Team Hero Illustration (SVG) ────────────────────────────────────────
+function TeamIllustration() {
+  return (
+    <svg
+      viewBox="0 0 520 600"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ width: '100%', maxWidth: 480, height: 'auto', position: 'relative', zIndex: 1 }}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="goldGradTeam" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#c8864a" />
+          <stop offset="100%" stopColor="#e8c99a" />
+        </linearGradient>
+        <pattern id="gridTeam" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(200,134,74,0.08)" strokeWidth="0.5" />
+        </pattern>
+      </defs>
+
+      <rect width="520" height="600" fill="url(#gridTeam)" />
+
+      {/* Central hub / network */}
+      <circle cx="260" cy="280" r="120" fill="none" stroke="rgba(200,134,74,0.15)" strokeWidth="1" />
+      <circle cx="260" cy="280" r="90" fill="none" stroke="rgba(200,134,74,0.3)" strokeWidth="1.2" strokeDasharray="6,4" />
+      <circle cx="260" cy="280" r="60" fill="none" stroke="rgba(200,134,74,0.5)" strokeWidth="1.5" />
+      
+      {/* Center hub */}
+      <circle cx="260" cy="280" r="20" fill="rgba(200,134,74,0.1)" stroke="url(#goldGradTeam)" strokeWidth="1.8" />
+      <circle cx="260" cy="280" r="8" fill="#c8864a" />
+
+      {/* People nodes around the hub */}
+      {[
+        { x: 260, y: 140, label: 'Arch' },
+        { x: 380, y: 200, label: 'Eng' },
+        { x: 400, y: 320, label: 'Srvy' },
+        { x: 340, y: 420, label: 'Test' },
+        { x: 180, y: 420, label: 'Est' },
+        { x: 100, y: 320, label: 'HR' },
+        { x: 80, y: 200, label: 'Adm' },
+        { x: 200, y: 130, label: 'Tend' },
+      ].map((node, i) => (
+        <g key={i} transform={`translate(${node.x}, ${node.y})`}>
+          <circle cx="0" cy="0" r="14" fill="rgba(18,16,14,0.7)" stroke="rgba(200,134,74,0.6)" strokeWidth="1" />
+          <circle cx="0" cy="0" r="6" fill="none" stroke="#c8864a" strokeWidth="1" />
+          <text x="0" y="-18" textAnchor="middle" fill="rgba(200,134,74,0.5)" fontSize="6.5" fontFamily="'Jost',sans-serif" fontWeight="500">{node.label}</text>
+        </g>
+      ))}
+
+      {/* Connecting lines */}
+      {[
+        [260,280, 260,140],
+        [260,280, 380,200],
+        [260,280, 400,320],
+        [260,280, 340,420],
+        [260,280, 180,420],
+        [260,280, 100,320],
+        [260,280, 80,200],
+        [260,280, 200,130],
+      ].map((line, i) => (
+        <line key={i} x1={line[0]} y1={line[1]} x2={line[2]} y2={line[3]} stroke="rgba(200,134,74,0.15)" strokeWidth="0.8" strokeDasharray="4,4" />
+      ))}
+
+      {/* Floating badge */}
+      <g transform="translate(30, 50)">
+        <rect width="110" height="70" rx="3" fill="rgba(18,16,14,0.65)" stroke="rgba(200,134,74,0.5)" strokeWidth="0.8" />
+        <text x="55" y="22" textAnchor="middle" fill="#e8c99a" fontSize="8" fontFamily="'Jost',sans-serif" letterSpacing="1" fontWeight="500">TEAM</text>
+        <text x="55" y="46" textAnchor="middle" fill="#c8864a" fontSize="26" fontFamily="'Cormorant Garamond',serif" fontWeight="300">40+</text>
+        <text x="55" y="60" textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="7" fontFamily="'Jost',sans-serif">Professionals</text>
+      </g>
+
+      {/* Bottom label */}
+      <text x="260" y="520" textAnchor="middle" fill="rgba(200,134,74,0.6)" fontSize="8" fontFamily="'Jost',sans-serif" letterSpacing="2.5" fontWeight="400">BUILDING CREATORS & CONSULTING</text>
+      <text x="260" y="538" textAnchor="middle" fill="rgba(200,134,74,0.35)" fontSize="6.5" fontFamily="'Jost',sans-serif" letterSpacing="1.5">EST. 2010</text>
+    </svg>
   );
 }
 
@@ -474,17 +551,17 @@ export default function TeamPage({ featured = false }) {
       : teamMembers.filter(m => m.department === activeFilter);
 
   const STATS = [
-    { value: '50+', label: 'Professionals' },
-    { value: '150+', label: 'Projects' },
+    { value: '40+', label: 'Professionals' },
+    { value: '1200+', label: 'Projects' },
     { value: '9', label: 'Departments' },
     { value: '98%', label: 'Satisfaction' },
   ];
 
   return (
     <>
-      {/* ═══ Google Fonts ═══ */}
+      {/* ═══ FONTS & ANIMATIONS ═══ */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
         @keyframes bccPulse {
           0%, 100% { opacity: 1 }
@@ -534,17 +611,23 @@ export default function TeamPage({ featured = false }) {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.9rem;
-          font-weight: 700;
-          padding: 12px 24px;
-          background: #0F172A;
-          color: #FFFFFF;
+          font-family: 'Jost', sans-serif;
+          font-size: 0.8rem;
+          font-weight: 500;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 12px 28px;
+          background: #c8864a;
+          color: #12100e;
           text-decoration: none;
-          border-radius: 12px;
-          transition: opacity 0.2s ease;
+          border-radius: 4px;
+          transition: background 0.3s, transform 0.3s;
         }
-        .bcc-cta-link:hover { opacity: 0.85; color: #FFFFFF; }
+        .bcc-cta-link:hover {
+          background: #e8c99a;
+          transform: translateY(-2px);
+          color: #12100e;
+        }
 
         .arrow-icon { transition: transform 0.2s ease; }
         .bcc-cta-link:hover .arrow-icon { transform: translateX(4px); }
@@ -553,19 +636,19 @@ export default function TeamPage({ featured = false }) {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          font-family: 'DM Sans', sans-serif;
-          font-size: 0.88rem;
-          font-weight: 600;
-          color: rgba(255,255,255,0.7);
+          font-family: 'Jost', sans-serif;
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: rgba(255,255,255,0.5);
           text-decoration: none;
-          padding: 8px 0;
+          padding: 4px 0;
           transition: color 0.18s;
         }
-        .bcc-back-link-hero:hover { color: #FFFFFF; }
+        .bcc-back-link-hero:hover { color: #c8864a; }
 
         @media (max-width: 640px) {
-          .bcc-stats-row { gap: 10px !important; }
-          .bcc-stats-row > div { padding: 14px 16px !important; min-width: 80px !important; }
+          .bcc-stats-row { gap: 12px !important; }
+          .bcc-stats-row > div { padding-right: 12px !important; }
           .bcc-team-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
@@ -591,144 +674,141 @@ export default function TeamPage({ featured = false }) {
         </Helmet>
       )}
 
-      {/* ═══ HERO (full bg image) ═══ */}
+      {/* ═══ HERO (ink & gold) ═══ */}
       <section
         aria-label={featured ? 'Featured team members' : 'Our team'}
         style={{
           position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          minHeight: featured ? 'auto' : '80vh',
-          background: 'transparent',
-          padding: '0 0 0',
+          background: '#12100e',
+          minHeight: featured ? 'auto' : '100vh',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          alignItems: 'center',
           overflow: 'hidden',
         }}
       >
-        {/* Background image */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 0,
-            backgroundImage: `url(${HERO_IMAGE})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'brightness(0.3)',
-          }}
-        />
-        {/* Dark overlay */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 0,
-            background: 'linear-gradient(180deg, rgba(5,15,30,0.7) 0%, rgba(5,15,30,0.4) 100%)',
-          }}
-        />
+        {/* Left Column */}
+        <div style={{ padding: '7rem 4rem 7rem 5rem', position: 'relative', zIndex: 2 }}>
+          {/* Back link */}
+          {!featured && (
+            <motion.div
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+              style={{ marginBottom: '40px' }}
+            >
+              <Link to="/about" className="bcc-back-link-hero">
+                <FaArrowLeft style={{ fontSize: '0.7rem' }} />
+                Back to About
+              </Link>
+            </motion.div>
+          )}
 
-        {/* Content */}
-        <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
-          <div
+          {/* Eyebrow */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <p style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              fontFamily: "'Jost', sans-serif",
+              fontSize: '10.5px',
+              fontWeight: 500,
+              letterSpacing: '0.35em',
+              textTransform: 'uppercase',
+              color: '#e8c99a',
+              marginBottom: '2rem',
+            }}>
+              <span style={{ display: 'block', width: '32px', height: '1px', background: '#c8864a' }}></span>
+              Our People
+            </p>
+          </motion.div>
+
+          {/* Heading */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              maxWidth: 1160,
-              margin: '0 auto',
-              padding: featured ? '0 24px' : '80px 24px 60px',
+              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: 'clamp(3rem, 5.5vw, 5.5rem)',
+              fontWeight: 400,
+              lineHeight: 1.06,
               color: '#FFFFFF',
+              margin: '0 0 1.5rem',
+              letterSpacing: '-0.01em',
             }}
           >
-            {/* Back link moved here */}
-            {!featured && (
-              <motion.div
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4 }}
-                style={{ marginBottom: '100px' }}
-              >
-                <Link to="/about" className="bcc-back-link-hero">
-                  <FaArrowLeft style={{ fontSize: '0.8rem' }} />
-                  Back to About
-                </Link>
-              </motion.div>
-            )}
+            {featured ? 'Meet our core team' : 'The experts behind every project'}
+          </motion.h1>
 
-            {/* Hero text */}
+          {/* Description with typewriter */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            style={{
+              fontFamily: "'Jost', sans-serif",
+              fontSize: '16px',
+              fontWeight: 300,
+              lineHeight: 1.85,
+              color: 'rgba(255,255,255,0.5)',
+              maxWidth: '460px',
+              margin: '0 0 2.5rem',
+            }}
+          >
+            A team of engineers, architects, and consultants who bring{' '}
+            <strong style={{ color: '#c8864a', fontWeight: 400, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>
+              {TYPEWRITER_WORDS[wordIdx].substring(0, charIdx)}
+              <span style={{ color: '#e8c99a', fontWeight: 300 }}>|</span>
+            </strong>{' '}
+            to every project we take on.
+          </motion.p>
+
+          {/* Stats row (horizontal) */}
+          {!featured && (
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              className="bcc-stats-row"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              style={{ textAlign: 'center', marginBottom: featured ? '40px' : '80px' }}
+              transition={{ duration: 0.6, delay: 0.55 }}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: 0,
+                borderTop: '1px solid rgba(255,255,255,0.1)',
+                paddingTop: '2.5rem',
+                maxWidth: '480px',
+              }}
             >
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '0.72rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.7)',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  padding: '6px 16px',
-                  borderRadius: '8px',
-                  marginBottom: '20px',
-                }}
-              >
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22C55E', display: 'inline-block' }} />
-                Our People
-              </div>
-
-              <h1
-                style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: 'clamp(2rem, 4.5vw, 3rem)',
-                  fontWeight: 800,
-                  lineHeight: 1.1,
-                  letterSpacing: '-0.03em',
-                  margin: '0 auto 16px',
-                  maxWidth: '680px',
-                  color: '#FFFFFF',
-                }}
-              >
-                {featured ? 'Meet our core team' : 'The experts behind every project'}
-              </h1>
-
-              <p
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: '1rem',
-                  lineHeight: 1.75,
-                  color: 'rgba(255,255,255,0.65)',
-                  maxWidth: '520px',
-                  margin: '0 auto 36px',
-                }}
-              >
-                A team of engineers, architects, and consultants who bring{' '}
-                <strong
-                  style={{
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    fontWeight: 800,
-                    color: '#FFFFFF',
-                  }}
-                >
-                  {TYPEWRITER_WORDS[wordIdx].substring(0, charIdx)}
-                  <span style={{ color: '#60A5FA', fontWeight: 400 }}>|</span>
-                </strong>{' '}
-                to every project we take on.
-              </p>
-
-              {!featured && (
-                <div className="bcc-stats-row" style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
-                  {STATS.map((s, i) => (
-                    <StatCounter key={i} {...s} index={i} />
-                  ))}
-                </div>
-              )}
+              {STATS.map((s, i) => (
+                <StatCounter key={i} {...s} index={i} />
+              ))}
             </motion.div>
-          </div>
+          )}
         </div>
+
+        {/* Right Column – Illustration */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          style={{
+            position: 'relative',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '4rem 3rem',
+            borderLeft: '1px solid rgba(200,134,74,0.2)',
+          }}
+          aria-hidden="true"
+        >
+          <TeamIllustration />
+        </motion.div>
       </section>
 
       {/* ═══ REST OF PAGE (white bg) ═══ */}
@@ -830,7 +910,7 @@ export default function TeamPage({ featured = false }) {
               style={{ textAlign: 'center', marginTop: '48px' }}
             >
               <Link to="/contact" className="bcc-cta-link">
-                Start your project <FaArrowRight className="arrow-icon" style={{ fontSize: '0.8rem' }} />
+                Start your project <FaArrowRight className="arrow-icon" style={{ fontSize: '0.7rem' }} />
               </Link>
             </motion.div>
           )}
@@ -845,7 +925,7 @@ export default function TeamPage({ featured = false }) {
               style={{ textAlign: 'center', marginTop: '48px', position: 'relative', zIndex: 2 }}
             >
               <Link to="/team" className="bcc-cta-link">
-                Meet the full team <FaArrowRight className="arrow-icon" style={{ fontSize: '0.8rem' }} />
+                Meet the full team <FaArrowRight className="arrow-icon" style={{ fontSize: '0.7rem' }} />
               </Link>
             </motion.div>
           )}

@@ -30,7 +30,7 @@ export const testimonials = [
 
 export const milestones = [
   { year: 2017, title: 'Foundation', desc: 'Company established in Rudrapur UttraKhand', icon: '🏗️' },
-  { year: 2019, title: 'First Milestone', desc: '50+ projects completed', icon: '🏢' },
+  { year: 2019, title: 'First Milestone', desc: '200+ projects completed', icon: '🏢' },
   { year: 2022, title: 'Consulting Launch', desc: 'Added consulting services', icon: '📊' },
   { year: 2023, title: 'ISO Certified', desc: 'International quality standards', icon: '✅' },
   { year: 2025, title: '950+ Projects', desc: 'Major expansion phase', icon: '🏆' },

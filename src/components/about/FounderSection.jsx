@@ -29,8 +29,8 @@ const DEFAULTS = {
   subQuote:
     "Every project we undertake is a responsibility we deliver with unwavering integrity, uncompromising quality, and relentless passion.",
   stats: [
-    ["12+", "Years of Excellence"],
-    ["500+", "Projects Delivered"],
+    ["15+", "Years of Excellence"],
+    ["1200+", "Projects Delivered"],
     ["100%", "Client Commitment"],
   ],
 };

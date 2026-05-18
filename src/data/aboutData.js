@@ -1,12 +1,3 @@
-/**
- * BCC Static Data
- * ────────────────
- * Centralised data for all About page sections.
- * Replace any array with a live API call inside the consuming component.
- *
- * Usage:
- *   import { STATS, TIMELINE, VALUES, TEAM, TESTIMONIALS } from '../data/aboutData';
- */
 
 import {
   FaBuilding, FaMapMarkerAlt, FaUsers, FaStar, FaCalendarAlt, FaAward,
@@ -15,9 +6,9 @@ import {
 } from "react-icons/fa";
 
 import { C } from "../utils/tokens";
-
+  
 export const STATS = [
-  { value: 500, suffix: "+", label: "Projects Completed",  icon: FaBuilding,     color: C.azure   },
+  { value: 1200, suffix: "+", label: "Projects Completed",  icon: FaBuilding,     color: C.azure   },
   { value: 15,  suffix: "+", label: "Cities Covered",      icon: FaMapMarkerAlt, color: C.teal    },
   { value: 40,  suffix: "+", label: "Expert Engineers",    icon: FaUsers,        color: C.emerald },
   { value: 100, suffix: "%", label: "Client Satisfaction", icon: FaStar,         color: C.amber   },
@@ -27,12 +18,13 @@ export const STATS = [
 
 export const TIMELINE = [
   { year: "2017", title: "Foundation",        desc: "BCC incorporated with a vision to bring transparency to Indian construction.",              icon: FaRocket      },
-  { year: "2018", title: "First 25 Projects", desc: "Delivered 25 residential projects across Uttar Pradesh — quality enshrined.",              icon: FaBuilding    },
+  { year: "2018", title: "First 100 Projects", desc: "Delivered 100 residential projects across Uttar Pradesh — quality enshrined.",              icon: FaBuilding    },
   { year: "2020", title: "Soil Division",     desc: "Launched specialised geotechnical & soil investigation division.",                          icon: FaHardHat     },
   { year: "2022", title: "10+ City Footprint",desc: "Expanded to 10+ cities; crossed the 100-project milestone.",                               icon: FaMapMarkerAlt},
   { year: "2022", title: "ISO Certified",     desc: "Achieved ISO 9001:2015 — quality management formally enshrined.",                          icon: FaShieldAlt   },
   { year: "2023", title: "CIDC Award",        desc: "Honoured with Construction Industry Development Council Award.",                            icon: FaAward       },
-  { year: "2025", title: "Today",             desc: "500+ projects, 30+ team members, 15+ cities — and still growing.",                         icon: FaChartLine   },
+  { year: "2025", title: "15+ Cities",        desc: "1100+ projects, 40+ team members, 15+ cities — and still growing.",                           icon: FaChartLine   },
+  { year: "2026", title: "Today",   desc: " 1200+ projects, 40+ team members, 20+ cities — and still growing.",                                  icon: FaUsers       },
 ];
 
 export const VALUES = [
@@ -77,9 +69,9 @@ export  const testimonials = [
 
 export const milestones = [
   { year: 2017, title: 'Foundation', desc: 'Company established in Rudrapur UttraKhand', icon: '🏗️' },
-  { year: 2019, title: 'First Milestone', desc: '50+ projects completed', icon: '🏢' },
+  { year: 2019, title: 'First Milestone', desc: '200+ projects completed', icon: '🏢' },
   { year: 2022, title: 'Consulting Launch', desc: 'Added consulting services', icon: '📊' },
   { year: 2023, title: 'ISO Certified', desc: 'International quality standards', icon: '✅' },
-  { year: 2025, title: '950+ Projects', desc: 'Major expansion phase', icon: '🏆' },
+  { year: 2025, title: '1100+ Projects', desc: 'Major expansion phase', icon: '🏆' },
   { year: 2026, title: 'Industry Leader', desc: 'Top construction company', icon: '👑' }
 ];

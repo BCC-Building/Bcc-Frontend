@@ -1,132 +1,281 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import GradientText from '../common/GradientText';
+import React from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaArrowRight, FaCheckCircle, FaBolt, FaTrophy } from "react-icons/fa";
 
-const ServicesCTA = () => {
-  const trustItems = [
-    { icon: "✓", text: "Free Quote", bg: "bg-green-500/20" },
-    { icon: "✓", text: "No Obligation", bg: "bg-blue-500/20" },
-    { icon: "⚡", text: "24hr Response", bg: "bg-yellow-500/20" },
-    { icon: "🏆", text: "100% Satisfaction", bg: "bg-purple-500/20" }
-  ];
+// ═══════════════════════════════════════════════════════════
+// DATA – mapped from original trustItems
+// ═══════════════════════════════════════════════════════════
+const TRUST_ITEMS = [
+  { icon: FaCheckCircle, text: "Free Quote" },
+  { icon: FaCheckCircle, text: "No Obligation" },
+  { icon: FaBolt, text: "24hr Response" },
+  { icon: FaTrophy, text: "100% Satisfaction" },
+];
 
+// ═══════════════════════════════════════════════════════════
+// STYLES – premium ink/gold palette, same as About hero
+// ═══════════════════════════════════════════════════════════
+const css = `
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
+
+  :root {
+    --ink: #12100e;
+    --ink-2: #3d3830;
+    --ink-3: #7a7068;
+    --cream: #faf8f4;
+    --warm: #f2ece0;
+    --gold: #c8864a;
+    --gold-l: #e8c99a;
+    --gold-d: #9a6030;
+    --white: #ffffff;
+    --border: rgba(18,16,14,0.1);
+    --fd: 'Cormorant Garamond', Georgia, serif;
+    --fb: 'Jost', system-ui, sans-serif;
+  }
+
+  .services-cta-page * { box-sizing: border-box; }
+  .services-cta-page { background: var(--cream); font-family: var(--fb); color: var(--ink); }
+
+  .services-cta-wrapper {
+    position: relative;
+    background: var(--ink);
+    overflow: hidden;
+    padding: 7rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+  }
+
+  .services-cta-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .services-cta-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--fb);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-l);
+    margin-bottom: 2rem;
+  }
+  .services-cta-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .services-cta-h2 {
+    font-family: var(--fd);
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    font-weight: 400;
+    line-height: 1.12;
+    color: var(--white);
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .services-cta-h2 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .services-cta-desc {
+    font-family: var(--fb);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: rgba(255,255,255,0.5);
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+  }
+  .services-cta-desc strong {
+    color: rgba(255,255,255,0.85);
+    font-weight: 400;
+  }
+
+  .services-cta-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+
+  .cta-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--fb);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    text-decoration: none;
+    padding: 16px 36px;
+    transition: background 0.3s, transform 0.3s;
+    white-space: nowrap;
+  }
+  .cta-btn-primary:hover {
+    background: var(--gold-l);
+    transform: translateY(-2px);
+  }
+
+  .cta-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--fb);
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    padding: 16px 36px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: border-color 0.3s, color 0.3s;
+    white-space: nowrap;
+  }
+  .cta-btn-secondary:hover {
+    border-color: rgba(255,255,255,0.4);
+    color: var(--white);
+  }
+
+  .services-cta-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+  }
+  .services-cta-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.45);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .services-cta-trust-item svg {
+    color: var(--gold);
+  }
+
+  .services-cta-contact {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+  }
+  .services-cta-contact a {
+    color: var(--gold);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .services-cta-contact a:hover {
+    color: var(--gold-l);
+  }
+
+  /* Subtle gold grain overlay */
+  .services-cta-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(200,134,74,0.04) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(200,134,74,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    .services-cta-wrapper {
+      padding: 5rem 1.5rem;
+    }
+    .services-cta-trust {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+`;
+
+// ═══════════════════════════════════════════════════════════
+// MAIN COMPONENT
+// ═══════════════════════════════════════════════════════════
+export default function ServicesCTA() {
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900"></div>
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -right-1/2 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-        <div className="absolute -bottom-1/2 -left-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse animation-delay-2000"></div>
-      </div>
-      <div className="absolute inset-0 bg-black/60"></div>
-      <div className="absolute inset-0" style={{
-        backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 1px)`,
-        backgroundSize: '40px 40px'
-      }}></div>
-      
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <motion.div 
-          className="max-w-4xl mx-auto text-center"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <motion.div 
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6"
-            initial={{ opacity: 0, y: 20 }}
+    <>
+      <style>{css}</style>
+      <div className="services-cta-page">
+        <section className="services-cta-wrapper" aria-label="Call to action">
+          <motion.div
+            className="services-cta-content"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
           >
-            <span className="text-yellow-400">⭐</span>
-            <span className="text-sm text-white">Trusted by 1000+ Clients</span>
-          </motion.div>
-          
-          <motion.h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
-            Ready to Transform Your
-            <GradientText className="block">
-              Vision into Reality?
-            </GradientText>
-          </motion.h2>
-          
-          <motion.p 
-            className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            Join <span className="text-purple-400 font-bold">1000+ satisfied clients</span> who trusted us with their projects.
-            Get expert consultation and a customized quote within <span className="text-purple-400">24 hours</span>.
-          </motion.p>
-          
-          <motion.div 
-            className="flex flex-wrap gap-4 justify-center mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            <Link 
-              to="/contact" 
-              className="group relative px-8 py-4 rounded-full font-semibold text-white overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-              style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Get Free Consultation
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </Link>
-            
-            <Link 
-              to="/portfolio" 
-              className="px-8 py-4 rounded-full font-semibold text-white border-2 border-white/30 backdrop-blur-sm hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover:-translate-y-1"
-            >
-              View Success Stories
-            </Link>
-          </motion.div>
-          
-          <motion.div 
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-          >
-            {trustItems.map((item, idx) => (
-              <div key={idx} className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full ${item.bg} backdrop-blur-sm border border-white/10`}>
-                <span className="text-green-400 font-bold">{item.icon}</span>
-                <span className="text-sm text-white">{item.text}</span>
-              </div>
-            ))}
-          </motion.div>
+            {/* Eyebrow */}
+            <div className="services-cta-eyebrow">
+              Trusted by 1000+ Clients
+            </div>
 
-          <motion.div 
-            className="mt-8 pt-6 border-t border-white/10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-          >
-            <p className="text-sm text-gray-400">
-              📞 Call us: <a href="tel:+911234567890" className="text-purple-400 hover:text-purple-300">+91 1234567890</a>
-              {' '}or{' '}
-              📧 Email: <a href="mailto:info@buildingcreators.com" className="text-purple-400 hover:text-purple-300">info@buildingcreators.com</a>
+            {/* Heading */}
+            <h2 className="services-cta-h2">
+              Ready to Transform Your
+              <br />
+              <em>Vision into Reality?</em>
+            </h2>
+
+            {/* Description */}
+            <p className="services-cta-desc">
+              Join <strong>1000+ satisfied clients</strong> who trusted us with
+              their projects. Get expert consultation and a customized quote
+              within <strong>24 hours</strong>.
             </p>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
 
-export default ServicesCTA;
+            {/* Buttons */}
+            <div className="services-cta-buttons">
+              <Link to="/contact" className="cta-btn-primary">
+                Get Free Consultation <FaArrowRight />
+              </Link>
+              <Link to="/projects" className="cta-btn-secondary">
+                View Success Stories
+              </Link>
+            </div>
+
+            {/* Trust items */}
+            <div className="services-cta-trust">
+              {TRUST_ITEMS.map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <span key={idx} className="services-cta-trust-item">
+                    <Icon /> {item.text}
+                  </span>
+                );
+              })}
+            </div>
+
+            {/* Contact info */}
+            <div className="services-cta-contact">
+              📞 Call us: <a href="tel:+918057540906">+91 8057540906</a>{" "}
+              &nbsp;or&nbsp; 📧 Email:{" "}
+              <a href="mailto:info@bcc.net.in">info@bcc.net.in</a>
+            </div>
+          </motion.div>
+        </section>
+      </div>
+    </>
+  );
+}

@@ -308,7 +308,7 @@ export const services = [
     details: "Accurate cost estimation and expert consultancy for better project planning and budget control.",
     technologies: ["Estimation Software", "Excel", "AutoCAD"],
     certifications: ["Cost Engineer Certified", "Quantity Surveyor"],
-    portfolio: "500+ Estimation Projects"
+    portfolio: "1200+ Estimation Projects"
   }
 ];
 

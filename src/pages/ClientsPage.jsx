@@ -256,9 +256,9 @@ const CLIENT_CATEGORIES = [
 
 const STATS = [
   { value: 50, suffix: "+", label: "Government\nClients" },
-  { value: 250, suffix: "+", label: "Projects\nDelivered" },
+  { value: 1200, suffix: "+", label: "Projects\nDelivered" },
   { value: 98, suffix: "%", label: "On-Time\nDelivery" },
-  { value: 15, suffix: "+", label: "Years of\nExcellence" },
+  { value: 9, suffix: "+", label: "Years of\nExcellence" },
 ];
 
 const MARQUEE_ITEMS = [
@@ -935,7 +935,7 @@ const buildSchemas = () => {
     url: 'https://bcc.net.in',
     logo: 'https://bcc.net.in/logo.png',
     description: 'Trusted government & institutional construction partner with 50+ clients, ISO certifications.',
-    foundingDate: '2009',
+    foundingDate: '2017',
     founder: { '@type': 'Person', name: 'Er. Yaseen Ahmad Khan' },
     numberOfEmployees: { '@type': 'QuantitativeValue', value: '200' },
     areaServed: { '@type': 'Country', name: 'India' },

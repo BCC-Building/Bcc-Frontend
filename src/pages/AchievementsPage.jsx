@@ -52,7 +52,7 @@ const ACHIEVEMENT_CATEGORIES = [
       {
         title: 'Class‑A Contractor License',
         desc: 'Registered with State PWD for major infrastructure works up to unlimited value.',
-        year: '2018',
+        year: '2017',
       },
     ],
   },
@@ -94,9 +94,9 @@ const ACHIEVEMENT_CATEGORIES = [
         year: 'Ongoing',
       },
       {
-        title: '500+ Projects Completed',
+        title: '1200+ Projects Completed',
         desc: 'Successfully delivered projects ranging from small works to large‑scale infrastructure.',
-        year: 'Since 2010',
+        year: 'Since 2017',
       },
       {
         title: '98% On‑Time Delivery',
@@ -104,7 +104,7 @@ const ACHIEVEMENT_CATEGORIES = [
         year: 'Consistent',
       },
       {
-        title: '90% Client Retention',
+        title: '98% Client Retention',
         desc: 'Long‑standing relationships with government departments and public sector units.',
         year: 'Ongoing',
       },
@@ -113,7 +113,7 @@ const ACHIEVEMENT_CATEGORIES = [
 ];
 
 const HERO_STATS = [
-  { value: '500+', label: 'Projects\nCompleted' },
+  { value: '1200+', label: 'Projects\nCompleted' },
   { value: '50+', label: 'Govt.\nClients' },
   { value: '98%', label: 'On-Time\nDelivery' },
   { value: '9+', label: 'Years of\nService' },
@@ -634,7 +634,7 @@ const buildSchemas = () => {
     name: 'BCC Building Creators And Consulting',
     url: 'https://bcc.net.in',
     logo: 'https://bcc.net.in/logo.png',
-    description: 'Award-winning construction and consulting firm with 150+ projects, ISO certifications, and recognition from government bodies across 8 countries.',
+    description: 'Award-winning construction and consulting firm with 1200+ projects, ISO certifications, and recognition from government bodies across 8 countries.',
     foundingDate: '2017',
     founder: { '@type': 'Person', name: 'Er. Yaseen Ahmad Khan' },
     numberOfEmployees: { '@type': 'QuantitativeValue', value: '50+' },
@@ -667,7 +667,7 @@ const buildSchemas = () => {
       {
         '@type': 'Question',
         name: 'How many projects has BCC completed?',
-        acceptedAnswer: { '@type': 'Answer', text: 'BCC has successfully completed 150+ projects across 6 states since 2010.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'BCC has successfully completed 1200+ projects across 6 states since 2010.' },
       },
     ],
   };
@@ -684,7 +684,7 @@ export default function AchievementsPage() {
     <>
       <SEO
         title="Awards, Certifications & Milestones | BCC Building Creators and Consulting"
-        description="Explore BCC's 200+ awards, ISO 9001/14001/OHSAS certifications, 150+ completed projects, and 15+ years of engineering excellence across India and 8 countries."
+        description="Explore BCC's 200+ awards, ISO 9001/14001/OHSAS certifications, 1200+ completed projects, and 15+ years of engineering excellence across India and 8 countries."
         keywords="BCC achievements, ISO certified construction firm, construction awards India, Uttarakhand contractor awards, engineering milestones, government contractor certifications, best construction firm 2024"
         url="https://bcc.net.in/achievements"
       />

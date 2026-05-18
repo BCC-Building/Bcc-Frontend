@@ -34,7 +34,7 @@ export default function StorySection({
                   src={imageUrl}
                   alt="BCC Construction project site"
                   loading="lazy"
-                  style={{ width: "100%", height: 520, objectFit: "cover", display: "block" }}
+                  style={{ width: "100%", height: 1200, objectFit: "cover", display: "block" }}
                 />
               </div>
 
@@ -72,7 +72,7 @@ export default function StorySection({
                 padding: "8px 18px", borderRadius: 100,
                 fontSize: 12, fontWeight: 800, letterSpacing: "1.5px",
               }}>
-                Est. 2010
+                Est. 2017
               </div>
             </div>
           </Reveal>
@@ -105,7 +105,7 @@ export default function StorySection({
                 display: "flex", gap: 44,
                 borderTop: `1px solid ${C.fog}`, paddingTop: 32, flexWrap: "wrap",
               }}>
-                {[["250+", "Projects"], ["₹500Cr+", "Value Delivered"], ["100%", "Satisfaction"]].map(([v, l], i) => (
+                {[["1200+", "Projects"], ["₹500Cr+", "Value Delivered"], ["100%", "Satisfaction"]].map(([v, l], i) => (
                   <div key={i}>
                     <div className="serif" style={{
                       fontSize: "2rem", fontWeight: 900, color: C.blue, lineHeight: 1,

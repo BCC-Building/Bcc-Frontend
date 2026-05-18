@@ -124,9 +124,9 @@ export default function Contact() {
                 className="mt-4 d-flex gap-3 flex-wrap"
               >
                 <a 
-                  href="tel:+919876543210" 
+                  href="tel:+918057540906" 
                   className="btn btn-light px-4"
-                  aria-label="Call us at +91 98765 43210"
+                  aria-label="Call us at +91 8057540906"
                 >
                   📞 Call Now
                 </a>
@@ -152,10 +152,10 @@ export default function Contact() {
             {
               icon: 'bi-telephone-fill',
               title: 'Call Us',
-              text: '+91 98765 43210',
+              text: '+91 8057540906',
               sub: 'Mon - Sat: 9:00 AM - 7:00 PM',
               color: 'bg-primary',
-              ariaLabel: 'Phone number: +91 98765 43210',
+              ariaLabel: 'Phone number: +91 8057540906',
             },
             {
               icon: 'bi-envelope-fill',

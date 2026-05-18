@@ -1,18 +1,8 @@
-// src/components/home/Hero.jsx - Production-Ready Hero Section
+// src/components/home/Hero.jsx
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useState, useMemo } from 'react';
-import { publicAPI } from '../api/endpoints'; // 👈 Backend API for dynamic stats
-/**
- * AnimatedCounter Component
- * Counts up from 0 to target value with smooth easing
- * Uses requestAnimationFrame for optimal performance
- * 
- * @param {object} props
- * @param {number} props.target - Final count number
- * @param {string} props.suffix - Suffix to show after count (+, %, etc.)
- * @param {number} props.duration - Animation duration in ms (default: 1500)
- */
+
 function AnimatedCounter({ target, suffix, duration = 1500 }) {
   const [count, setCount] = useState(0);
 
@@ -24,13 +14,9 @@ function AnimatedCounter({ target, suffix, duration = 1500 }) {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
-      // Easing: cubic ease-out (starts fast, slows down)
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.floor(eased * target);
-      
       setCount(current);
-      
       if (progress < 1) {
         animationId = requestAnimationFrame(animate);
       }
@@ -41,45 +27,34 @@ function AnimatedCounter({ target, suffix, duration = 1500 }) {
   }, [target, duration]);
 
   return (
-    <h3 className="mb-0 text-white fw-bold" style={{ minHeight: '36px', fontSize: 'clamp(1.5rem, 3vw, 2rem)' }}>
+    <h3
+      className="mb-0 text-white fw-bold"
+      style={{ minHeight: '36px', fontSize: 'clamp(1.5rem, 3vw, 2rem)' }}
+    >
       {count}{suffix}
     </h3>
   );
 }
 
-/**
- * TypingText Component
- * Creates a typewriter effect with cycling text
- * 
- * @param {object} props
- * @param {string[]} props.texts - Array of texts to cycle through
- * @param {number} props.typeSpeed - Typing speed in ms per character (default: 60)
- * @param {number} props.deleteSpeed - Deleting speed in ms per character (unused)
- * @param {number} props.pauseDuration - Pause after text completes in ms (default: 2000)
- */
 function TypingText({ texts, typeSpeed = 60, pauseDuration = 2000 }) {
-  const [index, setIndex] = useState(0);          // Current text index
-  const [displayText, setDisplayText] = useState(''); // Currently displayed text
-  const [charIndex, setCharIndex] = useState(0);  // Current character index
+  const [index, setIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [charIndex, setCharIndex] = useState(0);
 
   useEffect(() => {
     let timeout;
-    
-    // If still typing current text
     if (charIndex < texts[index].length) {
       timeout = setTimeout(() => {
         setDisplayText((prev) => prev + texts[index][charIndex]);
         setCharIndex((prev) => prev + 1);
       }, typeSpeed);
     } else {
-      // Text complete - pause then move to next
       timeout = setTimeout(() => {
         setDisplayText('');
         setCharIndex(0);
         setIndex((prev) => (prev + 1) % texts.length);
       }, pauseDuration);
     }
-    
     return () => clearTimeout(timeout);
   }, [charIndex, index, texts, typeSpeed, pauseDuration]);
 
@@ -100,10 +75,6 @@ function TypingText({ texts, typeSpeed = 60, pauseDuration = 2000 }) {
   );
 }
 
-/**
- * StatCard Component
- * Glassmorphism card on right side with dynamic data
- */
 function StatCard({ stats }) {
   return (
     <motion.div
@@ -121,21 +92,34 @@ function StatCard({ stats }) {
       }}
     >
       <div className="text-center mb-3">
-        <span style={{ fontSize: '3rem' }} role="img" aria-label="building">🏢</span>
+        <span style={{ fontSize: '3rem' }} role="img" aria-label="building">
+          🏢
+        </span>
       </div>
       <h2 className="h5 text-white mb-3 text-center fw-bold">
         Trusted by Leading Clients
       </h2>
 
-      <p style={{ color: 'rgba(255,255,255,0.9)', minHeight: '48px', textAlign: 'center', lineHeight: 1.6 }}>
-        Delivering premium engineering & consulting solutions with unmatched precision since 2018.
+      <p
+        style={{
+          color: 'rgba(255,255,255,0.9)',
+          minHeight: '48px',
+          textAlign: 'center',
+          lineHeight: 1.6,
+        }}
+      >
+        Delivering premium engineering & consulting solutions with unmatched
+        precision since 2017.
       </p>
 
-      {/* Quick Stats inside card */}
+      {/* Stats inside card – ab value key use karenge */}
       <div className="d-flex justify-content-center gap-4 mt-4 mb-3">
         {stats.slice(0, 3).map((stat, i) => (
           <div key={i} className="text-center">
-            <div className="text-warning fw-bold" style={{ fontSize: '1.2rem' }}>
+            <div
+              className="text-warning fw-bold"
+              style={{ fontSize: '1.2rem' }}
+            >
               {stat.value}{stat.suffix}
             </div>
             <small className="text-white-50" style={{ fontSize: '0.7rem' }}>
@@ -167,87 +151,36 @@ function StatCard({ stats }) {
   );
 }
 
-// ==================== MAIN COMPONENT ====================
-
-/**
- * Hero Component
- * Home page hero section with typing animation, counters, and CTA
- * 
- * Features:
- * - Full-screen hero with background image
- * - Typewriter text animation (cycling through taglines)
- * - Animated counters (projects, engineers, satisfaction)
- * - Glassmorphism stat card
- * - Optimized with requestAnimationFrame
- * - Accessible with ARIA labels
- * 
- * To change hero image: Update the img src URL
- * To change taglines: Update `taglines` array
- * To change stats: Update `heroStats` array
- */
 export default function Hero() {
-  // ==================== STATE ====================
-  const [projectCount, setProjectCount] = useState(0);
-  const [apiLoaded, setApiLoaded] = useState(false);
+  const taglines = useMemo(
+    () => [
+      "Engineering Excellence",
+      "Smart Construction Solutions",
+      "Precision & Trust",
+    ],
+    []
+  );
 
-  // ==================== DATA ====================
-
-  /**
-   * Hero taglines for typing animation
-   * Edit these to change what text cycles in the hero
-   */
-  const taglines = useMemo(() => [
-    "Engineering Excellence",
-    "Smart Construction Solutions",
-    "Precision & Trust",
-  ], []);
-
-  /**
-   * Hero stats (fallback values - overridden by API if available)
-   * Edit these to change default stat numbers
-   */
-  const heroStats = useMemo(() => [
-    { target: apiLoaded ? projectCount : 150, suffix: '+', label: 'Projects Completed', icon: '🏗️' },
-    { target: 20, suffix: '+', label: 'Expert Engineers', icon: '👷' },
-    { target: 98, suffix: '%', label: 'Client Satisfaction', icon: '⭐' },
-  ], [apiLoaded, projectCount]);
-
-  // ==================== API FETCHING ====================
-
-  /**
-   * Fetch project count from backend to show real stats
-   * Falls back to default values if API fails
-   */
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await publicAPI.getProjects();
-        if (response.data?.success) {
-          const projects = response.data.data || [];
-          setProjectCount(projects.length);
-          setApiLoaded(true);
-        }
-      } catch {
-        // Silently fail - use default stats
-        console.debug('Hero stats: Using default values');
-      }
-    };
-
-    fetchStats();
-  }, []);
-
-  // ==================== RENDER ====================
+  // 👇 Hardcoded stats – ab "value" key use karenge
+  const heroStats = useMemo(
+    () => [
+      { value: 1200, suffix: '+', label: 'Projects Completed', icon: '🏗️' },
+      { value: 40,   suffix: '+', label: 'Expert Engineers',   icon: '👷' },
+      { value: 100,  suffix: '%', label: 'Client Satisfaction', icon: '⭐' },
+    ],
+    []
+  );
 
   return (
     <section
       className="hero d-flex align-items-center position-relative overflow-hidden"
       style={{
         minHeight: 'calc(100vh - 70px)',
-        background: '#0a0a1a', // Fallback dark blue
+        background: '#0a0a1a',
       }}
       aria-label="Hero section"
     >
-      {/* ==================== HERO BACKGROUND IMAGE ==================== */}
+      {/* Background image */}
       <img
         src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80"
         alt="Construction site with engineers"
@@ -266,25 +199,22 @@ export default function Hero() {
         }}
       />
 
-      {/* ==================== GRADIENT OVERLAY ==================== */}
+      {/* Gradient overlay */}
       <div
         aria-hidden="true"
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,30,0.5) 50%, rgba(0,0,0,0.7) 100%)',
+          background:
+            'linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,30,0.5) 50%, rgba(0,0,0,0.7) 100%)',
           zIndex: 1,
         }}
       />
 
-      {/* ==================== CONTENT ==================== */}
       <div className="container py-5 position-relative" style={{ zIndex: 2 }}>
         <div className="row align-items-center gy-5">
-
-          {/* ==================== LEFT COLUMN ==================== */}
+          {/* Left column */}
           <div className="col-lg-7">
-            
-            {/* Subheading */}
             <motion.span
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -295,7 +225,6 @@ export default function Hero() {
               🏗️ Construction • Consulting • Digital Solutions
             </motion.span>
 
-            {/* Typing Heading */}
             <motion.h1
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -313,7 +242,6 @@ export default function Hero() {
               <TypingText texts={taglines} />
             </motion.h1>
 
-            {/* Description */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -327,10 +255,10 @@ export default function Hero() {
                 lineHeight: 1.6,
               }}
             >
-              Premium structural, architectural, geotechnical and survey services for clients who demand quality, speed and clarity.
+              Premium structural, architectural, geotechnical and survey services
+              for clients who demand quality, speed and clarity.
             </motion.p>
 
-            {/* ==================== CTA BUTTONS ==================== */}
             <motion.div
               className="d-flex gap-3 flex-wrap mb-5"
               initial={{ opacity: 0, y: 20 }}
@@ -356,8 +284,8 @@ export default function Hero() {
               </Link>
               <a
                 className="btn btn-outline-light btn-lg px-4"
-                href="tel:+919876543210"
-                aria-label="Call us at +91 98765 43210"
+                href="tel:+918057540906"
+                aria-label="Call us at +91 8057540906"
                 style={{ borderRadius: '50px', transition: 'all 0.3s ease' }}
                 onMouseEnter={(e) => {
                   e.target.style.transform = 'translateY(-2px)';
@@ -372,7 +300,7 @@ export default function Hero() {
               </a>
             </motion.div>
 
-            {/* ==================== ANIMATED COUNTERS ==================== */}
+            {/* Left side counters – ab item.value use karenge */}
             <div className="d-flex gap-4 flex-wrap" style={{ minHeight: '72px' }}>
               {heroStats.map((item, i) => (
                 <motion.div
@@ -383,12 +311,19 @@ export default function Hero() {
                   transition={{ delay: 0.8 + i * 0.15 }}
                 >
                   <div className="d-flex align-items-center gap-2 mb-1">
-                    <span style={{ fontSize: '1.3rem' }} role="img" aria-hidden="true">
+                    <span
+                      style={{ fontSize: '1.3rem' }}
+                      role="img"
+                      aria-hidden="true"
+                    >
                       {item.icon}
                     </span>
-                    <AnimatedCounter target={item.target} suffix={item.suffix} />
+                    <AnimatedCounter target={item.value} suffix={item.suffix} />
                   </div>
-                  <small className="text-white-50" style={{ paddingLeft: '2rem' }}>
+                  <small
+                    className="text-white-50"
+                    style={{ paddingLeft: '2rem' }}
+                  >
                     {item.label}
                   </small>
                 </motion.div>
@@ -396,21 +331,17 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ==================== RIGHT COLUMN (Glass Card) ==================== */}
+          {/* Right column – StatCard with same heroStats */}
           <div className="col-lg-5">
             <StatCard stats={heroStats} />
           </div>
-
         </div>
       </div>
 
-      {/* ==================== CSS ANIMATIONS ==================== */}
       <style>{`
         @keyframes blink {
           50% { border-color: transparent; }
         }
-        
-        /* Smooth scroll behavior */
         @media (prefers-reduced-motion: no-preference) {
           html {
             scroll-behavior: smooth;
@@ -419,4 +350,4 @@ export default function Hero() {
       `}</style>
     </section>
   );
-};
+}

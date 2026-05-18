@@ -2,6 +2,8 @@
 // Production-Ready | Editorial Magazine Style | BCC Engineering Blog
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FaArrowRight, FaCheckCircle } from 'react-icons/fa';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 
@@ -10,6 +12,12 @@ const CATEGORIES = ['All','Architecture','Design','Business','Soil Testing','Sur
 const PER_PAGE = 6;
 const FALLBACK = 'https://placehold.co/800x500/1a1a2e/ffffff?text=BCC+Blog';
 
+const TRUST_BADGES = [
+  'Weekly Expert Insights',
+  '8+ Industry Topics',
+  'By Senior Engineers',
+];
+
 // ─── helpers ──────────────────────────────────────────────────────────────────
 const fmtDate = (d) => {
   if (!d) return '';
@@ -17,6 +25,82 @@ const fmtDate = (d) => {
 };
 const truncate = (t, n = 130) => !t || t.length <= n ? t : t.slice(0, n).trimEnd() + '…';
 const readTime = (p) => p.readTimeMinutes || p.readTime || '5 min';
+
+// ─── Blog illustration (blog‑themed SVG) ────────────────────────────────────
+const BlogIllustration = () => (
+  <svg
+    viewBox="0 0 520 600"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ width: '100%', maxWidth: 480, height: 'auto' }}
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="goldGradBlog" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor="#c8864a" />
+        <stop offset="100%" stopColor="#e8c99a" />
+      </linearGradient>
+      <pattern id="gridBlog" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(200,134,74,0.08)" strokeWidth="0.5" />
+      </pattern>
+    </defs>
+
+    <rect width="520" height="600" fill="url(#gridBlog)" />
+
+    {/* Open book / article */}
+    <g transform="translate(130, 100)">
+      {/* Left page */}
+      <path d="M0 20 L130 40 L130 340 L0 320 Z" fill="rgba(200,134,74,0.04)" stroke="rgba(200,134,74,0.4)" strokeWidth="1.2" />
+      {/* Right page */}
+      <path d="M260 40 L390 20 L390 320 L260 340 Z" fill="rgba(200,134,74,0.04)" stroke="rgba(200,134,74,0.4)" strokeWidth="1.2" />
+      {/* Spine */}
+      <line x1="130" y1="40" x2="130" y2="340" stroke="rgba(200,134,74,0.5)" strokeWidth="1.2" />
+      <line x1="260" y1="40" x2="260" y2="340" stroke="rgba(200,134,74,0.5)" strokeWidth="1.2" />
+
+      {/* Text lines left */}
+      {[70,90,110,130,150,170,190,210,230,250,270,290,310].map((y, i) => (
+        <line key={`l${i}`} x1="15" y1={y} x2="110" y2={y} stroke="rgba(200,134,74,0.2)" strokeWidth="0.8" strokeDasharray="4,4" />
+      ))}
+      {/* Text lines right */}
+      {[70,90,110,130,150,170,190,210,230,250,270,290,310].map((y, i) => (
+        <line key={`r${i}`} x1="145" y1={y} x2="370" y2={y} stroke="rgba(200,134,74,0.2)" strokeWidth="0.8" strokeDasharray="4,4" />
+      ))}
+
+      {/* Pen / writing tool */}
+      <line x1="350" y1="250" x2="400" y2="200" stroke="url(#goldGradBlog)" strokeWidth="1.8" />
+      <circle cx="400" cy="200" r="4" fill="none" stroke="#c8864a" strokeWidth="1.2" />
+      <circle cx="400" cy="200" r="1.5" fill="#c8864a" />
+      <line x1="350" y1="250" x2="330" y2="270" stroke="url(#goldGradBlog)" strokeWidth="1.8" />
+    </g>
+
+    {/* Floating badge */}
+    <g transform="translate(30, 50)">
+      <rect width="100" height="70" rx="3" fill="rgba(18,16,14,0.65)" stroke="rgba(200,134,74,0.5)" strokeWidth="0.8" />
+      <text x="50" y="22" textAnchor="middle" fill="#e8c99a" fontSize="8" fontFamily="'Jost',sans-serif" letterSpacing="1" fontWeight="500">BLOG</text>
+      <text x="50" y="46" textAnchor="middle" fill="#c8864a" fontSize="24" fontFamily="'Cormorant Garamond',serif" fontWeight="300">50+</text>
+      <text x="50" y="60" textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="7" fontFamily="'Jost',sans-serif">Articles</text>
+    </g>
+
+    {/* Certification card */}
+    <g transform="translate(380, 100)">
+      <rect width="110" height="75" rx="3" fill="rgba(18,16,14,0.7)" stroke="rgba(200,134,74,0.4)" strokeWidth="0.8" />
+      <circle cx="55" cy="32" r="14" fill="none" stroke="url(#goldGradBlog)" strokeWidth="1.2" />
+      <text x="55" y="36" textAnchor="middle" fill="#c8864a" fontSize="9" fontFamily="'Jost',sans-serif" fontWeight="600">✓</text>
+      <text x="55" y="14" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7" fontFamily="'Jost',sans-serif" letterSpacing="1">EXPERT</text>
+      <text x="55" y="58" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="7" fontFamily="'Jost',sans-serif">Contributors</text>
+      <text x="55" y="69" textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize="6" fontFamily="'Jost',sans-serif">Engineers & Architects</text>
+    </g>
+
+    <circle cx="130" cy="85" r="3" fill="rgba(200,134,74,0.7)" />
+    <circle cx="490" cy="137" r="3" fill="rgba(200,134,74,0.7)" />
+    <line x1="130" y1="85" x2="160" y2="110" stroke="rgba(200,134,74,0.25)" strokeWidth="0.6" strokeDasharray="3,4" />
+    <line x1="490" y1="137" x2="460" y2="150" stroke="rgba(200,134,74,0.25)" strokeWidth="0.6" strokeDasharray="3,4" />
+
+    {/* Bottom label */}
+    <text x="260" y="520" textAnchor="middle" fill="rgba(200,134,74,0.6)" fontSize="8" fontFamily="'Jost',sans-serif" letterSpacing="2.5" fontWeight="400">ENGINEERING BLOG</text>
+    <text x="260" y="538" textAnchor="middle" fill="rgba(200,134,74,0.35)" fontSize="6.5" fontFamily="'Jost',sans-serif" letterSpacing="1.5">INSIGHTS & KNOWLEDGE</text>
+  </svg>
+);
 
 // ─── LoadingSkeleton ───────────────────────────────────────────────────────────
 const Skeleton = () => (
@@ -64,7 +148,7 @@ const Pill = ({ cat }) => {
   );
 };
 
-// ─── BlogCard ─────────────────────────────────────────────────────────────────
+// ─── BlogCard (unchanged) ─────────────────────────────────────────────────────
 const BlogCard = ({ post, onClick, index, featured = false }) => {
   const [img, setImg]     = useState(getImageUrl(post.coverImageUrl) || FALLBACK);
   const [hover, setHover] = useState(false);
@@ -184,7 +268,7 @@ const BlogCard = ({ post, onClick, index, featured = false }) => {
   );
 };
 
-// ─── BlogDetail ───────────────────────────────────────────────────────────────
+// ─── BlogDetail (unchanged) ──────────────────────────────────────────────────
 const BlogDetail = ({ post, onBack }) => {
   const [img, setImg] = useState(getImageUrl(post.coverImageUrl) || FALLBACK);
   const [liked, setLiked]           = useState(false);
@@ -380,7 +464,7 @@ const BlogDetail = ({ post, onBack }) => {
   );
 };
 
-// ─── Newsletter ───────────────────────────────────────────────────────────────
+// ─── Newsletter (unchanged) ──────────────────────────────────────────────────
 const NewsletterBox = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle');
@@ -420,7 +504,7 @@ const NewsletterBox = () => {
   );
 };
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
+// ─── Sidebar (unchanged) ─────────────────────────────────────────────────────
 const Sidebar = ({ recent, onPost, search, setSearch }) => (
   <aside style={{ display:'flex', flexDirection:'column', gap:24 }}>
     {/* search */}
@@ -573,6 +657,15 @@ export default function BlogPage() {
     window.history.pushState(null,'','/blog');
   };
 
+  // Live stats for hero
+  const totalArticles = posts.length;
+  const topicCount = new Set(posts.map(p => p.category).filter(Boolean)).size;
+  const HERO_STATS = [
+    { value: `${totalArticles}+`, label: "Articles" },
+    { value: `${topicCount || 8}+`, label: "Topics" },
+    { value: "Weekly", label: "Updates" },
+  ];
+
   return (
     <div style={{ background:'#f8fafc', minHeight:'100vh' }} ref={topRef}>
 
@@ -582,82 +675,265 @@ export default function BlogPage() {
       {/* ── listing view ── */}
       {!selected && (
         <>
-          {/* HERO */}
-          <section style={{
-            position:'relative',
-            background:'linear-gradient(135deg,#050a1a 0%,#0d1b3e 55%,#050a1a 100%)',
-            padding:'90px 0 70px', overflow:'hidden',
-          }}>
-            {/* grid */}
-            <div style={{
-              position:'absolute',inset:0,opacity:.06,
-              backgroundImage:'linear-gradient(rgba(255,255,255,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px)',
-              backgroundSize:'60px 60px',
-            }} />
-            {/* glow */}
-            <div style={{
-              position:'absolute',top:'-15%',right:'8%',
-              width:450,height:450,borderRadius:'50%',
-              background:'radial-gradient(circle,rgba(37,99,235,.2) 0%,transparent 70%)',
-              pointerEvents:'none',
-            }} />
-            <div className="bp-container" style={{ position:'relative',zIndex:2,textAlign:'center' }}>
-              <div style={{
-                display:'inline-flex',alignItems:'center',gap:8,
-                background:'rgba(37,99,235,.15)',border:'1px solid rgba(37,99,235,.3)',
-                padding:'6px 18px',borderRadius:30,marginBottom:24,
-              }}>
-                <span style={{ width:6,height:6,borderRadius:'50%',background:'#60a5fa',display:'inline-block' }} />
-                <span style={{ color:'#93c5fd',fontSize:12,fontWeight:700,letterSpacing:'.7px',textTransform:'uppercase' }}>
-                  Engineering Insights
-                </span>
-              </div>
-              <h1 style={{
-                color:'#fff',
-                fontSize:'clamp(2.2rem,5vw,3.6rem)',
-                fontWeight:900,lineHeight:1.1,
-                margin:'0 0 18px',
-              }}>
-                Expert{' '}
-                <span style={{
-                  background:'linear-gradient(90deg,#60a5fa,#38bdf8)',
-                  WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',
-                }}>Engineering</span>
-                {' '}Blog
-              </h1>
-              <p style={{
-                color:'rgba(255,255,255,.65)',
-                fontSize:'clamp(.95rem,1.8vw,1.1rem)',
-                lineHeight:1.7,maxWidth:560,
-                margin:'0 auto 40px',
-              }}>
-                Discover the latest trends, construction insights, and expert knowledge from BCC's senior engineers and architects.
-              </p>
-              {/* stats */}
-              <div style={{
-                display:'inline-flex',gap:0,
-                background:'rgba(255,255,255,.06)',
-                border:'1px solid rgba(255,255,255,.1)',
-                borderRadius:14,overflow:'hidden',
-              }}>
-                {[
-                  { n:`${posts.length}+`, label:'Articles' },
-                  { n:'8+',              label:'Topics'   },
-                  { n:'Weekly',          label:'Updates'  },
-                ].map((s,i) => (
-                  <div key={i} style={{
-                    padding:'14px 24px',textAlign:'center',
-                    borderRight:i<2?'1px solid rgba(255,255,255,.08)':'none',
-                  }}>
-                    <div style={{ color:'#fff',fontSize:'1.5rem',fontWeight:900,lineHeight:1 }}>{s.n}</div>
-                    <div style={{ color:'rgba(255,255,255,.5)',fontSize:11,marginTop:4,letterSpacing:'.4px',textTransform:'uppercase' }}>{s.label}</div>
+          {/* ═══ NEW HERO (ink & gold) ═══ */}
+          <style>{`
+            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
+            
+            .blog-hero-wrapper {
+              position: relative;
+              background: #12100e;
+              overflow: hidden;
+              min-height: 100vh;
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              align-items: center;
+            }
+            .blog-hero-left {
+              padding: 7rem 4rem 7rem 5rem;
+              position: relative;
+              z-index: 2;
+            }
+            .blog-hero-eyebrow {
+              display: inline-flex;
+              align-items: center;
+              gap: 10px;
+              font-family: 'Jost', sans-serif;
+              font-size: 10.5px;
+              font-weight: 500;
+              letter-spacing: 0.35em;
+              text-transform: uppercase;
+              color: #e8c99a;
+              margin-bottom: 2rem;
+            }
+            .blog-hero-eyebrow::before {
+              content: '';
+              display: block;
+              width: 32px;
+              height: 1px;
+              background: #c8864a;
+            }
+            .blog-hero-h1 {
+              font-family: 'Cormorant Garamond', serif;
+              font-size: clamp(3rem, 5.5vw, 5.5rem);
+              font-weight: 400;
+              line-height: 1.06;
+              color: #ffffff;
+              margin: 0 0 1.5rem;
+              letter-spacing: -0.01em;
+            }
+            .blog-hero-h1 em {
+              font-style: italic;
+              color: #c8864a;
+            }
+            .blog-hero-desc {
+              font-family: 'Jost', sans-serif;
+              font-size: 16px;
+              font-weight: 300;
+              line-height: 1.85;
+              color: rgba(255,255,255,0.5);
+              max-width: 460px;
+              margin: 0 0 2.5rem;
+            }
+            .blog-hero-desc strong {
+              color: rgba(255,255,255,0.85);
+              font-weight: 400;
+            }
+            .blog-hero-ctas {
+              display: flex;
+              gap: 16px;
+              flex-wrap: wrap;
+              margin-bottom: 3rem;
+            }
+            .blog-btn-primary {
+              display: inline-flex;
+              align-items: center;
+              gap: 12px;
+              font-family: 'Jost', sans-serif;
+              font-size: 11.5px;
+              font-weight: 500;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: #12100e;
+              background: #c8864a;
+              text-decoration: none;
+              padding: 16px 36px;
+              transition: background 0.3s, transform 0.3s;
+              white-space: nowrap;
+            }
+            .blog-btn-primary:hover { background: #e8c99a; transform: translateY(-2px); }
+            .blog-btn-secondary {
+              display: inline-flex;
+              align-items: center;
+              gap: 12px;
+              font-family: 'Jost', sans-serif;
+              font-size: 11.5px;
+              font-weight: 400;
+              letter-spacing: 0.2em;
+              text-transform: uppercase;
+              color: rgba(255,255,255,0.6);
+              text-decoration: none;
+              padding: 16px 36px;
+              border: 1px solid rgba(255,255,255,0.15);
+              transition: border-color 0.3s, color 0.3s;
+              white-space: nowrap;
+            }
+            .blog-btn-secondary:hover { border-color: rgba(255,255,255,0.4); color: #ffffff; }
+            .blog-hero-trust {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 24px;
+            }
+            .blog-hero-trust-item {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              color: rgba(255,255,255,0.45);
+              font-size: 12px;
+              font-weight: 500;
+            }
+            .blog-hero-trust-item svg { color: #c8864a; }
+            .blog-hero-stats {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 0;
+              border-top: 1px solid rgba(255,255,255,0.1);
+              padding-top: 2.5rem;
+              max-width: 480px;
+              margin-top: 2rem;
+            }
+            .blog-hero-stat {
+              padding-right: 24px;
+              border-right: 1px solid rgba(255,255,255,0.1);
+            }
+            .blog-hero-stat:last-child { border-right: none; }
+            .blog-hero-stat-val {
+              font-family: 'Cormorant Garamond', serif;
+              font-size: clamp(1.8rem, 3vw, 2.6rem);
+              font-weight: 300;
+              line-height: 1;
+              color: #c8864a;
+              display: block;
+            }
+            .blog-hero-stat-lbl {
+              font-family: 'Jost', sans-serif;
+              font-size: 10.5px;
+              font-weight: 300;
+              color: rgba(255,255,255,0.4);
+              display: block;
+              margin-top: 5px;
+              line-height: 1.5;
+              white-space: pre-line;
+            }
+            .blog-hero-right {
+              position: relative;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 4rem 3rem;
+            }
+            .blog-hero-right::before {
+              content: '';
+              position: absolute;
+              inset: 0;
+              background: linear-gradient(135deg, rgba(200,134,74,0.06) 0%, rgba(200,134,74,0.02) 100%);
+              border-left: 1px solid rgba(200,134,74,0.2);
+            }
+            @media (max-width: 900px) {
+              .blog-hero-wrapper { grid-template-columns: 1fr; min-height: auto; }
+              .blog-hero-left { padding: 5rem 1.5rem 3rem; }
+              .blog-hero-right {
+                height: auto;
+                min-height: 50vh;
+                padding: 2rem 1.5rem;
+                border-left: none;
+                border-top: 1px solid rgba(200,134,74,0.15);
+              }
+              .blog-hero-right::before { border-left: none; border-top: 1px solid rgba(200,134,74,0.1); }
+            }
+          `}</style>
+
+          <section className="blog-hero-wrapper" aria-label="Blog hero">
+            <div className="blog-hero-left">
+              <motion.div initial={{ opacity:0, x:-20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.7 }}>
+                <p className="blog-hero-eyebrow">Engineering Insights</p>
+              </motion.div>
+
+              <motion.h1
+                className="blog-hero-h1"
+                initial={{ opacity:0, y:30 }}
+                animate={{ opacity:1, y:0 }}
+                transition={{ duration:0.7, delay:0.1, ease:[0.16,1,0.3,1] }}
+              >
+                Expert{" "}
+                <em>Engineering</em>{" "}
+                Blog
+              </motion.h1>
+
+              <motion.p
+                className="blog-hero-desc"
+                initial={{ opacity:0, y:20 }}
+                animate={{ opacity:1, y:0 }}
+                transition={{ duration:0.6, delay:0.25 }}
+              >
+                Discover the latest trends, construction insights, and expert knowledge from{" "}
+                <strong>BCC's senior engineers and architects</strong>.
+              </motion.p>
+
+              <motion.div
+                className="blog-hero-ctas"
+                initial={{ opacity:0, y:20 }}
+                animate={{ opacity:1, y:0 }}
+                transition={{ duration:0.6, delay:0.35 }}
+              >
+                <Link to="#articles" className="blog-btn-primary">
+                  Read Articles <FaArrowRight />
+                </Link>
+                <Link to="#subscribe" className="blog-btn-secondary">
+                  Subscribe
+                </Link>
+              </motion.div>
+
+              <motion.div
+                className="blog-hero-trust"
+                initial={{ opacity:0 }}
+                animate={{ opacity:1 }}
+                transition={{ delay:0.5 }}
+              >
+                {TRUST_BADGES.map((badge, i) => (
+                  <span key={i} className="blog-hero-trust-item">
+                    <FaCheckCircle /> {badge}
+                  </span>
+                ))}
+              </motion.div>
+
+              <motion.div
+                className="blog-hero-stats"
+                initial={{ opacity:0, y:20 }}
+                animate={{ opacity:1, y:0 }}
+                transition={{ duration:0.6, delay:0.55 }}
+              >
+                {HERO_STATS.map((s, i) => (
+                  <div className="blog-hero-stat" key={i}>
+                    <span className="blog-hero-stat-val">{s.value}</span>
+                    <span className="blog-hero-stat-lbl">{s.label}</span>
                   </div>
                 ))}
-              </div>
+              </motion.div>
             </div>
+
+            <motion.div
+              className="blog-hero-right"
+              initial={{ opacity:0 }}
+              animate={{ opacity:1 }}
+              transition={{ duration:1, delay:0.3 }}
+              aria-hidden="true"
+            >
+              <BlogIllustration />
+            </motion.div>
           </section>
 
-          {/* MAIN CONTENT */}
+          {/* MAIN CONTENT (unchanged) */}
           <div className="bp-container" style={{ padding:'48px 24px 80px' }}>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 300px', gap:32, alignItems:'start' }}>
 

@@ -5,16 +5,7 @@ import SEO from '../components/SEO';
 import { services } from '../data/ServicesData';
 import ServiceDetailTabs from '../components/services/ServiceDetailTabs';
 
-/**
- * ServiceDetail Component
- * Shows detailed information for a single service by URL slug
- * 
- * URL: /services/:slug
- * Example: /services/architecture-design
- * 
- * To add new service detail fields: Edit ServicesData.js
- * To change tabs: Edit ServiceDetailTabs component
- */
+
 
 export default function ServiceDetail() {
   // ==================== URL PARAMS ====================

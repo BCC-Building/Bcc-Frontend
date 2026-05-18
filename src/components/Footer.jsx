@@ -14,12 +14,12 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { href: "#", icon: "bi bi-facebook", label: "Facebook" },
+    { href: "https://www.facebook.com/buildingcreatorsconsulting", icon: "bi bi-facebook", label: "Facebook" },
     { href: "#", icon: "bi bi-twitter-x", label: "Twitter" },
-    { href: "#", icon: "bi bi-linkedin", label: "LinkedIn" },
-    { href: "#", icon: "bi bi-instagram", label: "Instagram" },
+    { href: "https://www.linkedin.com/in/building-creators-and-consulting/", icon: "bi bi-linkedin", label: "LinkedIn" },
+    { href: "https://www.instagram.com/bcc.rudrapur/", icon: "bi bi-instagram", label: "Instagram" },
     { href: "#", icon: "bi bi-youtube", label: "YouTube" },
-    { href: "https://wa.me/919876543210", icon: "bi bi-whatsapp", label: "WhatsApp" },
+    { href: "https://wa.me/918057540906", icon: "bi bi-whatsapp", label: "WhatsApp" },
   ];
 
   return (
@@ -54,11 +54,11 @@ export default function Footer() {
               </div>
               <h3 className="footer-company-name">Building Creators And Consulting</h3>
               <p className="footer-tagline">
-                Trusted construction & engineering partner delivering quality, safety, and professionalism since 2018.
+                Trusted construction & engineering partner delivering quality, safety, and professionalism since 2017.
               </p>
               <div className="footer-contact">
-                <a href="tel:+919876543210" className="footer-contact-item">
-                  <i className="bi bi-telephone-fill"></i> +91 98765 43210
+                <a href="tel:+8057540906" className="footer-contact-item">
+                  <i className="bi bi-telephone-fill"></i> +91 8057540906
                 </a>
                 <a href="mailto:info@bcc.net.in" className="footer-contact-item">
                   <i className="bi bi-envelope-fill"></i> info@bcc.net.in
