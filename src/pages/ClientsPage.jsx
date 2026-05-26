@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
+import ClientsHero from "../components/clients/ClientsHero";
 
 // ═══════════════════════════════════════════════════════════
 // DATA
@@ -300,7 +301,11 @@ const css = `
   /* ── HERO ── */
   .cl-hero-wrap {
     position: relative;
-    background: var(--ink);
+    background: linear-gradient(135deg, rgba(10,8,6,0.88) 0%, rgba(15,12,8,0.85) 50%, rgba(8,6,4,0.92) 100%),
+      url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=85&fm=webp') center/cover no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     overflow: hidden;
     min-height: 92vh;
     display: grid;
@@ -310,47 +315,50 @@ const css = `
   .cl-hero-left {
     padding: 7rem 4rem 7rem 5rem;
     position: relative;
-    z-index: 2;
+    z-index: 4;
   }
   .cl-hero-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-family: var(--fb);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.35em;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: var(--gold-l);
-    margin-bottom: 2rem;
+    color: #d4af37;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
   }
   .cl-hero-eyebrow::before {
     content: '';
     display: block;
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #d4af37 0%, rgba(212,175,55,0.3) 100%);
   }
   .cl-hero-h1 {
     font-family: var(--fd);
-    font-size: clamp(3rem, 5.5vw, 5.5rem);
-    font-weight: 400;
-    line-height: 1.06;
+    font-size: clamp(3.2rem, 6vw, 6rem);
+    font-weight: 300;
+    line-height: 1.08;
     color: var(--white);
-    margin: 0 0 1.5rem;
-    letter-spacing: -0.01em;
+    margin: 0 0 1.8rem;
+    letter-spacing: -0.015em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
   }
-  .cl-hero-h1 em { font-style: italic; color: var(--gold); }
+  .cl-hero-h1 em { font-style: italic; color: #d4af37; font-weight: 400; }
   .cl-hero-desc {
     font-family: var(--fb);
-    font-size: 16px;
-    font-weight: 300;
-    line-height: 1.85;
-    color: rgba(255,255,255,0.5);
-    max-width: 420px;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.88);
+    max-width: 520px;
     margin: 0 0 3rem;
+    letter-spacing: 0.3px;
   }
-  .cl-hero-desc strong { color: rgba(255,255,255,0.85); font-weight: 400; }
+  .cl-hero-desc strong { color: #d4af37; font-weight: 500; }
 
   .cl-hero-stats {
     display: grid;
@@ -1021,56 +1029,7 @@ export default function ClientsPage() {
       <div className="clients-page">
 
         {/* ══ HERO ══ */}
-        <section className="cl-hero-wrap" aria-label="Clients hero">
-          <div className="cl-hero-left">
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
-              <p className="cl-hero-eyebrow">Trusted Partnerships</p>
-            </motion.div>
-
-            <motion.h1
-              className="cl-hero-h1"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Our <em>Prestigious</em><br />
-              Clients &<br />
-              Partners
-            </motion.h1>
-
-            <motion.p
-              className="cl-hero-desc"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-            >
-              From defence to energy, railways to urban development — we are the{' '}
-              <strong>trusted execution partner for 50+ government agencies</strong> across India.
-            </motion.p>
-
-            <motion.div
-              className="cl-hero-stats"
-              ref={statsRef}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              {STATS.map((s, i) => (
-                <StatBlock key={i} {...s} index={i} inView={statsInView} />
-              ))}
-            </motion.div>
-          </div>
-
-          <motion.div
-            className="cl-hero-right"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            aria-hidden="true"
-          >
-            <ClientsIllustration />
-          </motion.div>
-        </section>
+        <ClientsHero />
 
         {/* ══ MARQUEE TRUST STRIP ══ */}
         <div className="cl-marquee" aria-hidden="true">

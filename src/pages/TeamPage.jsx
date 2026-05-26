@@ -1,4 +1,4 @@
-// src/pages/TeamPage.jsx
+﻿// src/pages/TeamPage.jsx
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
@@ -7,13 +7,13 @@ import {
   FaLinkedinIn,
   FaEnvelope,
   FaArrowRight,
-  FaArrowLeft,
   FaUser,
 } from 'react-icons/fa';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
+import TeamHero from '../components/team/TeamHero';
 
-// ─── constants ────────────────────────────────────────────────────────────
+// --- constants ------------------------------------------------------------
 const FEATURED_COUNT = 3;
 const HERO_IMAGE = // (no longer used for hero, but kept for fallback if needed)
   'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80';
@@ -47,7 +47,7 @@ function initials(name = '') {
     .toUpperCase() || '??';
 }
 
-// ─── skeleton card ────────────────────────────────────────────────────────
+// --- skeleton card --------------------------------------------------------
 function SkeletonCard() {
   return (
     <div
@@ -72,7 +72,7 @@ function SkeletonCard() {
   );
 }
 
-// ─── team card ───────────────────────────────────────────────────────────
+// --- team card -----------------------------------------------------------
 function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
   const [bioExpanded, setBioExpanded] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -365,7 +365,7 @@ function TeamCard({ member, detailed, imageErrors, onImageError, index }) {
   );
 }
 
-// ─── stat counter (horizontal style for hero) ─────────────────────────────
+// --- stat counter (horizontal style for hero) -----------------------------
 function StatCounter({ value, label, index }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
@@ -415,85 +415,7 @@ function StatCounter({ value, label, index }) {
   );
 }
 
-// ─── Team Hero Illustration (SVG) ────────────────────────────────────────
-function TeamIllustration() {
-  return (
-    <svg
-      viewBox="0 0 520 600"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ width: '100%', maxWidth: 480, height: 'auto', position: 'relative', zIndex: 1 }}
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="goldGradTeam" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#c8864a" />
-          <stop offset="100%" stopColor="#e8c99a" />
-        </linearGradient>
-        <pattern id="gridTeam" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(200,134,74,0.08)" strokeWidth="0.5" />
-        </pattern>
-      </defs>
-
-      <rect width="520" height="600" fill="url(#gridTeam)" />
-
-      {/* Central hub / network */}
-      <circle cx="260" cy="280" r="120" fill="none" stroke="rgba(200,134,74,0.15)" strokeWidth="1" />
-      <circle cx="260" cy="280" r="90" fill="none" stroke="rgba(200,134,74,0.3)" strokeWidth="1.2" strokeDasharray="6,4" />
-      <circle cx="260" cy="280" r="60" fill="none" stroke="rgba(200,134,74,0.5)" strokeWidth="1.5" />
-      
-      {/* Center hub */}
-      <circle cx="260" cy="280" r="20" fill="rgba(200,134,74,0.1)" stroke="url(#goldGradTeam)" strokeWidth="1.8" />
-      <circle cx="260" cy="280" r="8" fill="#c8864a" />
-
-      {/* People nodes around the hub */}
-      {[
-        { x: 260, y: 140, label: 'Arch' },
-        { x: 380, y: 200, label: 'Eng' },
-        { x: 400, y: 320, label: 'Srvy' },
-        { x: 340, y: 420, label: 'Test' },
-        { x: 180, y: 420, label: 'Est' },
-        { x: 100, y: 320, label: 'HR' },
-        { x: 80, y: 200, label: 'Adm' },
-        { x: 200, y: 130, label: 'Tend' },
-      ].map((node, i) => (
-        <g key={i} transform={`translate(${node.x}, ${node.y})`}>
-          <circle cx="0" cy="0" r="14" fill="rgba(18,16,14,0.7)" stroke="rgba(200,134,74,0.6)" strokeWidth="1" />
-          <circle cx="0" cy="0" r="6" fill="none" stroke="#c8864a" strokeWidth="1" />
-          <text x="0" y="-18" textAnchor="middle" fill="rgba(200,134,74,0.5)" fontSize="6.5" fontFamily="'Jost',sans-serif" fontWeight="500">{node.label}</text>
-        </g>
-      ))}
-
-      {/* Connecting lines */}
-      {[
-        [260,280, 260,140],
-        [260,280, 380,200],
-        [260,280, 400,320],
-        [260,280, 340,420],
-        [260,280, 180,420],
-        [260,280, 100,320],
-        [260,280, 80,200],
-        [260,280, 200,130],
-      ].map((line, i) => (
-        <line key={i} x1={line[0]} y1={line[1]} x2={line[2]} y2={line[3]} stroke="rgba(200,134,74,0.15)" strokeWidth="0.8" strokeDasharray="4,4" />
-      ))}
-
-      {/* Floating badge */}
-      <g transform="translate(30, 50)">
-        <rect width="110" height="70" rx="3" fill="rgba(18,16,14,0.65)" stroke="rgba(200,134,74,0.5)" strokeWidth="0.8" />
-        <text x="55" y="22" textAnchor="middle" fill="#e8c99a" fontSize="8" fontFamily="'Jost',sans-serif" letterSpacing="1" fontWeight="500">TEAM</text>
-        <text x="55" y="46" textAnchor="middle" fill="#c8864a" fontSize="26" fontFamily="'Cormorant Garamond',serif" fontWeight="300">40+</text>
-        <text x="55" y="60" textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="7" fontFamily="'Jost',sans-serif">Professionals</text>
-      </g>
-
-      {/* Bottom label */}
-      <text x="260" y="520" textAnchor="middle" fill="rgba(200,134,74,0.6)" fontSize="8" fontFamily="'Jost',sans-serif" letterSpacing="2.5" fontWeight="400">BUILDING CREATORS & CONSULTING</text>
-      <text x="260" y="538" textAnchor="middle" fill="rgba(200,134,74,0.35)" fontSize="6.5" fontFamily="'Jost',sans-serif" letterSpacing="1.5">EST. 2010</text>
-    </svg>
-  );
-}
-
-// ─── main component ───────────────────────────────────────────────────────
+// --- main component -------------------------------------------------------
 export default function TeamPage({ featured = false }) {
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -559,7 +481,7 @@ export default function TeamPage({ featured = false }) {
 
   return (
     <>
-      {/* ═══ FONTS & ANIMATIONS ═══ */}
+      {/* --- FONTS & ANIMATIONS --- */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
@@ -653,7 +575,7 @@ export default function TeamPage({ featured = false }) {
         }
       `}</style>
 
-      {/* ═══ SEO ═══ */}
+      {/* --- SEO --- */}
       {!featured && (
         <Helmet>
           <title>Our Team | Expert Engineers & Consultants | BCC</title>
@@ -674,151 +596,16 @@ export default function TeamPage({ featured = false }) {
         </Helmet>
       )}
 
-      {/* ═══ HERO (ink & gold) ═══ */}
-      <section
-        aria-label={featured ? 'Featured team members' : 'Our team'}
-        style={{
-          position: 'relative',
-          background: '#12100e',
-          minHeight: featured ? 'auto' : '100vh',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          alignItems: 'center',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Left Column */}
-        <div style={{ padding: '7rem 4rem 7rem 5rem', position: 'relative', zIndex: 2 }}>
-          {/* Back link */}
-          {!featured && (
-            <motion.div
-              initial={{ opacity: 0, x: -12 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4 }}
-              style={{ marginBottom: '40px' }}
-            >
-              <Link to="/about" className="bcc-back-link-hero">
-                <FaArrowLeft style={{ fontSize: '0.7rem' }} />
-                Back to About
-              </Link>
-            </motion.div>
-          )}
+      <TeamHero />
 
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <p style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-              fontFamily: "'Jost', sans-serif",
-              fontSize: '10.5px',
-              fontWeight: 500,
-              letterSpacing: '0.35em',
-              textTransform: 'uppercase',
-              color: '#e8c99a',
-              marginBottom: '2rem',
-            }}>
-              <span style={{ display: 'block', width: '32px', height: '1px', background: '#c8864a' }}></span>
-              Our People
-            </p>
-          </motion.div>
-
-          {/* Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: 'clamp(3rem, 5.5vw, 5.5rem)',
-              fontWeight: 400,
-              lineHeight: 1.06,
-              color: '#FFFFFF',
-              margin: '0 0 1.5rem',
-              letterSpacing: '-0.01em',
-            }}
-          >
-            {featured ? 'Meet our core team' : 'The experts behind every project'}
-          </motion.h1>
-
-          {/* Description with typewriter */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            style={{
-              fontFamily: "'Jost', sans-serif",
-              fontSize: '16px',
-              fontWeight: 300,
-              lineHeight: 1.85,
-              color: 'rgba(255,255,255,0.5)',
-              maxWidth: '460px',
-              margin: '0 0 2.5rem',
-            }}
-          >
-            A team of engineers, architects, and consultants who bring{' '}
-            <strong style={{ color: '#c8864a', fontWeight: 400, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>
-              {TYPEWRITER_WORDS[wordIdx].substring(0, charIdx)}
-              <span style={{ color: '#e8c99a', fontWeight: 300 }}>|</span>
-            </strong>{' '}
-            to every project we take on.
-          </motion.p>
-
-          {/* Stats row (horizontal) */}
-          {!featured && (
-            <motion.div
-              className="bcc-stats-row"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.55 }}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: 0,
-                borderTop: '1px solid rgba(255,255,255,0.1)',
-                paddingTop: '2.5rem',
-                maxWidth: '480px',
-              }}
-            >
-              {STATS.map((s, i) => (
-                <StatCounter key={i} {...s} index={i} />
-              ))}
-            </motion.div>
-          )}
-        </div>
-
-        {/* Right Column – Illustration */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          style={{
-            position: 'relative',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '4rem 3rem',
-            borderLeft: '1px solid rgba(200,134,74,0.2)',
-          }}
-          aria-hidden="true"
-        >
-          <TeamIllustration />
-        </motion.div>
-      </section>
-
-      {/* ═══ REST OF PAGE (white bg) ═══ */}
+      {/* --- REST OF PAGE (white bg) --- */}
       <section
         style={{
           background: '#FAFAFA',
           padding: featured ? '40px 0' : '60px 0',
         }}
       >
-        {/* dot‑grid texture */}
+        {/* dot-grid texture */}
         <div
           style={{
             position: 'fixed',
@@ -832,7 +619,7 @@ export default function TeamPage({ featured = false }) {
         />
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 1160, margin: '0 auto', padding: '0 24px' }}>
-          {/* ── FILTERS ── */}
+          {/* -- FILTERS -- */}
           {!featured && !loading && !error && teamMembers.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -854,7 +641,7 @@ export default function TeamPage({ featured = false }) {
             </motion.div>
           )}
 
-          {/* ── LOADING ── */}
+          {/* -- LOADING -- */}
           {loading && (
             <div className="bcc-team-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
               {Array.from({ length: featured ? 3 : 6 }).map((_, i) => (
@@ -863,10 +650,10 @@ export default function TeamPage({ featured = false }) {
             </div>
           )}
 
-          {/* ── ERROR / EMPTY ── */}
+          {/* -- ERROR / EMPTY -- */}
           {!loading && error && (
             <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>⚠️</div>
+              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>??</div>
               <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Could not load team</h3>
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.88rem' }}>{error}</p>
               <button className="bcc-retry-btn" onClick={() => window.location.reload()}>Try again</button>
@@ -875,13 +662,13 @@ export default function TeamPage({ featured = false }) {
 
           {!loading && !error && teamMembers.length === 0 && (
             <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>👥</div>
+              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>??</div>
               <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>No team members yet</h3>
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.88rem' }}>Our team page is being updated.</p>
             </div>
           )}
 
-          {/* ── GRID ── */}
+          {/* -- GRID -- */}
           {!loading && !error && filtered.length > 0 && (
             <AnimatePresence mode="wait">
               <motion.div
@@ -900,7 +687,7 @@ export default function TeamPage({ featured = false }) {
             </AnimatePresence>
           )}
 
-          {/* ── CTA (full page) ── */}
+          {/* -- CTA (full page) -- */}
           {!featured && !loading && teamMembers.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -915,7 +702,7 @@ export default function TeamPage({ featured = false }) {
             </motion.div>
           )}
 
-          {/* ── CTA (featured mode) ── */}
+          {/* -- CTA (featured mode) -- */}
           {featured && !loading && teamMembers.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -934,3 +721,5 @@ export default function TeamPage({ featured = false }) {
     </>
   );
 }
+
+

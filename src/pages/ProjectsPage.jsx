@@ -1,5 +1,6 @@
 // src/pages/ProjectsPage.jsx
 import SEO from '../components/SEO';
+import ProjectsHero from '../components/projects/ProjectsHero';
 import Projects from '../components/Projects';
 
 export default function ProjectsPage() {
@@ -11,6 +12,7 @@ export default function ProjectsPage() {
         url="https://bcc.net.in/projects"
       />
       <main>
+        <ProjectsHero />
         <Projects />
       </main>
     </>

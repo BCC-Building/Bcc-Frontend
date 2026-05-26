@@ -1,20 +1,20 @@
-// src/pages/GalleryPage.jsx – Hero updated to ink & gold brand style
+﻿// src/pages/GalleryPage.jsx
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowRight, FaCheckCircle } from "react-icons/fa";
 import { getMediaUrl } from "../utils/media";
 import { publicAPI } from "../api/endpoints";
+import GalleryHero from "../components/gallery/GalleryHero";
 
 // ==================== CONSTANTS ====================
 
 const CATEGORIES = [
-  { id: "all", name: "All Projects", icon: "🎯" },
-  { id: "Construction", name: "Construction", icon: "🏗️" },
-  { id: "Interior", name: "Interior Design", icon: "🛋️" },
-  { id: "Survey", name: "Survey Work", icon: "📏" },
-  { id: "Testing", name: "Testing", icon: "🔬" },
+  { id: "all", name: "All Projects" },
+  { id: "Construction", name: "Construction" },
+  { id: "Interior", name: "Interior Design" },
+  { id: "Survey", name: "Survey Work" },
+  { id: "Testing", name: "Testing" },
 ];
 
 const ITEMS_PER_PAGE = 6;
@@ -69,7 +69,7 @@ const ImageWithFallback = ({ src, alt, className, onLoad }) => {
       )}
       {status === "error" && (
         <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 flex flex-col items-center justify-center">
-          <span className="text-4xl mb-2">🖼️</span>
+          <span className="text-3xl mb-2 font-semibold text-gray-500">Image</span>
           <span className="text-sm text-gray-500 dark:text-gray-400">Image unavailable</span>
         </div>
       )}
@@ -130,7 +130,7 @@ const GalleryCard = ({ item, onClick }) => (
       <div className="p-4">
         <h3 className="font-semibold text-gray-900 dark:text-white mb-1 truncate">{item.title}</h3>
         <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-          <span className="truncate flex-1 mr-2">📍 {item.location}</span>
+          <span className="truncate flex-1 mr-2">{item.location}</span>
           <span className="flex-shrink-0">{item.date}</span>
         </div>
       </div>
@@ -151,75 +151,6 @@ const LoadingSkeleton = () => (
     ))}
   </div>
 );
-
-// ==================== HERO ILLUSTRATION (Gallery‑themed SVG) ====================
-function GalleryIllustration() {
-  return (
-    <svg
-      viewBox="0 0 520 600"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ width: '100%', maxWidth: 480, height: 'auto', position: 'relative', zIndex: 1 }}
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="goldGrad3" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#c8864a" />
-          <stop offset="100%" stopColor="#e8c99a" />
-        </linearGradient>
-        <pattern id="gridGallery" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(200,134,74,0.08)" strokeWidth="0.5" />
-        </pattern>
-      </defs>
-
-      <rect width="520" height="600" fill="url(#gridGallery)" />
-
-      {/* Central frame (portfolio / lightbox) */}
-      <rect x="120" y="100" width="280" height="340" rx="12" fill="rgba(200,134,74,0.04)" stroke="rgba(200,134,74,0.4)" strokeWidth="1.5" />
-      <rect x="135" y="115" width="250" height="250" rx="8" fill="rgba(18,16,14,0.4)" stroke="rgba(200,134,74,0.25)" strokeWidth="0.8" />
-      
-      {/* Image placeholder inside frame */}
-      <path d="M160 180 L240 140 L300 190 L340 160 L360 200 L360 330 L160 330 Z" fill="rgba(200,134,74,0.08)" stroke="rgba(200,134,74,0.3)" strokeWidth="0.6" strokeDasharray="3,3" />
-      
-      {/* Small thumbnails */}
-      <rect x="135" y="385" width="55" height="40" rx="4" fill="rgba(200,134,74,0.1)" stroke="rgba(200,134,74,0.3)" strokeWidth="0.8" />
-      <rect x="200" y="385" width="55" height="40" rx="4" fill="rgba(200,134,74,0.1)" stroke="rgba(200,134,74,0.3)" strokeWidth="0.8" />
-      <rect x="265" y="385" width="55" height="40" rx="4" fill="rgba(200,134,74,0.1)" stroke="rgba(200,134,74,0.3)" strokeWidth="0.8" />
-      <rect x="330" y="385" width="55" height="40" rx="4" fill="rgba(200,134,74,0.1)" stroke="rgba(200,134,74,0.3)" strokeWidth="0.8" />
-
-      {/* Floating award card */}
-      <g transform="translate(30, 50)">
-        <rect width="100" height="80" rx="3" fill="rgba(18,16,14,0.65)" stroke="rgba(200,134,74,0.5)" strokeWidth="0.8" />
-        <circle cx="50" cy="35" r="16" fill="none" stroke="url(#goldGrad3)" strokeWidth="1.2" />
-        <text x="50" y="39" textAnchor="middle" fill="#c8864a" fontSize="8" fontFamily="'Jost',sans-serif" fontWeight="600">★</text>
-        <text x="50" y="16" textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="7" fontFamily="'Jost',sans-serif" letterSpacing="1">AWARD</text>
-        <text x="50" y="62" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="7" fontFamily="'Jost',sans-serif">Best Portfolio</text>
-        <text x="50" y="73" textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize="6" fontFamily="'Jost',sans-serif">2024</text>
-      </g>
-
-      {/* Performance card */}
-      <g transform="translate(380, 120)">
-        <rect width="110" height="90" rx="3" fill="rgba(18,16,14,0.7)" stroke="rgba(200,134,74,0.4)" strokeWidth="0.8" />
-        <text x="12" y="20" fill="rgba(200,134,74,0.8)" fontSize="7" fontFamily="'Jost',sans-serif" letterSpacing="1.2" fontWeight="600">REACH</text>
-        <text x="12" y="48" fill="#c8864a" fontSize="26" fontFamily="'Cormorant Garamond',serif" fontWeight="300">10+</text>
-        <text x="12" y="62" fill="rgba(255,255,255,0.45)" fontSize="7.5" fontFamily="'Jost',sans-serif" fontWeight="300">Cities Covered</text>
-        <line x1="12" y1="70" x2="98" y2="70" stroke="rgba(200,134,74,0.3)" strokeWidth="0.5" />
-        <text x="12" y="84" fill="rgba(255,255,255,0.4)" fontSize="6.5" fontFamily="'Jost',sans-serif">Nationwide Presence</text>
-      </g>
-
-      {/* Connecting lines */}
-      <line x1="130" y1="90" x2="180" y2="110" stroke="rgba(200,134,74,0.25)" strokeWidth="0.6" strokeDasharray="3,4" />
-      <line x1="380" y1="170" x2="490" y2="145" stroke="rgba(200,134,74,0.25)" strokeWidth="0.6" strokeDasharray="3,4" />
-      
-      <circle cx="130" cy="90" r="3" fill="rgba(200,134,74,0.7)" />
-      <circle cx="490" cy="145" r="3" fill="rgba(200,134,74,0.7)" />
-
-      {/* Bottom label */}
-      <text x="260" y="520" textAnchor="middle" fill="rgba(200,134,74,0.6)" fontSize="8" fontFamily="'Jost',sans-serif" letterSpacing="2.5" fontWeight="400">PROJECT GALLERY</text>
-      <text x="260" y="538" textAnchor="middle" fill="rgba(200,134,74,0.35)" fontSize="6.5" fontFamily="'Jost',sans-serif" letterSpacing="1.5">BUILDING CREATORS & CONSULTING</text>
-    </svg>
-  );
-}
 
 // ==================== MAIN COMPONENT ====================
 export default function GalleryPage() {
@@ -295,174 +226,7 @@ export default function GalleryPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImage]);
 
-  // ─── Inline styles for the new hero (scoped) ───
-  const heroStyles = `
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
-    .gallery-hero-wrapper {
-      background: #12100e;
-      overflow: hidden;
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-    }
-    .gallery-hero-left {
-      padding: 7rem 4rem 7rem 5rem;
-      position: relative;
-      z-index: 2;
-    }
-    .gallery-hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Jost', sans-serif;
-      font-size: 10.5px;
-      font-weight: 500;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: #e8c99a;
-      margin-bottom: 2rem;
-    }
-    .gallery-hero-eyebrow::before {
-      content: '';
-      display: block;
-      width: 32px;
-      height: 1px;
-      background: #c8864a;
-    }
-    .gallery-hero-h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 5.5vw, 5.5rem);
-      font-weight: 400;
-      line-height: 1.06;
-      color: #ffffff;
-      margin: 0 0 1.5rem;
-      letter-spacing: -0.01em;
-    }
-    .gallery-hero-h1 em {
-      font-style: italic;
-      color: #c8864a;
-    }
-    .gallery-hero-desc {
-      font-family: 'Jost', sans-serif;
-      font-size: 16px;
-      font-weight: 300;
-      line-height: 1.85;
-      color: rgba(255,255,255,0.5);
-      max-width: 460px;
-      margin: 0 0 2.5rem;
-    }
-    .gallery-hero-desc strong {
-      color: rgba(255,255,255,0.85);
-      font-weight: 400;
-    }
-    .gallery-hero-ctas {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 3rem;
-    }
-    .gallery-btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Jost', sans-serif;
-      font-size: 11.5px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #12100e;
-      background: #c8864a;
-      text-decoration: none;
-      padding: 16px 36px;
-      transition: background 0.3s, transform 0.3s;
-      white-space: nowrap;
-    }
-    .gallery-btn-primary:hover { background: #e8c99a; transform: translateY(-2px); }
-    .gallery-btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Jost', sans-serif;
-      font-size: 11.5px;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
-      padding: 16px 36px;
-      border: 1px solid rgba(255,255,255,0.15);
-      transition: border-color 0.3s, color 0.3s;
-      white-space: nowrap;
-    }
-    .gallery-btn-secondary:hover { border-color: rgba(255,255,255,0.4); color: #ffffff; }
-    .gallery-hero-trust {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-    }
-    .gallery-hero-trust-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: rgba(255,255,255,0.45);
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .gallery-hero-trust-item svg { color: #c8864a; }
-    .gallery-hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 2.5rem;
-      max-width: 480px;
-      margin-top: 2rem;
-    }
-    .gallery-hero-stat {
-      padding-right: 24px;
-      border-right: 1px solid rgba(255,255,255,0.1);
-    }
-    .gallery-hero-stat:last-child { border-right: none; }
-    .gallery-hero-stat-val {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
-      font-weight: 300;
-      line-height: 1;
-      color: #c8864a;
-      display: block;
-    }
-    .gallery-hero-stat-lbl {
-      font-family: 'Jost', sans-serif;
-      font-size: 10.5px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.4);
-      display: block;
-      margin-top: 5px;
-      line-height: 1.5;
-      white-space: pre-line;
-    }
-    .gallery-hero-right {
-      position: relative;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 4rem 3rem;
-    }
-    .gallery-hero-right::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(200,134,74,0.06) 0%, rgba(200,134,74,0.02) 100%);
-      border-left: 1px solid rgba(200,134,74,0.2);
-    }
-    @media (max-width: 900px) {
-      .gallery-hero-wrapper { grid-template-columns: 1fr; min-height: auto; }
-      .gallery-hero-left { padding: 5rem 1.5rem 3rem; }
-      .gallery-hero-right { display: none; }
-    }
-  `;
+
 
   return (
     <>
@@ -473,93 +237,10 @@ export default function GalleryPage() {
         <link rel="canonical" href="https://bcc.net.in/gallery" />
       </Helmet>
 
-      <style>{heroStyles}</style>
+      {/* HERO */}
+      <GalleryHero />
 
-      {/* ════════════ HERO (INK & GOLD) ════════════ */}
-      <section className="gallery-hero-wrapper" aria-label="Gallery hero">
-        <div className="gallery-hero-left">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <p className="gallery-hero-eyebrow">Our Portfolio</p>
-          </motion.div>
-
-          <motion.h1
-            className="gallery-hero-h1"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            Project{" "}
-            <em>Gallery</em>
-          </motion.h1>
-
-          <motion.p
-            className="gallery-hero-desc"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-          >
-            Explore our finest work across <strong>engineering, construction, and design</strong>. 
-            Every project reflects our commitment to precision and excellence.
-          </motion.p>
-
-          <motion.div
-            className="gallery-hero-ctas"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
-          >
-            <Link to="/contact" className="gallery-btn-primary">
-              Start Your Project <FaArrowRight />
-            </Link>
-            <Link to="/services" className="gallery-btn-secondary">
-              Explore Services
-            </Link>
-          </motion.div>
-
-          <motion.div
-            className="gallery-hero-trust"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            {TRUST_BADGES.map((badge, i) => (
-              <span key={i} className="gallery-hero-trust-item">
-                <FaCheckCircle /> {badge}
-              </span>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="gallery-hero-stats"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.55 }}
-          >
-            {HERO_STATS.map((s, i) => (
-              <div className="gallery-hero-stat" key={i}>
-                <span className="gallery-hero-stat-val">{s.value}</span>
-                <span className="gallery-hero-stat-lbl">{s.label}</span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-
-        <motion.div
-          className="gallery-hero-right"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          aria-hidden="true"
-        >
-          <GalleryIllustration />
-        </motion.div>
-      </section>
-
-      {/* ════════════ FILTER SECTION (unchanged) ════════════ */}
+      {/* FILTER SECTION */}
       <section className="sticky top-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 py-4 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-md mx-auto mb-4">
@@ -581,7 +262,7 @@ export default function GalleryPage() {
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                   aria-label="Clear search"
                 >
-                  ✕
+                  x
                 </button>
               )}
             </div>
@@ -600,7 +281,7 @@ export default function GalleryPage() {
                 aria-pressed={activeCategory === category.id}
                 aria-label={`Filter by ${category.name}`}
               >
-                <span aria-hidden="true">{category.icon}</span>
+                {category.icon && <span aria-hidden="true">{category.icon}</span>}
                 <span>{category.name}</span>
               </button>
             ))}
@@ -608,14 +289,14 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {/* ════════════ GALLERY CONTENT (unchanged) ════════════ */}
+      {/* GALLERY CONTENT */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {isLoading && <LoadingSkeleton />}
 
           {!isLoading && apiError && (
             <div className="text-center py-20">
-              <div className="text-6xl mb-4">⚠️</div>
+              <div className="text-5xl mb-4 font-bold text-amber-500">!</div>
               <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Failed to Load Gallery</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">{apiError}</p>
               <button onClick={fetchGalleryData} className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
@@ -628,7 +309,7 @@ export default function GalleryPage() {
             <>
               <div className="mb-8 text-center">
                 <div className="inline-flex items-center gap-2 px-5 py-2 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-100 dark:border-gray-700">
-                  <span>📷</span>
+                  <span className="font-semibold text-blue-600">Gallery</span>
                   <span className="text-sm text-gray-600 dark:text-gray-400">
                     Showing <strong className="text-blue-600 dark:text-blue-400">{currentImages.length}</strong> of{" "}
                     <strong className="text-blue-600 dark:text-blue-400">{filteredImages.length}</strong> projects
@@ -638,7 +319,7 @@ export default function GalleryPage() {
 
               {filteredImages.length === 0 ? (
                 <div className="text-center py-20">
-                  <div className="text-6xl mb-4">🔍</div>
+                  <div className="text-5xl mb-4 font-bold text-gray-400">No results</div>
                   <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">No projects found</h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">We couldn't find any projects matching "{searchTerm}"</p>
                   <button
@@ -666,7 +347,7 @@ export default function GalleryPage() {
                         className="px-5 py-2.5 rounded-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all font-medium"
                         aria-label="Previous page"
                       >
-                        ← Previous
+                        Previous
                       </button>
 
                       <div className="flex gap-1.5">
@@ -704,7 +385,7 @@ export default function GalleryPage() {
                         className="px-5 py-2.5 rounded-lg bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all font-medium"
                         aria-label="Next page"
                       >
-                        Next →
+                        Next
                       </button>
                     </nav>
                   )}
@@ -715,7 +396,7 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {/* ════════════ LIGHTBOX (unchanged) ════════════ */}
+      {/* LIGHTBOX */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
@@ -761,14 +442,14 @@ export default function GalleryPage() {
                 className="absolute top-4 right-4 text-white bg-black/50 hover:bg-black/70 rounded-full w-10 h-10 flex items-center justify-center text-lg transition-colors"
                 aria-label="Close lightbox"
               >
-                ✕
+                x
               </button>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ════════════ CTA SECTION (original colors kept) ════════════ */}
+      {/* CTA SECTION */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Have a Project in Mind?</h2>
@@ -777,7 +458,7 @@ export default function GalleryPage() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/contact" className="px-8 py-3.5 bg-white text-blue-600 rounded-full font-semibold hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-              Start Your Project →
+              Start Your Project
             </Link>
             <Link to="/services" className="px-8 py-3.5 border-2 border-white/80 text-white rounded-full font-semibold hover:bg-white/10 transition-all duration-300">
               Explore Services
@@ -788,3 +469,5 @@ export default function GalleryPage() {
     </>
   );
 }
+
+

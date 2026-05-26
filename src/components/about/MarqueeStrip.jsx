@@ -14,9 +14,9 @@ import { motion } from "framer-motion";
 import { C } from "../../utils/tokens";
 
 const DEFAULT_ITEMS = [
-  "250+ Projects", "ISO 9001:2015", "CIDC Award Winner",
-  "15+ Cities", "30+ Engineers", "Green Certified",
-  "Est. 2010", "BCC India",
+  "1200+ Projects", "ISO 9001:2015", "CIDC Award Winner",
+  "10+ State", "40+ Engineers", "Green Certified",
+  "Est. 2017", "BCC India",
 ];
 
 export default function MarqueeStrip({ items = DEFAULT_ITEMS, speed = 24 }) {

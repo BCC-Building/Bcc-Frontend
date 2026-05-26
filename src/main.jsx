@@ -1,42 +1,40 @@
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import { LazyMotion, domAnimation } from 'framer-motion'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import './index.css'
-import App from './App.jsx'
-import { AuthProvider } from './context/AuthContext'
-import { ToastProvider } from './components/common/Toast'
-import ErrorBoundary from './components/common/ErrorBoundary'
+import { createRoot } from 'react-dom/client';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
 
-// Load Bootstrap JS only when needed (after page load)
+import App from './App.jsx';
+import AppProviders from './core/providers/AppProviders';
+import apiClient from './api/client';
+import { setupAuthInterceptor, setupErrorInterceptor } from './api/interceptors';
+
+/**
+ * Setup API Interceptors
+ */
+setupAuthInterceptor(apiClient);
+setupErrorInterceptor(apiClient);
+
+/**
+ * Load Bootstrap JS after page is interactive
+ */
 const loadBootstrap = () => {
   import('bootstrap/dist/js/bootstrap.bundle.min.js').catch(() => {
-    // Silently fail in production - Bootstrap JS is optional for most features
-  })
-}
+    console.warn('Bootstrap JS failed to load - core features may be limited');
+  });
+};
 
-// Load Bootstrap JS after page is interactive
 if (typeof window !== 'undefined') {
   if (document.readyState === 'complete') {
-    loadBootstrap()
+    loadBootstrap();
   } else {
-    window.addEventListener('load', loadBootstrap, { once: true })
+    window.addEventListener('load', loadBootstrap, { once: true });
   }
 }
 
-// Render without StrictMode in production (double rendering removed)
-const AppWrapper = () => (
-  <BrowserRouter>
-    <ErrorBoundary>
-      <AuthProvider>
-        <ToastProvider>
-          <LazyMotion features={domAnimation}>
-            <App />
-          </LazyMotion>
-        </ToastProvider>
-      </AuthProvider>
-    </ErrorBoundary>
-  </BrowserRouter>
-)
-
-createRoot(document.getElementById('root')).render(<AppWrapper />)
+/**
+ * Render App
+ */
+createRoot(document.getElementById('root')).render(
+  <AppProviders>
+    <App />
+  </AppProviders>
+);

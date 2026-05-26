@@ -1,9 +1,4 @@
-/**
- * BCC Global Styles
- * ─────────────────
- * Import and render <GlobalStyles /> once at the top of AboutPage.jsx.
- * All utility classes used by individual section components live here.
- */
+
 
 import React from "react";
 import { C } from "../../utils/tokens";

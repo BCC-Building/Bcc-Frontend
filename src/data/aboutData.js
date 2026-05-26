@@ -9,7 +9,7 @@ import { C } from "../utils/tokens";
   
 export const STATS = [
   { value: 1200, suffix: "+", label: "Projects Completed",  icon: FaBuilding,     color: C.azure   },
-  { value: 15,  suffix: "+", label: "Cities Covered",      icon: FaMapMarkerAlt, color: C.teal    },
+  { value: 10,  suffix: "+", label: "States Covered",      icon: FaMapMarkerAlt, color: C.teal    },
   { value: 40,  suffix: "+", label: "Expert Engineers",    icon: FaUsers,        color: C.emerald },
   { value: 100, suffix: "%", label: "Client Satisfaction", icon: FaStar,         color: C.amber   },
   { value: 9,  suffix: "+", label: "Years Experience",    icon: FaCalendarAlt,  color: C.rose    },

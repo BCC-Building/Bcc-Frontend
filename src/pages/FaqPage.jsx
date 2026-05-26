@@ -1,9 +1,10 @@
-// src/pages/FAQPage.jsx - Production-Ready with Schema.org + Search
+﻿// src/pages/FAQPage.jsx - Production-Ready with Schema.org + Search
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import SEO from "../components/SEO";
+import FAQHero from "../components/faq/FAQHero";
 
 // ==================== FAQ DATA ====================
 
@@ -53,7 +54,7 @@ const FAQS = [
   // Pricing
   {
     question: "How do you price your services?",
-    answer: "Our pricing is transparent and project-based. We provide detailed quotations after understanding your requirements. No hidden costs — everything is documented upfront.",
+    answer: "Our pricing is transparent and project-based. We provide detailed quotations after understanding your requirements. No hidden costs â€” everything is documented upfront.",
     category: "Pricing",
   },
   {
@@ -153,25 +154,8 @@ export default function FAQPage() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
-        
-        {/* ==================== HERO ==================== */}
-        <section className="pt-24 pb-12 px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold mb-4">
-              ❓ Help Center
-            </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold mb-4 text-gray-900">
-              Frequently Asked <span className="text-blue-600">Questions</span>
-            </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              Quick answers to help you understand our services, process, and expertise.
-            </p>
-          </motion.div>
-        </section>
+        {/* HERO */}
+        <FAQHero />
 
         {/* ==================== SEARCH + FILTER ==================== */}
         <section className="max-w-3xl mx-auto px-6 pb-8">
@@ -200,7 +184,7 @@ export default function FAQPage() {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 aria-label="Clear search"
               >
-                ✕
+                âœ•
               </button>
             )}
           </div>
@@ -233,7 +217,7 @@ export default function FAQPage() {
         <section className="max-w-3xl mx-auto px-6 pb-16 space-y-4">
           {filteredFAQs.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-5xl mb-4">🔍</div>
+              <div className="text-5xl mb-4">ðŸ”</div>
               <h3 className="text-xl font-bold text-gray-700 mb-2">No questions found</h3>
               <p className="text-gray-500 mb-4">
                 Try a different search term or browse all categories.
@@ -326,7 +310,7 @@ export default function FAQPage() {
                 href="tel:+919876543210"
                 className="inline-block bg-blue-500 text-white px-7 py-3 rounded-lg font-semibold border border-blue-400 hover:bg-blue-600 transition"
               >
-                📞 Call Now
+                ðŸ“ž Call Now
               </a>
             </div>
           </motion.div>
@@ -336,3 +320,4 @@ export default function FAQPage() {
     </>
   );
 }
+

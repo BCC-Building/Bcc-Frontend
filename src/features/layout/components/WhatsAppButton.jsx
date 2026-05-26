@@ -10,7 +10,7 @@ const WHATSAPP_CONFIG = {
     {
       id: 1,
       name: 'Architecture & Design',
-      number: '919876543210',
+      number: '9411311544',
       message: "Hi! I'm interested in your architecture and design services.",
       icon: '🏗️',
       role: 'Architecture Specialist',
@@ -21,7 +21,7 @@ const WHATSAPP_CONFIG = {
     {
       id: 2,
       name: 'Technical Support',
-      number: '919876543211',
+      number: '9411311544',
       message: 'Hello! I need technical assistance with my project.',
       icon: '🛠️',
       role: 'Technical Expert',
@@ -32,7 +32,7 @@ const WHATSAPP_CONFIG = {
     {
       id: 3,
       name: 'Customer Care',
-      number: '919876543212',
+      number: '9411311544',
       message: 'I have a query about your services.',
       icon: '💬',
       role: 'Customer Support',
@@ -43,7 +43,7 @@ const WHATSAPP_CONFIG = {
     {
       id: 4,
       name: 'Emergency Support',
-      number: '919876543213',
+      number: '9411311544',
       message: 'URGENT: Need immediate assistance!',
       icon: '🚨',
       role: 'Emergency Response',
@@ -161,7 +161,8 @@ const SingleContactButton = ({ config, trackEvent }) => {
 const MultiContactMenu = ({ contacts, trackEvent }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState('');
-  const menuRef = useRef(null);   // ✅ FIXED: was useState(null)
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Escape' && WHATSAPP_CONFIG.settings.closeOnEscape) {
@@ -169,12 +170,22 @@ const MultiContactMenu = ({ contacts, trackEvent }) => {
     }
   }, []);
 
+  const handleClickOutside = useCallback((e) => {
+    if (WHATSAPP_CONFIG.settings.closeOnOutsideClick && menuRef.current && !menuRef.current.contains(e.target) && buttonRef.current && !buttonRef.current.contains(e.target)) {
+      setIsOpen(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
     }
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen, handleKeyDown, handleClickOutside]);
 
   const handleContactClick = (contact) => {
     const message = selectedMessage || contact.message;
@@ -252,6 +263,7 @@ const MultiContactMenu = ({ contacts, trackEvent }) => {
       </AnimatePresence>
 
       <motion.button
+        ref={buttonRef}
         onClick={() => {
           if (!isOpen) {
             // Scroll down 200px so the full menu is visible

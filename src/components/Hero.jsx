@@ -182,7 +182,7 @@ export default function Hero() {
     >
       {/* Background image */}
       <img
-        src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=80"
+        src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=85&fm=webp"
         alt="Construction site with engineers"
         fetchPriority="high"
         decoding="sync"
@@ -222,7 +222,7 @@ export default function Hero() {
               className="text-warning fw-semibold mb-3 d-inline-block"
               style={{ letterSpacing: '1px' }}
             >
-              🏗️ Construction • Consulting • Digital Solutions
+              Engineering. Infrastructure. Performance.
             </motion.span>
 
             <motion.h1
@@ -248,15 +248,15 @@ export default function Hero() {
               transition={{ delay: 0.3, duration: 0.5 }}
               className="mb-5 fs-5"
               style={{
-                color: 'rgba(255,255,255,0.9)',
-                maxWidth: '600px',
-                minHeight: '48px',
-                textShadow: '0 1px 10px rgba(0,0,0,0.5)',
-                lineHeight: 1.6,
+                color: 'rgba(255,255,255,0.92)',
+                maxWidth: '640px',
+                minHeight: '56px',
+                textShadow: '0 1px 15px rgba(0,0,0,0.45)',
+                lineHeight: 1.75,
               }}
             >
-              Premium structural, architectural, geotechnical and survey services
-              for clients who demand quality, speed and clarity.
+              Delivering premium engineering, construction and consulting services
+              with clarity, responsiveness, and exceptional execution.
             </motion.p>
 
             <motion.div
@@ -280,12 +280,12 @@ export default function Hero() {
                   e.target.style.boxShadow = 'none';
                 }}
               >
-                Get Free Quote ✨
+                Request a Proposal
               </Link>
               <a
                 className="btn btn-outline-light btn-lg px-4"
                 href="tel:+918057540906"
-                aria-label="Call us at +91 8057540906"
+                aria-label="Speak with a project specialist"
                 style={{ borderRadius: '50px', transition: 'all 0.3s ease' }}
                 onMouseEnter={(e) => {
                   e.target.style.transform = 'translateY(-2px)';
@@ -296,7 +296,7 @@ export default function Hero() {
                   e.target.style.backgroundColor = 'transparent';
                 }}
               >
-                📞 Call Now
+                Talk to an Expert
               </a>
             </motion.div>
 

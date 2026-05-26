@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AchievementsHero from '../components/achievements/AchievementsHero';
 
 // ==================== DATA ====================
 
@@ -145,7 +146,11 @@ const css = `
   /* ── HERO ── */
   .hero-wrap {
     position: relative;
-    background: var(--ink);
+    background: linear-gradient(135deg, rgba(10,8,6,0.88) 0%, rgba(15,12,8,0.85) 50%, rgba(8,6,4,0.92) 100%),
+      url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=85&fm=webp') center/cover no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     overflow: hidden;
     min-height: 92vh;
     display: grid;
@@ -155,47 +160,50 @@ const css = `
   .hero-left {
     padding: 7rem 4rem 7rem 5rem;
     position: relative;
-    z-index: 2;
+    z-index: 4;
   }
   .hero-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-family: var(--fb);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.35em;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: var(--gold-l);
-    margin-bottom: 2rem;
+    color: #d4af37;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
   }
   .hero-eyebrow::before {
     content: '';
     display: block;
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #d4af37 0%, rgba(212,175,55,0.3) 100%);
   }
   .hero-h1 {
     font-family: var(--fd);
-    font-size: clamp(3rem, 5.5vw, 5.5rem);
-    font-weight: 400;
-    line-height: 1.06;
+    font-size: clamp(3.2rem, 6vw, 6rem);
+    font-weight: 300;
+    line-height: 1.08;
     color: var(--white);
-    margin: 0 0 1.5rem;
-    letter-spacing: -0.01em;
+    margin: 0 0 1.8rem;
+    letter-spacing: -0.015em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
   }
-  .hero-h1 em { font-style: italic; color: var(--gold); }
+  .hero-h1 em { font-style: italic; color: #d4af37; font-weight: 400; }
   .hero-desc {
     font-family: var(--fb);
-    font-size: 16px;
-    font-weight: 300;
-    line-height: 1.85;
-    color: rgba(255,255,255,0.5);
-    max-width: 420px;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.88);
+    max-width: 520px;
     margin: 0 0 3rem;
+    letter-spacing: 0.3px;
   }
-  .hero-desc strong { color: rgba(255,255,255,0.85); font-weight: 400; }
+  .hero-desc strong { color: #d4af37; font-weight: 500; }
 
   /* hero stats row */
   .hero-stats {
@@ -699,76 +707,7 @@ export default function AchievementsPage() {
       <div className="ach-page">
 
         {/* ══ HERO ══ */}
-        <section className="hero-wrap" aria-label="Achievements hero">
-
-          {/* Subtle bg decoration */}
-          <div className="hero-bg-lines" aria-hidden="true">
-            <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0 }}>
-              <line x1="0" y1="30%" x2="100%" y2="30%" stroke="rgba(200,134,74,0.04)" strokeWidth="1"/>
-              <line x1="0" y1="60%" x2="100%" y2="60%" stroke="rgba(200,134,74,0.04)" strokeWidth="1"/>
-              <line x1="30%" y1="0" x2="30%" y2="100%" stroke="rgba(200,134,74,0.03)" strokeWidth="1"/>
-            </svg>
-          </div>
-
-          {/* LEFT */}
-          <div className="hero-left">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <p className="hero-eyebrow">Excellence Recognised</p>
-            </motion.div>
-
-            <motion.h1
-              className="hero-h1"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Our<br />
-              <em>Achievements</em><br />
-              &amp; Legacy
-            </motion.h1>
-
-            <motion.p
-              className="hero-desc"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-            >
-              From industry awards to critical certifications and landmark milestones —
-              every achievement reflects our{' '}
-              <strong>unwavering commitment to quality and client success</strong>.
-            </motion.p>
-
-            <motion.div
-              className="hero-stats"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              {HERO_STATS.map((s, i) => (
-                <div className="hstat" key={i}>
-                  <span className="hstat-val">{s.value}</span>
-                  <span className="hstat-lbl">{s.label}</span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* RIGHT — Illustration */}
-          <motion.div
-            className="hero-right"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            aria-hidden="true"
-          >
-            <HeroIllustration />
-          </motion.div>
-
-        </section>
+        <AchievementsHero />
 
         {/* ══ SECTION INTRO ══ */}
         <div className="section-intro">

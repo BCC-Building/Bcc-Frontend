@@ -4,11 +4,11 @@ import { Helmet } from 'react-helmet-async';
 
 const stats = [
   {
-    number: '15',
-    label: 'Cityes Served',
-    items: ['India', 'UAE', 'Nepal', 'Bangladesh', 'Bhutan', 'Sri Lanka', 'Afghanistan', 'South Africa'],
+    number: '10+',
+    label: 'State Served',
+    items: ['UttraKhand', 'Uttar Pradesh', 'Delhi', 'Rajasthan', 'Punjab', 'Haryana', 'Nagaland', 'Shimla', 'Arunachal Pradesh', 'Jammu & Kashmir'],
   },
-  { number: '500+', label: 'Projects Completed' },
+  { number: '1200+', label: 'Projects Completed' },
   { number: '09+', label: 'Years of Experience' },
   { number: '50+', label: 'Million sq ft', sub: 'under Green Certification' },
 ];

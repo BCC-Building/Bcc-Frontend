@@ -4,7 +4,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import logo from '../assets/img.webp';
+import logo from "../../../assets/img.webp";
 
 /* ─── CONFIG ─── */
 const COMPANY_FULL  = 'Building Creators And Consulting';
