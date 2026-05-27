@@ -284,7 +284,7 @@ const AboutSection = () => {
               project execution under one roof.
             </p>
             <p>
-              With a growing portfolio across <strong>8 states</strong>, <strong>500+ projects</strong>,
+              With a growing portfolio across <strong>10+ states</strong>, <strong>1200+ projects</strong>,
               and <strong>09+ years</strong>, we bring functionality, precision, durability,
               and modern aesthetics to every project — from residential homes to large-scale
               infrastructure. Every project reflects our commitment to quality engineering
