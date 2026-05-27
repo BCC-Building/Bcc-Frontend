@@ -40,10 +40,12 @@ export default function HomePage() {
     <>
       {/* ==================== SEO ==================== */}
       <SEO
-        title="BCC Building Creators And Consulting | Construction & Engineering Services"
-        description="BCC delivers structural engineering, architecture, soil investigation, material testing, land survey, and consulting services for ambitious projects across India."
+        title="BCC Consulting | Structural Engineering & Construction Services"
+        description="BCC delivers structural engineering, architecture design, soil testing & construction consulting. 1200+ projects completed. ISO 9001:2015 certified. Free consultation."
+        keywords="structural engineering services India, construction consulting, architecture design, soil investigation, material testing, NDT testing, engineering services Rudrapur"
         url="https://bcc.net.in/"
-        keywords="construction consulting, architecture design, structural engineering, soil investigation, material testing, land survey, NDT testing, building contractors"
+        image="https://bcc.net.in/og-home.jpg"
+        schemaType="LocalBusiness"
       />
 
       {/* ==================== MAIN CONTENT ==================== */}

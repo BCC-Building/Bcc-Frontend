@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion, useScroll } from "framer-motion";
+import SEO from "../components/SEO";
 
 // ── Global styles & utils ────────────────────────────
 import GlobalStyles from "../components/about/GlobalStyles";
@@ -23,6 +24,15 @@ export default function AboutPage() {
 
   return (
     <>
+      <SEO
+        title="About BCC | 1200+ Projects | Expert Engineers Since 2017"
+        description="Learn about BCC's journey, mission to deliver excellence in construction consulting, team of expert structural engineers, and ISO certifications."
+        keywords="about BCC, construction consulting company, structural engineers, engineering firm, BCC history, founder Yaseen Ahmad Khan"
+        url="https://bcc.net.in/about"
+        image="https://bcc.net.in/og-about.jpg"
+        schemaType="Organization"
+      />
+
       {/* ── Inject global CSS (fonts, utility classes) ── */}
       <GlobalStyles />
 

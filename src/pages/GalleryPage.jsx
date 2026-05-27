@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import SEO from "../components/SEO";
 import { getMediaUrl } from "../utils/media";
 import { publicAPI } from "../api/endpoints";
 import GalleryHero from "../components/gallery/GalleryHero";
@@ -23,13 +24,13 @@ const ITEMS_PER_PAGE = 6;
 const TRUST_BADGES = [
   "1200+ Projects Delivered",
   "98% Client Satisfaction",
-  "15+ Cities Covered",
+  "10+ States Covered",
 ];
 
 // Hero stats
 const HERO_STATS = [
   { value: "1200+", label: "Projects\nCompleted" },
-  { value: "10+", label: "Cities\nServed" },
+  { value: "10+", label: "States\nServed" },
   { value: "98%", label: "Client\nSatisfaction" },
 ];
 
@@ -230,12 +231,13 @@ export default function GalleryPage() {
 
   return (
     <>
-      <Helmet>
-        <title>Project Gallery | Building Creators & Consulting</title>
-        <meta name="description" content="Explore our portfolio of engineering and construction projects." />
-        <meta name="keywords" content="construction gallery, engineering projects, architecture portfolio" />
-        <link rel="canonical" href="https://bcc.net.in/gallery" />
-      </Helmet>
+      <SEO
+        title="Project Gallery | BCC Construction Portfolio"
+        description="Browse 1200+ completed construction projects including architectural designs, structural work, surveys & testing services across India. View our portfolio."
+        keywords="construction projects, architectural portfolio, structural engineering projects, project gallery, construction gallery, engineering portfolio India"
+        url="https://bcc.net.in/gallery"
+        image="https://bcc.net.in/og-gallery.jpg"
+      />
 
       {/* HERO */}
       <GalleryHero />

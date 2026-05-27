@@ -1,0 +1,33 @@
+# BCC Building Creators And Consulting - robots.txt
+# This file tells search engines which pages to crawl and which to ignore
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /private
+Disallow: /*.pdf$
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+
+# Allow specific crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: baiduspider
+Allow: /
+
+# Sitemap locations
+Sitemap: https://bcc.net.in/sitemap.xml
+Sitemap: https://bcc.net.in/sitemap-pages.xml
+Sitemap: https://bcc.net.in/sitemap-blog.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Cache settings
+# Let search engines cache pages for up to 30 days
+Cache-Control: max-age=2592000

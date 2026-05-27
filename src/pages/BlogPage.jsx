@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import BlogHero from '../components/blog/BlogHero';
@@ -584,7 +585,17 @@ export default function BlogPage() {
   ];
 
   return (
-    <div style={{ background:'#f8fafc', minHeight:'100vh' }} ref={topRef}>
+    <>
+      <SEO
+        title="Engineering Blog | Construction & Consulting Insights"
+        description="Expert articles on structural engineering, soil investigation, construction management, architecture tips & industry trends. Weekly insights from BCC engineers."
+        keywords="engineering blog, construction articles, structural engineering tips, soil testing insights, BCC blog, construction management articles"
+        url="https://bcc.net.in/blog"
+        image="https://bcc.net.in/og-blog.jpg"
+        schemaType="Article"
+      />
+
+      <div style={{ background:'#f8fafc', minHeight:'100vh' }} ref={topRef}>
 
       {/* -- detail view -- */}
       {selected && <BlogDetail post={selected} onBack={handleBack} />}
@@ -723,7 +734,8 @@ export default function BlogPage() {
           .bp-card-grid { grid-template-columns:1fr !important; }
         }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }
 

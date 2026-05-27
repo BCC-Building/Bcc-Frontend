@@ -7,9 +7,11 @@ export default function ProjectsPage() {
   return (
     <>
       <SEO
-        title="Our Projects | BCC Construction & Consulting"
-        description="Explore BCC's portfolio of completed and ongoing construction, engineering, and consulting projects across India."
+        title="Projects | BCC Construction & Engineering Portfolio"
+        description="Explore BCC's 1200+ successful projects in structural engineering, architecture, soil investigation & construction consulting across India since 2017."
+        keywords="construction projects, engineering projects, structural projects, portfolio projects, BCC projects, case studies"
         url="https://bcc.net.in/projects"
+        image="https://bcc.net.in/og-projects.jpg"
       />
       <main>
         <ProjectsHero />

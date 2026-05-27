@@ -1012,11 +1012,11 @@ export default function ClientsPage() {
   return (
     <>
       <SEO
-        title="Our Prestigious Clients | Government & Institutional Partners | BCC"
-        description="BCC proudly serves 50+ government and institutional clients across Defence, PWD, Petroleum, Railways, and more."
-        keywords="BCC clients, government construction clients, MES contractor, PWD construction, defence infrastructure, petroleum construction, BPCL contractor, IOCL contractor, NTPC civil works, CPWD contractor Bareilly"
+        title="Clients & Success Stories | BCC Consulting"
+        description="BCC has served 50+ government & corporate clients with 1200+ successful projects. Government bodies, PWD, railways & municipal corporations trust BCC."
+        keywords="BCC clients, government clients, project success stories, client testimonials, government contracts"
         url="https://bcc.net.in/clients"
-        ogImage="https://bcc.net.in/og-clients.jpg"
+        image="https://bcc.net.in/og-clients.jpg"
       />
 
       <Helmet>

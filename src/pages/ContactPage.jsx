@@ -70,10 +70,11 @@ export default function ContactPage() {
     <>
       {/* ==================== SEO ==================== */}
       <SEO
-        title="Contact BCC Consulting | Start Your Next Project"
-        description="Contact BCC for consultations, quotes, and project discussions across construction, consulting, engineering, and surveying services."
-        keywords="contact BCC, construction consultation, engineering enquiry, project quote, BCC Rudrapur contact"
+        title="Contact BCC | Get Free Engineering Consultation"
+        description="Contact BCC for quotes, consultations & project discussions. Available for structural engineering, architecture, soil testing & construction consulting services."
+        keywords="contact BCC, consultation, construction quote, engineering inquiry, project consultation, contact form"
         url="https://bcc.net.in/contact"
+        image="https://bcc.net.in/og-contact.jpg"
       />
 
       {/* ==================== JSON-LD SCHEMA ==================== */}

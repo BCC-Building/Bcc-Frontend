@@ -141,9 +141,11 @@ export default function FAQPage() {
     <>
       {/* ==================== SEO ==================== */}
       <SEO
-        title="Frequently Asked Questions | BCC Consulting"
-        description="Find answers to common questions about our construction, engineering, and consulting services. Learn about our process, pricing, and expertise."
+        title="FAQ | Frequently Asked Questions About BCC Services"
+        description="Find answers to common questions about BCC's construction, engineering & consulting services. Learn about our process, pricing, timeline & expertise."
+        keywords="FAQ, frequently asked questions, BCC services, construction FAQ, engineering services FAQ"
         url="https://bcc.net.in/faq"
+        image="https://bcc.net.in/og-faq.jpg"
       />
 
       {/* ==================== JSON-LD SCHEMA ==================== */}
@@ -307,7 +309,7 @@ export default function FAQPage() {
                 Contact Us
               </Link>
               <a
-                href="tel:+919876543210"
+                href="tel:+919411311544"
                 className="inline-block bg-blue-500 text-white px-7 py-3 rounded-lg font-semibold border border-blue-400 hover:bg-blue-600 transition"
               >
                 ðŸ“ž Call Now

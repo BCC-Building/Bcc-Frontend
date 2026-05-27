@@ -47,11 +47,12 @@ export default function ServiceDetail() {
     <>
       {/* SEO */}
       <SEO
-        title={`${service.name} | BCC Consulting Services`}
-        description={service.shortDesc}
-        keywords={`${service.name}, ${service.category}, BCC services, Rudrapur`}
+        title={`${service.name} | BCC Consulting`}
+        description={service.shortDesc || 'Professional engineering & construction consulting services from BCC. Expert structural design & delivery.'}
+        keywords={`${service.name}, ${service.category}, structural engineering, BCC services`}
         url={`https://bcc.net.in/services/${service.slug}`}
-        image={service.image}
+        image={service.image || 'https://bcc.net.in/og-service.jpg'}
+        schemaType="Service"
       />
 
       <div className="service-detail-page">

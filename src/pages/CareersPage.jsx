@@ -2,6 +2,7 @@
 // Production-Ready | Bechtel + Skanska + Turner Style | BCC
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 
 // ─── constants ────────────────────────────────────────────────────────────────
@@ -396,6 +397,14 @@ export default function CareersPage() {
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <>
+      <SEO
+        title="Careers at BCC | Join Our Engineering Team"
+        description="Join BCC's talented team of structural engineers & architects. Competitive salary, training programs, leadership opportunities & work-life balance in India."
+        keywords="BCC careers, structural engineer jobs, architect jobs, engineering positions, construction jobs India, career opportunities"
+        url="https://bcc.net.in/careers"
+        image="https://bcc.net.in/og-careers.jpg"
+      />
+
       {/* ══ HERO ══════════════════════════════════════════════════════════════ */}
       <section style={{
         position: 'relative', minHeight: '88vh',

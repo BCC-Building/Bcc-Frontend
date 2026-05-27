@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 import {
   FaLinkedinIn,
   FaEnvelope,
@@ -576,25 +577,14 @@ export default function TeamPage({ featured = false }) {
       `}</style>
 
       {/* --- SEO --- */}
-      {!featured && (
-        <Helmet>
-          <title>Our Team | Expert Engineers & Consultants | BCC</title>
-          <meta
-            name="description"
-            content="Meet the dedicated team of engineers, consultants and innovators at BCC. 50+ professionals with expertise in construction, design, and project management."
-          />
-          <meta
-            name="keywords"
-            content="BCC team, construction engineers, structural engineers, project managers, consultants, architects"
-          />
-          <link rel="canonical" href="https://bcc.net.in/team" />
-          <meta property="og:title" content="Our Expert Team | BCC Consulting" />
-          <meta property="og:description" content="Meet the professionals behind BCC's success." />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://bcc.net.in/team" />
-          <meta name="twitter:card" content="summary_large_image" />
-        </Helmet>
-      )}
+      <SEO
+        title="Our Team | Expert Engineers & Consultants | BCC"
+        description="Meet BCC's talented team of structural engineers, architects & consultants with expertise in construction design & project delivery. 50+ professionals."
+        keywords="BCC team, structural engineers, architects, construction professionals, engineering consultants, expert team"
+        url="https://bcc.net.in/team"
+        image="https://bcc.net.in/og-team.jpg"
+        schemaType="Organization"
+      />
 
       <TeamHero />
 

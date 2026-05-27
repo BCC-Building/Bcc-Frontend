@@ -691,10 +691,12 @@ export default function AchievementsPage() {
   return (
     <>
       <SEO
-        title="Awards, Certifications & Milestones | BCC Building Creators and Consulting"
-        description="Explore BCC's 200+ awards, ISO 9001/14001/OHSAS certifications, 1200+ completed projects, and 15+ years of engineering excellence across India and 8 countries."
-        keywords="BCC achievements, ISO certified construction firm, construction awards India, Uttarakhand contractor awards, engineering milestones, government contractor certifications, best construction firm 2024"
+        title="Awards & Recognition | BCC Engineering Excellence"
+        description="BCC has earned 50+ government clients, 1200+ projects, 98% on-time delivery & ISO 9001:2015 certification. Industry leader in construction consulting."
+        keywords="BCC achievements, awards, ISO certification, project success, industry recognition, engineering excellence"
         url="https://bcc.net.in/achievements"
+        image="https://bcc.net.in/og-achievements.jpg"
+        schemaType="Organization"
       />
 
       <Helmet>
