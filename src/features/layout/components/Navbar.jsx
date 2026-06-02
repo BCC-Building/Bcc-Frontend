@@ -11,7 +11,7 @@ const COMPANY_FULL  = 'Building Creators And Consulting';
 const COMPANY_SHORT = 'BCC';
 const PHONE         = '+918057540906';
 const PHONE_DISPLAY = '+91 80575 40906';
-const EMAIL         = 'info@bcc.net.in';
+const EMAIL         = 'bcc06.info@gmail.com';
 const ADDRESS       = 'Guru Angad Dev Complex, 4th Floor, Rudrapur (U.S.Nagar), Uttarakhand';
 
 const NAV_LINKS = [

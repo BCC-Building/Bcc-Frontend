@@ -60,8 +60,8 @@ export default function Footer() {
                 <a href="tel:+8057540906" className="footer-contact-item">
                   <i className="bi bi-telephone-fill"></i> +91 8057540906
                 </a>
-                <a href="mailto:info@bcc.net.in" className="footer-contact-item">
-                  <i className="bi bi-envelope-fill"></i> info@bcc.net.in
+                <a href="mailto:bcc06.info@gmail.com" className="footer-contact-item">
+                  <i className="bi bi-envelope-fill"></i> bcc06.info@gmail.com
                 </a>
                 <span className="footer-contact-item">
                   <i className="bi bi-geo-alt-fill"></i> Rudrapur, Uttarakhand

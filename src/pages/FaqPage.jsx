@@ -186,7 +186,7 @@ export default function FAQPage() {
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 aria-label="Clear search"
               >
-                âœ•
+                &times;
               </button>
             )}
           </div>
@@ -309,10 +309,10 @@ export default function FAQPage() {
                 Contact Us
               </Link>
               <a
-                href="tel:+919411311544"
+                href="tel:+918057540906"
                 className="inline-block bg-blue-500 text-white px-7 py-3 rounded-lg font-semibold border border-blue-400 hover:bg-blue-600 transition"
               >
-                ðŸ“ž Call Now
+                📞 Call Now
               </a>
             </div>
           </motion.div>

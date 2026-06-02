@@ -30,7 +30,7 @@ export default function CTASection({
   secondaryLabel= "View Portfolio",
   secondaryTo   = "/projects",
   phone         = "+91-XXXXXXXXXX",
-  email         = "info@bcc.net.in",
+  email         = "bcc06.info@gmail.com",
   address       = "Rudrapur, UK",
 }) {
   return (

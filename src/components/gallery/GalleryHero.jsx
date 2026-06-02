@@ -8,7 +8,7 @@ const TRUST_BADGES = [
 
 const HERO_STATS = [
   { value: "500+", label: "Photos" },
-  { value: "250+", label: "Projects" },
+  { value: "1200+", label: "Projects" },
   { value: "15+", label: "Categories" },
 ];
 

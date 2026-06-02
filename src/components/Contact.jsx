@@ -160,10 +160,10 @@ export default function Contact() {
             {
               icon: 'bi-envelope-fill',
               title: 'Email Us',
-              text: 'info@bcc.net.in',
+              text: 'bcc06.info@gmail.com',
               sub: 'We reply within 24 hours',
               color: 'bg-success',
-              ariaLabel: 'Email address: info@bcc.net.in',
+              ariaLabel: 'Email address: bcc06.info@gmail.com',
             },
             {
               icon: 'bi-geo-alt-fill',

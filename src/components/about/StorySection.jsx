@@ -120,7 +120,7 @@ export default function StorySection({
                         lineHeight: 1,
                       }}
                     >
-                      8+
+                      9+
                     </div>
 
                     <div

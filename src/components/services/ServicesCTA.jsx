@@ -271,7 +271,7 @@ export default function ServicesCTA() {
             <div className="services-cta-contact">
               📞 Call us: <a href="tel:+918057540906">+91 8057540906</a>{" "}
               &nbsp;or&nbsp; 📧 Email:{" "}
-              <a href="mailto:info@bcc.net.in">info@bcc.net.in</a>
+              <a href="mailto:bcc06.info@gmail.com">bcc06.info@gmail.com</a>
             </div>
           </motion.div>
         </section>
