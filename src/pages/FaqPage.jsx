@@ -20,7 +20,7 @@ const FAQS = [
   // Services
   {
     question: "What services does BCC provide?",
-    answer: "We provide Structure Design, Architecture Design, Soil Investigation, Material Testing, NDT Testing, and Land Survey services with 8+ years of industry experience across residential, commercial, and industrial projects.",
+    answer: "We provide Structure Design, Architecture Design, Soil Investigation, Material Testing, NDT Testing, and Land Survey services with 9+ years of industry experience across residential, commercial, and industrial projects.",
     category: "Services",
   },
   {
@@ -66,7 +66,7 @@ const FAQS = [
   // Support
   {
     question: "How can I contact your team?",
-    answer: "You can reach us via our contact form, email at info@bcc.net.in, or call us directly. Visit our Contact page for all options including WhatsApp chat.",
+    answer: "You can reach us via our contact form, email at bcc06.info@gmail.com, or call us directly. Visit our Contact page for all options including WhatsApp chat.",
     category: "Support",
   },
   {
