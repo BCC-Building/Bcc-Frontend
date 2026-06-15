@@ -1,5 +1,5 @@
 // src/components/ProjectsPreview.jsx
-// Homepage section — big company format, 3 featured projects
+// Homepage section — big company format, 3 featured projects with blur-on-load effect
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { publicAPI } from '../api/endpoints';
@@ -70,15 +70,15 @@ export default function ProjectsPreview() {
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2563eb', display: 'inline-block' }} />
               <span style={{ color: '#1d4ed8', fontSize: 11, fontWeight: 700, letterSpacing: '.6px', textTransform: 'uppercase' }}>
-                Featured Work
+                Our Portfolio
               </span>
             </div>
             <h2 style={{ margin: 0, fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>
-              Recent Projects
+              The Proof Is in the Projects
             </h2>
             <p style={{ margin: '8px 0 0', color: '#64748b', fontSize: '1rem', maxWidth: 440 }}>
-              A glimpse of our latest work across construction, consulting and design.
-            </p>
+    Proof of precision, passion, and partnership.
+  </p>
           </div>
           <Link
             to="/projects"
@@ -136,7 +136,7 @@ function PreviewCard({ project, index }) {
         animationDelay: `${index * 0.1}s`,
       }}
     >
-      {/* image */}
+      {/* image with blur effect - blurred on idle, clear on hover */}
       <div style={{ position: 'relative', height: 210, overflow: 'hidden' }}>
         <img
           src={imgSrc}
@@ -145,8 +145,9 @@ function PreviewCard({ project, index }) {
           loading="lazy"
           style={{
             width: '100%', height: '100%', objectFit: 'cover',
-            transition: 'transform .45s ease',
+            transition: 'transform .45s ease, filter .3s ease',
             transform: hovered ? 'scale(1.07)' : 'scale(1)',
+            filter: hovered ? 'blur(0)' : 'blur(4px)',
             display: 'block',
           }}
         />
@@ -178,7 +179,7 @@ function PreviewCard({ project, index }) {
         )}
       </div>
 
-      {/* body */}
+      {/* body - remains sharp */}
       <div style={{ padding: '16px 18px 18px' }}>
         <h3 style={{
           margin: '0 0 6px', fontSize: 15, fontWeight: 700,

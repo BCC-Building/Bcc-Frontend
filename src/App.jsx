@@ -22,6 +22,7 @@ import HomePage  from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import TeamPage  from './pages/TeamPage';
 import FaqPage   from './pages/FaqPage';
+import WelcomePopup from './features/layout/components/WelcomePopup';
 
 // ==================== PUBLIC PAGES (LAZY LOADED - NON-CRITICAL) ====================
 const ServicesPage     = lazy(() => import('./pages/ServicesPage'));
@@ -87,6 +88,7 @@ function AdminLayout({ children }) {
 export default function App() {
   return (
     <>
+      <WelcomePopup />
       <ScrollToTop />
       <WhatsAppButton />
 

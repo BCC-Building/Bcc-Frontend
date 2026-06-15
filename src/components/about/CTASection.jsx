@@ -1,26 +1,14 @@
 /**
  * CTASection
  * ───────────
- * Dark gradient call-to-action banner with ambient blobs.
+ * Full-width navy call-to-action banner with ambient glow.
  * Two buttons + contact strip below.
- *
- * Props:
- *   heading       string  — main headline (default provided)
- *   subtext       string  — paragraph below heading
- *   primaryLabel  string  — label for primary button
- *   primaryTo     string  — react-router path for primary button
- *   secondaryLabel string — label for secondary button
- *   secondaryTo   string  — react-router path for secondary button
- *   phone         string
- *   email         string
- *   address       string
  */
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaArrowRight } from "react-icons/fa";
-import { C } from "../../utils/tokens";
-import { Reveal, Eyebrow } from "./Shared";
+import { motion } from "framer-motion";
+import { FaArrowRight, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function CTASection({
   heading       = "Ready to Build Your Dream Project?",
@@ -29,88 +17,225 @@ export default function CTASection({
   primaryTo     = "/contact",
   secondaryLabel= "View Portfolio",
   secondaryTo   = "/projects",
-  phone         = "+91-XXXXXXXXXX",
+  phone         = "+91 80575 40906",
   email         = "bcc06.info@gmail.com",
-  address       = "Rudrapur, UK",
+  address       = "Rudrapur, Uttarakhand",
 }) {
   return (
-    <section style={{ padding: "80px 0 100px" }}>
-      <div className="bcc-wrap">
-        <Reveal>
-          <div style={{
-            background: `linear-gradient(135deg, ${C.ink} 0%, #0d1b4b 100%)`,
-            borderRadius: 32, padding: "clamp(48px, 9vw, 96px)",
-            position: "relative", overflow: "hidden", textAlign: "center",
-          }}>
+    <motion.section
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      style={{
+        width: "100%",
+        background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e3a5f 100%)",
+        padding: "60px 24px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 1000,
+          margin: "0 auto",
+          textAlign: "center",
+          position: "relative",
+          zIndex: 2,
+        }}
+      >
+        {/* Ambient glow orbs – softer, smaller */}
+        <div
+          style={{
+            position: "absolute",
+            width: 300,
+            height: 300,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%)",
+            top: -100,
+            right: -80,
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            width: 280,
+            height: 280,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(96,165,250,0.15) 0%, transparent 70%)",
+            bottom: -80,
+            left: -60,
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        />
 
-            {/* Ambient blobs */}
-            <div style={{
-              position: "absolute", width: 500, height: 500, borderRadius: "50%",
-              background: `radial-gradient(circle, ${C.blue}30 0%, transparent 70%)`,
-              top: -180, right: -120, pointerEvents: "none",
-            }}/>
-            <div style={{
-              position: "absolute", width: 420, height: 420, borderRadius: "50%",
-              background: `radial-gradient(circle, ${C.teal}20 0%, transparent 70%)`,
-              bottom: -160, left: -100, pointerEvents: "none",
-            }}/>
-
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <Eyebrow light center>Start Today</Eyebrow>
-
-              <h2 className="serif" style={{
-                fontSize: "clamp(2rem, 5.5vw, 3.8rem)", fontWeight: 900,
-                color: C.white, marginBottom: 16, lineHeight: 1.08, marginTop: 8,
-              }}>
-                {heading.split("Dream Project?").length > 1 ? (
-                  <>
-                    {heading.split("Dream Project?")[0]}
-                    <span className="bcc-gr">Dream Project?</span>
-                  </>
-                ) : heading}
-              </h2>
-
-              <p style={{
-                color: "rgba(255,255,255,.5)", fontSize: 17,
-                maxWidth: 480, margin: "0 auto 44px", lineHeight: 1.75,
-              }}>
-                {subtext}
-              </p>
-
-              {/* Buttons */}
-              <div style={{
-                display: "flex", gap: 16, justifyContent: "center",
-                flexWrap: "wrap", marginBottom: 40,
-              }}>
-                <Link to={primaryTo} style={{
-                  display: "inline-flex", alignItems: "center", gap: 10,
-                  background: C.white, color: C.ink,
-                  padding: "16px 36px", borderRadius: 8,
-                  fontWeight: 800, fontSize: 15, textDecoration: "none",
-                  transition: "all .28s",
-                }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,.22)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
-                >
-                  {primaryLabel} <FaArrowRight/>
-                </Link>
-                <Link to={secondaryTo} className="btn-g">{secondaryLabel}</Link>
-              </div>
-
-              {/* Contact strip */}
-              <div style={{
-                display: "flex", gap: 32, justifyContent: "center",
-                flexWrap: "wrap", color: "rgba(255,255,255,.38)", fontSize: 14,
-              }}>
-                <span>📞 {phone}</span>
-                <span>✉️ {email}</span>
-                <span>🏢 {address}</span>
-              </div>
-            </div>
-
+        <div style={{ position: "relative", zIndex: 2 }}>
+          {/* Eyebrow */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: "rgba(59,130,246,0.2)",
+              backdropFilter: "blur(4px)",
+              border: "1px solid rgba(59,130,246,0.4)",
+              borderRadius: 40,
+              padding: "4px 16px",
+              marginBottom: 20,
+              fontSize: "0.7rem",
+              fontWeight: 600,
+              letterSpacing: 1,
+              color: "#a5c9ff",
+            }}
+          >
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                background: "#3b82f6",
+                borderRadius: "50%",
+                display: "inline-block",
+                boxShadow: "0 0 6px #3b82f6",
+              }}
+            />
+            Start Today
           </div>
-        </Reveal>
+
+          {/* Heading */}
+          <h2
+            style={{
+              fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+              fontWeight: 800,
+              color: "#ffffff",
+              marginBottom: 12,
+              lineHeight: 1.2,
+            }}
+          >
+            {heading.includes("Dream Project") ? (
+              <>
+                {heading.split("Dream Project")[0]}
+                <span
+                  style={{
+                    background: "linear-gradient(135deg, #b9d8ff, #60a5fa)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  Dream Project
+                </span>
+                {heading.split("Dream Project")[1] || "?"}
+              </>
+            ) : (
+              heading
+            )}
+          </h2>
+
+          {/* Subtext */}
+          <p
+            style={{
+              color: "rgba(255,255,255,0.75)",
+              fontSize: "0.95rem",
+              maxWidth: 560,
+              margin: "0 auto 32px",
+              lineHeight: 1.6,
+            }}
+          >
+            {subtext}
+          </p>
+
+          {/* Buttons */}
+          <div
+            style={{
+              display: "flex",
+              gap: 14,
+              justifyContent: "center",
+              flexWrap: "wrap",
+              marginBottom: 36,
+            }}
+          >
+            <Link
+              to={primaryTo}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "linear-gradient(105deg, #2563eb, #1e3a8a)",
+                color: "white",
+                padding: "12px 28px",
+                borderRadius: 50,
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                textDecoration: "none",
+                transition: "all 0.25s ease",
+                boxShadow: "0 8px 20px -6px rgba(37,99,235,0.4)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 12px 24px -6px rgba(37,99,235,0.6)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 8px 20px -6px rgba(37,99,235,0.4)";
+              }}
+            >
+              {primaryLabel} <FaArrowRight style={{ fontSize: "0.7rem" }} />
+            </Link>
+            <Link
+              to={secondaryTo}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                background: "transparent",
+                border: "1.5px solid rgba(255,255,255,0.5)",
+                borderRadius: 50,
+                padding: "12px 28px",
+                color: "white",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                textDecoration: "none",
+                transition: "all 0.25s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.8)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)";
+              }}
+            >
+              {secondaryLabel}
+            </Link>
+          </div>
+
+          {/* Contact strip */}
+          <div
+            style={{
+              display: "flex",
+              gap: "clamp(16px, 2vw, 28px)",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              paddingTop: 20,
+              borderTop: "1px solid rgba(255,255,255,0.1)",
+              color: "rgba(255,255,255,0.55)",
+              fontSize: "0.8rem",
+            }}
+          >
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <FaPhoneAlt size={11} /> {phone}
+            </span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <FaEnvelope size={11} /> {email}
+            </span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+              <FaMapMarkerAlt size={11} /> {address}
+            </span>
+          </div>
+        </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

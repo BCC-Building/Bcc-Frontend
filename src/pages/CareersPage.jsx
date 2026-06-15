@@ -1,12 +1,14 @@
 // src/pages/CareersPage.jsx
-// Production-Ready | Bechtel + Skanska + Turner Style | BCC
+// Updated: Clean Navy Hero + Proper Text Formatting
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 
 // ─── constants ────────────────────────────────────────────────────────────────
-const FALLBACK_IMG = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=80';
+// New clean image for careers (corporate team meeting)
+const FALLBACK_IMG = 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1600';
 
 const BENEFITS = [
   { icon: '🚀', title: 'Fast-Track Growth',   desc: 'Structured career paths with leadership programs and mentorship from senior engineers.' },
@@ -57,18 +59,16 @@ const typeColor = (type) => {
   return map[type] || { bg: '#e0e7ff', c: '#3730a3' };
 };
 
-// ─── Helper for safe array handling ────────────────────────────────────────
 function toLines(value) {
   if (!value) return [];
   if (Array.isArray(value)) return value;
   return value.split('\n').filter(line => line.trim().length > 0);
 }
 
-// ─── Job Card ─────────────────────────────────────────────────────────────────
+// ─── Job Card (unchanged) ─────────────────────────────────────────────────────
 const JobCard = ({ job, onView, onApply, index }) => {
   const [hovered, setHovered] = useState(false);
   const tc = typeColor(job.type);
-
   return (
     <div
       onMouseEnter={() => setHovered(true)}
@@ -86,6 +86,7 @@ const JobCard = ({ job, onView, onApply, index }) => {
         display: 'flex', flexDirection: 'column', gap: 14,
       }}
     >
+      {/* ... same content as original ... */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
         <div>
           <h3 style={{ margin: '0 0 6px', fontSize: 16, fontWeight: 800, color: '#0f172a', lineHeight: 1.3 }}>
@@ -104,35 +105,26 @@ const JobCard = ({ job, onView, onApply, index }) => {
           {hovered && job.salary ? job.salary : '💼 Competitive'}
         </div>
       </div>
-
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
         {job.location && (
           <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#64748b' }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" strokeWidth="2" fill="none"/>
-              <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none"/>
-            </svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" stroke="currentColor" strokeWidth="2" fill="none"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none"/></svg>
             {job.location}
           </span>
         )}
         {job.experience && (
           <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#64748b' }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-              <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/><path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
             {job.experience}
           </span>
         )}
       </div>
-
       {job.description && (
         <p style={{ margin: 0, fontSize: 13, color: '#64748b', lineHeight: 1.65,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {job.description}
         </p>
       )}
-
       <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
         <button onClick={() => onView(job)} style={{
           flex: 1, padding: '9px 0',
@@ -147,9 +139,9 @@ const JobCard = ({ job, onView, onApply, index }) => {
           View Details
         </button>
         <button onClick={() => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });   // 👈 add this line
-  onView(job);
-}} style={{
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          onView(job);
+        }} style={{
           flex: 1, padding: '9px 0',
           borderRadius: 10, border: 'none',
           background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
@@ -162,7 +154,7 @@ const JobCard = ({ job, onView, onApply, index }) => {
   );
 };
 
-// ─── Job Modal ────────────────────────────────────────────────────────────────
+// ─── Job Modal (unchanged) ────────────────────────────────────────────────────
 const JobModal = ({ job, onClose, onApply }) => {
   useEffect(() => {
     const esc = e => { if (e.key === 'Escape') onClose(); };
@@ -177,8 +169,8 @@ const JobModal = ({ job, onClose, onApply }) => {
 
   return (
     <div onClick={onClose} style={{
-     position: 'fixed', inset: 0, zIndex: 9999,  // ← changed
-  background: 'rgba(5,10,30,.7)', backdropFilter: 'blur(4px)',
+      position: 'fixed', inset: 0, zIndex: 9999,
+      background: 'rgba(5,10,30,.7)', backdropFilter: 'blur(4px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       padding: 20, animation: 'cc-fadein .2s ease',
     }}>
@@ -197,14 +189,11 @@ const JobModal = ({ job, onClose, onApply }) => {
           fontSize: 18, cursor: 'pointer', color: '#64748b',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>×</button>
-
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 14 }}>
           {job.department && <Tag>{job.department}</Tag>}
           {job.type && <Tag color={tc.bg} textColor={tc.c}>{job.type}</Tag>}
         </div>
-
         <h2 style={{ margin: '0 0 16px', fontSize: 22, fontWeight: 900, color: '#0f172a' }}>{job.title}</h2>
-
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))',
           gap: 12, padding: '14px 16px',
@@ -222,11 +211,9 @@ const JobModal = ({ job, onClose, onApply }) => {
             </div>
           ))}
         </div>
-
         {job.description && (
           <Section title="About this Role"><p style={{ color: '#475569', lineHeight: 1.7, fontSize: 14 }}>{job.description}</p></Section>
         )}
-
         {respLines.length > 0 && (
           <Section title="Key Responsibilities">
             <ul style={{ paddingLeft: 18, color: '#475569', lineHeight: 1.8, fontSize: 14 }}>
@@ -234,7 +221,6 @@ const JobModal = ({ job, onClose, onApply }) => {
             </ul>
           </Section>
         )}
-
         {reqLines.length > 0 && (
           <Section title="Requirements">
             <ul style={{ paddingLeft: 18, color: '#475569', lineHeight: 1.8, fontSize: 14 }}>
@@ -242,7 +228,6 @@ const JobModal = ({ job, onClose, onApply }) => {
             </ul>
           </Section>
         )}
-
         <button onClick={() => { onClose(); onApply(job); }} style={{
           width: '100%', marginTop: 20,
           padding: '13px 0',
@@ -290,6 +275,22 @@ export default function CareersPage() {
   const [wordIdx, setWordIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
 
+  // Typewriter effect
+  useEffect(() => {
+    const currentWord = TYPEWRITER_WORDS[wordIdx];
+    if (charIdx < currentWord.length) {
+      const timeout = setTimeout(() => setCharIdx(prev => prev + 1), 100);
+      return () => clearTimeout(timeout);
+    } else {
+      const timeout = setTimeout(() => {
+        setCharIdx(0);
+        setWordIdx(prev => (prev + 1) % TYPEWRITER_WORDS.length);
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [charIdx, wordIdx]);
+
+  // Fetch jobs
   useEffect(() => {
     (async () => {
       try {
@@ -305,20 +306,6 @@ export default function CareersPage() {
       }
     })();
   }, []);
-
-  useEffect(() => {
-    const currentWord = TYPEWRITER_WORDS[wordIdx];
-    if (charIdx < currentWord.length) {
-      const timeout = setTimeout(() => setCharIdx(prev => prev + 1), 100);
-      return () => clearTimeout(timeout);
-    } else {
-      const timeout = setTimeout(() => {
-        setCharIdx(0);
-        setWordIdx(prev => (prev + 1) % TYPEWRITER_WORDS.length);
-      }, 2000);
-      return () => clearTimeout(timeout);
-    }
-  }, [charIdx, wordIdx]);
 
   const departments = useMemo(() => {
     const s = new Set(jobs.map(j => j.department).filter(Boolean));
@@ -405,71 +392,229 @@ export default function CareersPage() {
         image="https://bcc.net.in/og-careers.jpg"
       />
 
-      {/* ══ HERO ══════════════════════════════════════════════════════════════ */}
-      <section style={{
-        position: 'relative', minHeight: '88vh',
-        display: 'flex', alignItems: 'center',
-        overflow: 'hidden',
-        background: '#050a1a',
-      }}>
-        <img src={FALLBACK_IMG} alt=""
-          style={{ position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:.2 }} />
+      {/* ══ NEW CLEAN NAVY HERO ═══════════════════════════════════════════ */}
+      <section
+        style={{
+          position: 'relative',
+          minHeight: '85vh',
+          display: 'flex',
+          alignItems: 'center',
+          overflow: 'hidden',
+          background: '#0a0f1e',
+        }}
+        aria-label="Careers Hero"
+      >
+        {/* Background Image with overlay */}
         <div style={{
-          position:'absolute',inset:0,opacity:.06,
-          backgroundImage:'linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px)',
-          backgroundSize:'64px 64px',
-        }} />
-        <div style={{position:'absolute',top:'-10%',right:'10%',width:500,height:500,borderRadius:'50%',background:'radial-gradient(circle,rgba(99,102,241,.3) 0%,transparent 70%)',pointerEvents:'none'}} />
-        <div style={{position:'absolute',bottom:'-5%',left:'5%',width:350,height:350,borderRadius:'50%',background:'radial-gradient(circle,rgba(139,92,246,.2) 0%,transparent 70%)',pointerEvents:'none'}} />
-
-        <div className="cc-container" style={{ position:'relative',zIndex:2, paddingTop: 80, paddingBottom: 80 }}>
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+        }}>
+          <img
+            src={FALLBACK_IMG}
+            alt="Team collaboration at BCC"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentElement.style.background = 'linear-gradient(135deg, #0a2f3a, #0a1a2a)';
+            }}
+          />
           <div style={{
-            display:'inline-flex',alignItems:'center',gap:8,
-            background:'rgba(99,102,241,.15)',
-            border:'1px solid rgba(99,102,241,.3)',
-            padding:'6px 18px',borderRadius:30,
-            marginBottom:28,
-          }}>
-            <span style={{width:7,height:7,borderRadius:'50%',background:'#818cf8',display:'inline-block',boxShadow:'0 0 8px rgba(129,140,248,.8)'}} />
-            <span style={{color:'#a5b4fc',fontSize:12,fontWeight:700,letterSpacing:'.7px',textTransform:'uppercase'}}>We're Hiring</span>
-          </div>
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(145deg, rgba(5,10,25,0.85) 0%, rgba(10,20,40,0.8) 100%)',
+          }} />
+        </div>
 
-          <h1 style={{color:'#fff',fontSize:'clamp(2.2rem,5vw,3.8rem)',fontWeight:900,lineHeight:1.1,margin:'0 0 22px',maxWidth:720}}>
-            Build the Future of{' '}
-            <span style={{background:'linear-gradient(135deg,#818cf8,#c084fc,#f472b6)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>
-              {TYPEWRITER_WORDS[wordIdx].substring(0, charIdx)}
-              <span className="cursor">|</span>
-            </span>
-          </h1>
+        {/* No dots, no grid, no extra glows */}
 
-          <p style={{color:'rgba(255,255,255,.65)',fontSize:'clamp(1rem,1.8vw,1.15rem)',lineHeight:1.75,maxWidth:600,margin:'0 0 42px'}}>
-            Join BCC — where engineers, architects and visionaries come together to design and deliver projects that define skylines. Work on landmark projects with a team that invests in your future.
-          </p>
+        <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '4rem 0' }}>
+          <div className="cc-container" style={{ textAlign: 'center' }}>
+            {/* Eyebrow badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'rgba(59,130,246,0.2)',
+                  border: '1px solid rgba(59,130,246,0.5)',
+                  borderRadius: '40px',
+                  padding: '6px 16px',
+                  fontSize: '0.75rem',
+                  letterSpacing: '1px',
+                  color: '#a5c9ff',
+                  marginBottom: '1rem',
+                }}
+              >
+                ⚡ We're Hiring
+              </span>
+            </motion.div>
 
-          <div style={{display:'flex',gap:0,flexWrap:'wrap',background:'rgba(255,255,255,.06)',border:'1px solid rgba(255,255,255,.1)',borderRadius:14,overflow:'hidden',maxWidth:480,marginBottom:40}}>
-            {[
-              { n: `${jobs.length}+`, label: 'Open Roles' },
-              { n: '8+',             label: 'Locations' },
-              { n: '1000+',          label: 'Team Members' },
-            ].map((s, i) => (
-              <div key={i} style={{flex:1,padding:'16px 20px',textAlign:'center',borderRight:i<2?'1px solid rgba(255,255,255,.08)':'none'}}>
-                <div style={{color:'#fff',fontSize:'clamp(1.4rem,2.5vw,2rem)',fontWeight:900,lineHeight:1}}>{s.n}</div>
-                <div style={{color:'rgba(255,255,255,.5)',fontSize:11,marginTop:4,letterSpacing:'.4px',textTransform:'uppercase'}}>{s.label}</div>
+            {/* Main Heading with typewriter */}
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              style={{
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                fontWeight: 800,
+                background: 'linear-gradient(135deg, #ffffff, #c7d2fe)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                marginBottom: '1rem',
+                textShadow: '0 2px 12px rgba(0,0,0,0.2)',
+                lineHeight: 1.2,
+              }}
+            >
+              Build the Future of{' '}
+              <span style={{ background: 'linear-gradient(135deg,#818cf8,#c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                {TYPEWRITER_WORDS[wordIdx].substring(0, charIdx)}
+                <span className="cursor">|</span>
+              </span>
+            </motion.h1>
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              style={{
+                maxWidth: '720px',
+                margin: '0 auto 1.5rem',
+                color: 'rgba(255,255,255,0.88)',
+                fontSize: '1.05rem',
+                lineHeight: 1.65,
+                fontWeight: 400,
+              }}
+            >
+              Join BCC — where engineers, architects and visionaries come together to design and deliver projects that define skylines. Work on landmark projects with a team that invests in your future.
+            </motion.p>
+
+            {/* Stats row (clean) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              style={{
+                display: 'flex',
+                gap: '2rem',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                marginBottom: '2rem',
+              }}
+            >
+              {[
+                { value: `${jobs.length}+`, label: 'Open Roles' },
+                { value: '8+', label: 'Locations' },
+                { value: '1000+', label: 'Team Members' },
+              ].map((stat, idx) => (
+                <div key={idx} style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, color: '#60a5fa' }}>
+                    {stat.value}
+                  </div>
+                  <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>{stat.label}</div>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}
+            >
+              <a
+                href="#openings"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'linear-gradient(105deg, #2563eb, #1e3a8a)',
+                  border: 'none',
+                  borderRadius: '50px',
+                  padding: '10px 28px',
+                  color: 'white',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  boxShadow: '0 8px 20px -6px rgba(37,99,235,0.5)',
+                  transition: 'all 0.25s',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-3px)';
+                  e.target.style.boxShadow = '0 14px 28px -8px rgba(37,99,235,0.7)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 8px 20px -6px rgba(37,99,235,0.5)';
+                }}
+              >
+                View Openings → 
+              </a>
+              <a
+                href="#why-join"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'transparent',
+                  border: '1.5px solid rgba(255,255,255,0.6)',
+                  borderRadius: '50px',
+                  padding: '10px 28px',
+                  color: 'white',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  transition: 'all 0.25s',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                  e.target.style.borderColor = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.borderColor = 'rgba(255,255,255,0.6)';
+                }}
+              >
+                Why BCC?
+              </a>
+            </motion.div>
+
+            {/* Scroll Indicator */}
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              style={{ marginTop: '3rem', cursor: 'pointer' }}
+              onClick={() => document.getElementById('openings')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', opacity: 0.7 }}>
+                <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.7rem' }}>Explore opportunities</span>
+                <div style={{ width: '24px', height: '24px', borderLeft: '2px solid white', borderBottom: '2px solid white', transform: 'rotate(-45deg)' }} />
               </div>
-            ))}
-          </div>
-
-          <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
-            <a href="#openings" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'13px 28px',borderRadius:12,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',fontWeight:800,fontSize:15,textDecoration:'none',boxShadow:'0 8px 24px rgba(99,102,241,.35)'}}>
-              View Openings
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </a>
-            <a href="#why-join" style={{display:'inline-flex',alignItems:'center',gap:8,padding:'12px 26px',borderRadius:12,border:'2px solid rgba(255,255,255,.25)',color:'#fff',fontWeight:700,fontSize:15,textDecoration:'none',background:'transparent'}}>Why BCC?</a>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ══ WHY JOIN ══════════════════════════════════════════════════════════ */}
+      {/* ══ WHY JOIN (unchanged) ══════════════════════════════════════════ */}
       <section id="why-join" style={{ padding:'90px 0', background:'#f8fafc' }}>
         <div className="cc-container">
           <SectionHeader eyebrow="Our Culture" title="Why Top Talent Chooses BCC" sub="We don't just build structures — we build careers that last a lifetime." />
@@ -479,7 +624,7 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ══ HIRING PROCESS ════════════════════════════════════════════════════ */}
+      {/* ══ HIRING PROCESS (unchanged) ═══════════════════════════════════════ */}
       <section style={{ padding:'90px 0', background:'#fff' }}>
         <div className="cc-container">
           <SectionHeader eyebrow="Our Process" title="How We Hire" sub="A transparent, respectful hiring journey — from application to offer in under 2 weeks." />
@@ -495,7 +640,7 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ══ OPEN POSITIONS ════════════════════════════════════════════════════ */}
+      {/* ══ OPEN POSITIONS (unchanged) ════════════════════════════════════════ */}
       <section id="openings" style={{ padding:'90px 0', background:'#f8fafc' }}>
         <div className="cc-container">
           <SectionHeader eyebrow="Current Openings" title="Find Your Role at BCC" sub="Filter by department or search to find the perfect opportunity." />
@@ -560,7 +705,7 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ══ APPLICATION FORM ══════════════════════════════════════════════════ */}
+      {/* ══ APPLICATION FORM (unchanged) ══════════════════════════════════════ */}
       <section id="apply-section" ref={applyRef} style={{ padding:'90px 0', background:'#fff' }}>
         <div className="cc-container">
           <SectionHeader eyebrow="Apply Now" title={selectedJob ? `Applying for: ${selectedJob.title}` : 'Submit Your Application'} sub="Our recruitment team responds within 48 hours of receiving your application." />
@@ -591,7 +736,7 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ══ CTA BANNER ════════════════════════════════════════════════════════ */}
+      {/* ══ CTA BANNER (unchanged) ════════════════════════════════════════════ */}
       <section style={{background:'linear-gradient(135deg,#0f0c29,#302b63,#24243e)',padding:'80px 0',textAlign:'center'}}>
         <div className="cc-container">
           <h2 style={{ color:'#fff',fontSize:'clamp(1.6rem,3vw,2.4rem)',fontWeight:900,marginBottom:14 }}>Don't See the Right Role?</h2>
@@ -617,7 +762,7 @@ export default function CareersPage() {
   );
 }
 
-// ─── small sub-components ─────────────────────────────────────────────────────
+// ─── small sub-components (unchanged) ─────────────────────────────────────────
 function SectionHeader({ eyebrow, title, sub }) {
   return (
     <div style={{ textAlign:'center', marginBottom:52 }}>

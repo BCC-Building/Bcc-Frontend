@@ -1,283 +1,341 @@
-// src/components/home/WhyChooseBCC.jsx - Production-Ready
-import { motion } from 'framer-motion';
+// src/components/home/WhyChooseBCC.jsx - Fun, Interactive, Navy Theme
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { 
   FaUserTie, FaCogs, FaShieldAlt, FaRocket, 
-  FaCheckCircle, FaHandshake, FaClock, FaPhone 
+  FaCheckCircle, FaHandshake, FaClock, FaPhone,
+  FaArrowRight
 } from 'react-icons/fa';
+import { useRef, useState } from 'react';
 
 // ==================== DATA ====================
 
-/**
- * Feature cards data
- * Edit these to change the cards content
- */
 const FEATURES = [
   {
     icon: <FaUserTie />,
     title: 'Client-Centered Projects',
     description: 'We tailor every solution to your business goals and deliver measurable value with a personal touch.',
-    color: '#2563eb', // Blue
+    gradient: 'linear-gradient(135deg, #3b82f6, #1e3a8a)',
   },
   {
     icon: <FaCogs />,
     title: 'Proven Technical Expertise',
     description: 'A strong team of engineers, architects and consultants with real industry experience since 2018.',
-    color: '#059669', // Green
+    gradient: 'linear-gradient(135deg, #60a5fa, #3b82f6)',
   },
   {
     icon: <FaShieldAlt />,
     title: 'Quality Focus',
     description: 'Every project follows rigorous standards for safety, performance and finish — no compromises.',
-    color: '#d97706', // Amber
+    gradient: 'linear-gradient(135deg, #2563eb, #1e40af)',
   },
   {
     icon: <FaRocket />,
     title: 'Fast, Reliable Delivery',
     description: 'We meet timelines with proactive planning, coordination, and expert execution.',
-    color: '#7c3aed', // Purple
+    gradient: 'linear-gradient(135deg, #4f46e5, #3730a3)',
   },
 ];
 
-/**
- * Why choose us bullet points
- * Edit these to change the list items
- */
 const BULLET_POINTS = [
-  {
-    icon: <FaHandshake />,
-    text: 'Personalized solutions for every stage of your project lifecycle.',
-  },
-  {
-    icon: <FaCheckCircle />,
-    text: 'Transparent communication and clear delivery milestones.',
-  },
-  {
-    icon: <FaClock />,
-    text: 'End-to-end services from design and engineering to execution.',
-  },
-  {
-    icon: <FaPhone />,
-    text: 'Dedicated support with fast response and ongoing guidance.',
-  },
+  { icon: <FaHandshake />, text: 'Personalized solutions for every stage of your project lifecycle.', delay: 0 },
+  { icon: <FaCheckCircle />, text: 'Transparent communication and clear delivery milestones.', delay: 0.1 },
+  { icon: <FaClock />, text: 'End-to-end services from design and engineering to execution.', delay: 0.2 },
+  { icon: <FaPhone />, text: 'Dedicated support with fast response and ongoing guidance.', delay: 0.3 },
 ];
 
-// ==================== ANIMATION VARIANTS ====================
+// 3D Tilt Card Component
+const TiltCard = ({ children, gradient }) => {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [8, -8]);
+  const rotateY = useTransform(x, [-100, 100], [-8, 8]);
+  const springConfig = { stiffness: 150, damping: 20 };
+  const rotateXSpring = useSpring(rotateX, springConfig);
+  const rotateYSpring = useSpring(rotateY, springConfig);
 
-/** Fade-in-up animation */
-const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.5 } 
-  },
+  const handleMouseMove = (e) => {
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const mouseX = e.clientX - centerX;
+    const mouseY = e.clientY - centerY;
+    x.set(mouseX);
+    y.set(mouseY);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX: rotateXSpring,
+        rotateY: rotateYSpring,
+        transformStyle: 'preserve-3d',
+      }}
+      className="h-100"
+    >
+      {children}
+    </motion.div>
+  );
 };
 
-/** Stagger children animation */
-const staggerContainer = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-/** Card hover animation */
-const cardHover = {
-  rest: { y: 0, boxShadow: '0 4px 15px rgba(0,0,0,0.05)' },
-  hover: { 
-    y: -6, 
-    boxShadow: '0 12px 30px rgba(0,0,0,0.1)',
-    transition: { type: 'spring', stiffness: 300, damping: 20 } 
-  },
-};
+// Floating Icon Component
+const FloatingIcon = ({ icon, delay }) => (
+  <motion.div
+    animate={{ y: [0, -10, 0] }}
+    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay }}
+    style={{ display: 'inline-block' }}
+  >
+    {icon}
+  </motion.div>
+);
 
 // ==================== MAIN COMPONENT ====================
 
-/**
- * WhyChooseBCC Component
- * Home page section showing why clients should choose BCC
- * 
- * Features:
- * - 4 feature cards with icons and color coding
- * - Bullet points list with icons
- * - Smooth scroll-triggered animations
- * - Responsive grid layout
- * - Fully accessible
- */
 export default function WhyChooseBCC() {
+  const [hoveredCard, setHoveredCard] = useState(null);
+
   return (
-    <section className="why-choose-bcc py-5" aria-label="Why choose BCC">
-      <div className="container">
+    <section className="why-choose-bcc py-5 position-relative overflow-hidden" aria-label="Why choose BCC">
+      {/* Animated Background Particles */}
+      <div className="particles-container">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="particle"
+            initial={{ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight }}
+            animate={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+            }}
+            transition={{ duration: 20 + Math.random() * 20, repeat: Infinity, ease: "linear" }}
+            style={{
+              position: 'absolute',
+              width: Math.random() * 4 + 2,
+              height: Math.random() * 4 + 2,
+              background: `rgba(59,130,246,${Math.random() * 0.3})`,
+              borderRadius: '50%',
+              pointerEvents: 'none',
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="container position-relative" style={{ zIndex: 2 }}>
         <div className="row align-items-center gy-5">
           
-          {/* ==================== LEFT COLUMN ==================== */}
+          {/* LEFT COLUMN */}
           <motion.div
             className="col-lg-5"
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {/* Section Label */}
-            <span className="section-label text-primary fw-semibold" style={{ letterSpacing: '1px' }}>
-              Why Choose BCC?
-            </span>
+            {/* Animated Label */}
+            <motion.div
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="d-inline-block mb-3"
+            >
+              <span className="section-label" style={{
+                color: '#3b82f6',
+                letterSpacing: '2px',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                background: 'rgba(59,130,246,0.1)',
+                padding: '4px 12px',
+                borderRadius: '30px',
+                border: '1px solid rgba(59,130,246,0.3)',
+              }}>
+                ✦ Why Choose BCC? ✦
+              </span>
+            </motion.div>
 
-            {/* Heading */}
-            <h2 className="mt-3 mb-4 fw-bold" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', lineHeight: 1.3 }}>
-              Trusted Construction & Consulting for Growing Businesses
+            {/* Glowing Heading */}
+            <h2 className="mt-3 mb-4 fw-bold" style={{
+              fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+              lineHeight: 1.2,
+              background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 80%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent',
+            }}>
+              Trusted Construction & Consulting for <span style={{ color: '#3b82f6', background: 'none' }}>Growing Businesses</span>
             </h2>
 
-            {/* Description */}
-            <p className="text-muted mb-4" style={{ lineHeight: 1.7 }}>
+            <p className="mb-4" style={{ color: '#475569', lineHeight: 1.7 }}>
               BCC delivers premium project outcomes with a client-first approach. 
               Our team blends deep industry expertise with modern technology to help 
               you build faster, safer and with more confidence.
             </p>
 
-            {/* Bullet Points */}
-            <ul className="list-unstyled why-list" role="list">
-              {BULLET_POINTS.map((point, index) => (
-                <motion.li
-                  key={index}
-                  className="mb-3 d-flex align-items-start gap-3"
-                  initial={{ opacity: 0, x: -20 }}
+            {/* Animated Bullet Points */}
+            <div className="bullet-list">
+              {BULLET_POINTS.map((point, idx) => (
+                <motion.div
+                  key={idx}
+                  className="d-flex align-items-start gap-3 mb-3"
+                  initial={{ opacity: 0, x: -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  {/* Icon Circle */}
-                  <span
-                    className="d-flex align-items-center justify-content-center flex-shrink-0"
-                    style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
-                      color: '#2563eb',
-                      fontSize: '0.9rem',
-                    }}
-                    aria-hidden="true"
-                  >
-                    {point.icon}
-                  </span>
-                  {/* Text */}
-                  <span className="text-muted" style={{ lineHeight: 1.5 }}>
-                    {point.text}
-                  </span>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* ==================== RIGHT COLUMN (Feature Cards) ==================== */}
-          <motion.div
-            className="col-lg-7"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            <div className="row g-4">
-              {FEATURES.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="col-sm-6"
-                  variants={fadeInUp}
+                  transition={{ delay: point.delay + 0.2, type: "spring", stiffness: 120 }}
                 >
                   <motion.div
-                    className="choose-card h-100 p-4 rounded-4 border"
-                    variants={cardHover}
-                    initial="rest"
-                    whileHover="hover"
+                    whileHover={{ scale: 1.2, rotate: 5 }}
                     style={{
-                      background: 'white',
-                      borderColor: '#f1f5f9',
-                      transition: 'all 0.3s ease',
+                      width: '34px',
+                      height: '34px',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, #3b82f620, #1e3a8a20)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#3b82f6',
+                      fontSize: '1rem',
+                      border: '1px solid #3b82f640',
                     }}
                   >
-                    {/* Icon */}
-                    <div
-                      className="d-flex align-items-center justify-content-center mb-3"
-                      style={{
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '14px',
-                        background: `${feature.color}15`,
-                        color: feature.color,
-                        fontSize: '1.3rem',
-                      }}
-                      aria-hidden="true"
-                    >
-                      {feature.icon}
-                    </div>
-
-                    {/* Title */}
-                    <h5 className="fw-bold mb-2" style={{ fontSize: '1.05rem', color: '#1e293b' }}>
-                      {feature.title}
-                    </h5>
-
-                    {/* Description */}
-                    <p className="text-muted mb-0" style={{ fontSize: '0.9rem', lineHeight: 1.6 }}>
-                      {feature.description}
-                    </p>
+                    <FloatingIcon icon={point.icon} delay={idx * 0.3} />
                   </motion.div>
+                  <span style={{ color: '#334155', fontSize: '0.95rem', lineHeight: 1.5 }}>
+                    {point.text}
+                  </span>
                 </motion.div>
               ))}
             </div>
+
+            {/* Magnetic CTA Button */}
+            <motion.a
+              href="/contact"
+              className="btn btn-primary mt-2 d-inline-flex align-items-center gap-2"
+              style={{
+                background: 'linear-gradient(105deg, #1e3a8a, #3b82f6)',
+                border: 'none',
+                borderRadius: '40px',
+                padding: '10px 24px',
+                fontWeight: 500,
+              }}
+              whileHover={{ scale: 1.05, boxShadow: '0 10px 25px -5px rgba(59,130,246,0.5)' }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Learn More <FaArrowRight className="arrow-icon" />
+            </motion.a>
           </motion.div>
 
+          {/* RIGHT COLUMN - 3D Tilt Cards */}
+          <div className="col-lg-7">
+            <div className="row g-4">
+              {FEATURES.map((feature, idx) => (
+                <div key={idx} className="col-sm-6">
+                  <TiltCard gradient={feature.gradient}>
+                    <motion.div
+                      className="card-3d p-4 rounded-4"
+                      style={{
+                        background: 'rgba(255,255,255,0.9)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(59,130,246,0.2)',
+                        borderRadius: '24px',
+                        transition: 'all 0.3s ease',
+                        cursor: 'pointer',
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      onHoverStart={() => setHoveredCard(idx)}
+                      onHoverEnd={() => setHoveredCard(null)}
+                    >
+                      {/* Animated Icon Background */}
+                      <motion.div
+                        animate={{
+                          background: hoveredCard === idx 
+                            ? `radial-gradient(circle at 30% 20%, rgba(59,130,246,0.2), transparent 70%)`
+                            : `radial-gradient(circle at 30% 20%, rgba(59,130,246,0.05), transparent 70%)`,
+                        }}
+                        className="position-absolute top-0 start-0 w-100 h-100 rounded-4"
+                        style={{ zIndex: 0, pointerEvents: 'none' }}
+                      />
+                      <div className="position-relative" style={{ zIndex: 1 }}>
+                        <motion.div
+                          animate={{ rotate: hoveredCard === idx ? [0, 5, -5, 0] : 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="d-flex align-items-center justify-content-center mb-3"
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                            borderRadius: '20px',
+                            background: feature.gradient,
+                            color: 'white',
+                            fontSize: '1.6rem',
+                            boxShadow: '0 8px 20px rgba(59,130,246,0.3)',
+                          }}
+                        >
+                          {feature.icon}
+                        </motion.div>
+                        <h5 className="fw-bold mb-2" style={{ fontSize: '1.15rem', color: '#0f172a' }}>
+                          {feature.title}
+                        </h5>
+                        <p className="mb-0" style={{ fontSize: '0.85rem', lineHeight: 1.6, color: '#475569' }}>
+                          {feature.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  </TiltCard>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ==================== STYLES ==================== */}
+      {/* Global Styles */}
       <style>{`
         .why-choose-bcc {
-          background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+          background: radial-gradient(circle at 10% 20%, #f0f4fe, #ffffff);
+          min-height: 600px;
         }
-
-        .choose-card {
-          background: white;
-          border: 1px solid #f1f5f9;
-          transition: all 0.3s ease;
+        .particles-container {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          pointer-events: none;
         }
-
-        .choose-card:hover {
-          border-color: #e2e8f0;
+        .card-3d {
+          transform-style: preserve-3d;
+          transition: box-shadow 0.3s ease;
         }
-
-        /* Dark mode support */
+        .card-3d:hover {
+          box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2), 0 0 0 1px rgba(59,130,246,0.4);
+        }
+        .arrow-icon {
+          transition: transform 0.2s;
+        }
+        .btn-primary:hover .arrow-icon {
+          transform: translateX(5px);
+        }
         @media (prefers-color-scheme: dark) {
           .why-choose-bcc {
-            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            background: radial-gradient(circle at 10% 20%, #0f172a, #020617);
           }
-          
-          .choose-card {
-            background: #1e293b;
-            border-color: #334155;
+          .card-3d {
+            background: rgba(30,41,59,0.8) !important;
+            backdrop-filter: blur(12px);
+            border-color: rgba(59,130,246,0.4) !important;
           }
-          
-          .choose-card h5 {
-            color: #f1f5f9;
-          }
-          
-          .choose-card p,
-          .text-muted {
-            color: #94a3b8 !important;
-          }
-          
-          h2 {
-            color: #f1f5f9;
-          }
+          .card-3d h5 { color: #e2e8f0 !important; }
+          .card-3d p { color: #94a3b8 !important; }
+          .section-label { background: rgba(59,130,246,0.2) !important; }
+          h2 { background: linear-gradient(135deg, #e2e8f0, #94a3b8) !important; background-clip: text !important; }
+          .bullet-list span { color: #cbd5e1 !important; }
         }
-
-        /* Responsive */
-        @media (max-width: 576px) {
-          .choose-card {
-            padding: 20px 16px !important;
-          }
+        @media (max-width: 768px) {
+          .card-3d { padding: 1.2rem !important; }
         }
       `}</style>
     </section>

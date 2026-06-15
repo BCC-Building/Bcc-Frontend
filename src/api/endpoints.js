@@ -4,25 +4,24 @@ import client from './clients';
 // Auth Endpoints
 export const authAPI = {
   login: (username, password) =>
-    client.post('/auth/login', { username, password }),
+    client.post('/v1/auth/login', { username, password }),
 
   verifyLoginOTP: (email, otp) =>
-    client.post('/auth/login/verify-otp', { email, otp }),
+    client.post('/v1/auth/login/verify-otp', { email, otp }),
 
   signup: (username, email, password) =>
-    client.post('/auth/signup/request-otp', { username, email, password }),
+    client.post('/v1/auth/signup/request-otp', { username, email, password }),
 
   verifySignupOTP: (payload) =>
-    client.post('/auth/signup/verify-otp', payload),
+    client.post('/v1/auth/signup/verify-otp', payload),
 
-  resendOTP: (email) =>
-    client.post('/auth/resend-otp', { email }),
+  resendOTP: (email) => client.post('/v1/auth/resend-otp', { email }),  
 
   refreshToken: (refreshToken) =>
-    client.post('/auth/refresh', { refreshToken }),
+    client.post('/v1/auth/refresh', { refreshToken }),
 
   logout: (refreshToken) =>
-    client.post('/auth/logout', { refreshToken }),
+    client.post('/v1/auth/logout', { refreshToken }),
 };
 
 // Admin Endpoints
@@ -38,14 +37,14 @@ updateProject: (id, formData) => client.put(`/projects/${id}`, formData, {
   deleteProject: (id) => client.delete(`/projects/${id}`),
 
   // Blogs
-  getBlogs: () => client.get('/blogs'),
- createBlog: (formData) => client.post('/blogs', formData, {
+  getBlogs: () => client.get('/v1/blogs'),
+ createBlog: (formData) => client.post('/v1/blogs', formData, {
   headers: { 'Content-Type': 'multipart/form-data' },
 }),
-updateBlog: (id, formData) => client.put(`/blogs/${id}`, formData, {
+updateBlog: (id, formData) => client.put(`/v1/blogs/${id}`, formData, {
   headers: { 'Content-Type': 'multipart/form-data' },
 }),
-  deleteBlog: (id) => client.delete(`/blogs/${id}`),
+  deleteBlog: (id) => client.delete(`/v1/blogs/${id}`),
 
   // Team Members: details are JSON; image is uploaded separately.
   getTeam: () => client.get('/team-members'),
@@ -92,7 +91,7 @@ export const publicAPI = {
   getBlogs: () => client.get('/blogs'),
   getBlogBySlug: (slug) => client.get(`/blogs/slug/${slug}`),
 
-  getActiveJobPostings: () => client.get('/job-postings/active'),// ✅ Sahi naam
+  getActiveJobPostings: () => client.get('/job-postings/active'),// 
   getActiveTeamMembers: () => client.get('/team-members/active'),
 
   getGallery: () => client.get('/gallery'),

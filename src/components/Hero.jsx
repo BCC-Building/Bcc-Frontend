@@ -64,7 +64,7 @@ function TypingText({ texts, typeSpeed = 60, pauseDuration = 2000 }) {
       <span
         aria-hidden="true"
         style={{
-          borderRight: '3px solid #ffc107',
+          borderRight: '3px solid #0a2f6c', // Navy blue cursor
           marginLeft: '4px',
           height: '0.8em',
           display: 'inline-block',
@@ -112,13 +112,13 @@ function StatCard({ stats }) {
         precision since 2017.
       </p>
 
-      {/* Stats inside card – ab value key use karenge */}
+      {/* Stats inside card – now navy blue */}
       <div className="d-flex justify-content-center gap-4 mt-4 mb-3">
         {stats.slice(0, 3).map((stat, i) => (
           <div key={i} className="text-center">
             <div
-              className="text-warning fw-bold"
-              style={{ fontSize: '1.2rem' }}
+              className="fw-bold"
+              style={{ fontSize: '1.2rem', color: '#7ab7ef' }} // Lighter navy for better contrast on dark bg
             >
               {stat.value}{stat.suffix}
             </div>
@@ -131,15 +131,31 @@ function StatCard({ stats }) {
 
       <div className="d-flex gap-2 justify-content-center mt-4">
         <Link
-          className="btn btn-warning btn-sm fw-bold px-4"
+          className="btn fw-bold px-4"
           to="/services"
           aria-label="View our services"
-          style={{ borderRadius: '50px' }}
+          style={{
+            borderRadius: '50px',
+            transition: 'all 0.3s ease',
+            backgroundColor: '#0a2f6c',
+            border: 'none',
+            color: 'white',
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 8px 25px rgba(10, 47, 108, 0.4)';
+            e.target.style.backgroundColor = '#0c3b88';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = 'none';
+            e.target.style.backgroundColor = '#0a2f6c';
+          }}
         >
           Our Services
         </Link>
         <Link
-          className="btn btn-outline-light btn-sm px-4"
+          className="btn btn-outline-light px-4"
           to="/contact"
           aria-label="Contact us"
           style={{ borderRadius: '50px' }}
@@ -161,7 +177,6 @@ export default function Hero() {
     []
   );
 
-  // 👇 Hardcoded stats – ab "value" key use karenge
   const heroStats = useMemo(
     () => [
       { value: 1200, suffix: '+', label: 'Projects Completed', icon: '🏗️' },
@@ -182,7 +197,7 @@ export default function Hero() {
     >
       {/* Background image */}
       <img
-        src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=85&fm=webp"
+        src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=90"
         alt="Construction site with engineers"
         fetchPriority="high"
         decoding="sync"
@@ -219,8 +234,11 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-warning fw-semibold mb-3 d-inline-block"
-              style={{ letterSpacing: '1px' }}
+              className="fw-semibold mb-3 d-inline-block"
+              style={{
+                letterSpacing: '1px',
+                color: '#7ab7ef' // Navy blue accent
+              }}
             >
               Engineering. Infrastructure. Performance.
             </motion.span>
@@ -267,17 +285,25 @@ export default function Hero() {
               style={{ minHeight: '56px' }}
             >
               <Link
-                className="btn btn-warning btn-lg fw-bold px-4"
+                className="btn fw-bold px-4"
                 to="/contact"
                 aria-label="Get a free quote for your project"
-                style={{ borderRadius: '50px', transition: 'all 0.3s ease' }}
+                style={{
+                  borderRadius: '50px',
+                  transition: 'all 0.3s ease',
+                  backgroundColor: '#0a2f6c',
+                  border: 'none',
+                  color: 'white',
+                }}
                 onMouseEnter={(e) => {
                   e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 8px 25px rgba(255, 193, 7, 0.4)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(10, 47, 108, 0.4)';
+                  e.target.style.backgroundColor = '#0c3b88';
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.transform = 'translateY(0)';
                   e.target.style.boxShadow = 'none';
+                  e.target.style.backgroundColor = '#0a2f6c';
                 }}
               >
                 Request a Proposal
@@ -300,7 +326,7 @@ export default function Hero() {
               </a>
             </motion.div>
 
-            {/* Left side counters – ab item.value use karenge */}
+            {/* Left side counters */}
             <div className="d-flex gap-4 flex-wrap" style={{ minHeight: '72px' }}>
               {heroStats.map((item, i) => (
                 <motion.div
@@ -331,7 +357,7 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right column – StatCard with same heroStats */}
+          {/* Right column – StatCard with updated navy styling */}
           <div className="col-lg-5">
             <StatCard stats={heroStats} />
           </div>
@@ -346,6 +372,11 @@ export default function Hero() {
           html {
             scroll-behavior: smooth;
           }
+        }
+        /* Additional navy styling for any lingering Bootstrap overrides */
+        .btn-outline-light:hover {
+          background-color: rgba(122, 183, 239, 0.2);
+          border-color: rgba(122, 183, 239, 0.5);
         }
       `}</style>
     </section>

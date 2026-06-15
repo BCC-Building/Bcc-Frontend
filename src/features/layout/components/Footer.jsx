@@ -13,6 +13,15 @@ export default function Footer() {
     { to: "/blog", label: "Blog" },
   ];
 
+  const serviceLinks = [
+    { to: "/services/civil", label: "Civil Construction" },
+    { to: "/services/structural", label: "Structural Design" },
+    { to: "/services/management", label: "Project Management" },
+    { to: "/services/consulting", label: "Consulting" },
+    { to: "/services/interior", label: "Interior Works" },
+    { to: "/services/surveys", label: "Site Surveys" },
+  ];
+
   const socialLinks = [
     { href: "https://www.facebook.com/buildingcreatorsconsulting", icon: "bi bi-facebook", label: "Facebook" },
     { href: "#", icon: "bi bi-twitter-x", label: "Twitter" },
@@ -24,342 +33,497 @@ export default function Footer() {
 
   return (
     <footer className="footer" aria-label="Site footer">
-      {/* Top Wave */}
-      <div className="footer-wave">
-        <svg viewBox="0 0 1440 100" fill="none" preserveAspectRatio="none">
-          <path d="M0 50C240 100 480 0 720 50C960 100 1200 0 1440 50V100H0V50Z" fill="#0f172a"/>
+      {/* Top Wave SVG with navy gradient (matching new bg) */}
+      <div className="footer-wave-wrap">
+        <svg viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 35 C200 70 400 0 600 35 C800 70 1000 0 1200 35 L1200 70 L0 70 Z" fill="#131b2f"/>
+          <path d="M0 45 C200 80 400 10 600 45 C800 80 1000 10 1200 45 L1200 70 L0 70 Z" fill="rgba(59,130,246,0.06)"/>
         </svg>
       </div>
 
-      <div className="footer-content">
-        <div className="container">
-          <div className="footer-grid">
-            
-            {/* Company Info */}
-            <div className="footer-col footer-brand">
-              <div className="footer-logo">
-                <img 
-                  src={logo} 
-                  alt="BCC Logo" 
-                  className="footer-logo-img"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-                {/* Fallback logo */}
-                <div className="footer-logo-fallback" style={{ display: 'none' }}>
-                  BCC
-                </div>
-              </div>
-              <h3 className="footer-company-name">Building Creators And Consulting</h3>
-              <p className="footer-tagline">
-                Trusted construction & engineering partner delivering quality, safety, and professionalism since 2017.
-              </p>
-              <div className="footer-contact">
-                <a href="tel:+8057540906" className="footer-contact-item">
-                  <i className="bi bi-telephone-fill"></i> +91 8057540906
-                </a>
-                <a href="mailto:bcc06.info@gmail.com" className="footer-contact-item">
-                  <i className="bi bi-envelope-fill"></i> bcc06.info@gmail.com
-                </a>
-                <span className="footer-contact-item">
-                  <i className="bi bi-geo-alt-fill"></i> Rudrapur, Uttarakhand
-                </span>
-              </div>
-            </div>
+      <div className="footer-body">
+        {/* Decorative grid background (lighter lines) */}
+        <div className="footer-grid-bg" aria-hidden="true"/>
+        <div className="footer-glow-accent" aria-hidden="true"/>
 
-            {/* Quick Links */}
-            <div className="footer-col">
-              <h4 className="footer-heading">Quick Links</h4>
-              <nav aria-label="Footer quick links">
-                <ul className="footer-links">
-                  {quickLinks.map((link) => (
-                    <li key={link.to}>
-                      <Link to={link.to} className="footer-link">
-                        <i className="bi bi-chevron-right"></i> {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+        {/* ── Top Bar ── */}
+        <div className="footer-topbar">
+          <div className="footer-brand-lockup">
+            <div className="footer-logo-box">
+              <img
+                src={logo}
+                alt="BCC Logo"
+                className="footer-logo-img"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                }}
+              />
+              <span className="footer-logo-fallback" style={{ display: 'none' }}>BCC</span>
             </div>
+            <div className="footer-brand-text">
+              <h2>Building Creators And Consulting</h2>
+              <p>Engineering Excellence</p>
+            </div>
+          </div>
+          <div className="footer-est-badge">
+            <span className="footer-est-dot" aria-hidden="true"/>
+            Est. 2017 &nbsp;·&nbsp; Rudrapur, Uttarakhand
+          </div>
+        </div>
 
-            {/* Social & Developer */}
-            <div className="footer-col">
-              <h4 className="footer-heading">Connect With Us</h4>
-              <div className="footer-social">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    className="footer-social-icon"
-                    aria-label={social.label}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={social.label}
-                  >
-                    <i className={social.icon}></i>
-                  </a>
+        {/* ── Main Grid ── */}
+        <div className="footer-main-grid">
+          {/* About + Contact */}
+          <div className="footer-col">
+            <p className="footer-section-label">About Us</p>
+            <p className="footer-about-desc">
+              Trusted construction &amp; engineering partner delivering quality, safety, and professionalism across every project we undertake.
+            </p>
+            <div className="footer-contacts">
+              <a href="tel:+918057540906" className="footer-contact-item">
+                <span className="footer-contact-icon"><i className="bi bi-telephone-fill" aria-hidden="true"/></span>
+                +91 80575 40906
+              </a>
+              <a href="mailto:bcc06.info@gmail.com" className="footer-contact-item">
+                <span className="footer-contact-icon"><i className="bi bi-envelope-fill" aria-hidden="true"/></span>
+                bcc06.info@gmail.com
+              </a>
+              <span className="footer-contact-item">
+                <span className="footer-contact-icon"><i className="bi bi-geo-alt-fill" aria-hidden="true"/></span>
+                Rudrapur, Uttarakhand
+              </span>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="footer-col">
+            <p className="footer-section-label">Navigate</p>
+            <nav aria-label="Footer navigation">
+              <ul className="footer-link-list">
+                {quickLinks.map((link) => (
+                  <li key={link.to} className="footer-link-item">
+                    <Link to={link.to} className="footer-nav-link">
+                      {link.label}
+                      <i className="bi bi-chevron-right footer-link-arrow" aria-hidden="true"/>
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
+            </nav>
+          </div>
 
-              {/* Developer Credit */}
-              <div className="footer-dev-credit">
-                <p className="footer-dev-label">Designed & Developed by</p>
+          {/* Services */}
+          <div className="footer-col">
+            <p className="footer-section-label">Services</p>
+            <nav aria-label="Footer services">
+              <ul className="footer-link-list">
+                {serviceLinks.map((link) => (
+                  <li key={link.to} className="footer-link-item">
+                    <Link to={link.to} className="footer-nav-link">
+                      {link.label}
+                      <i className="bi bi-chevron-right footer-link-arrow" aria-hidden="true"/>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          {/* Social + Dev Credit */}
+          <div className="footer-col">
+            <p className="footer-section-label">Connect</p>
+            <div className="footer-social-grid">
+              {socialLinks.map((social) => (
                 <a
-                  href="https://portfolio-nadeem-ali.vercel.app/"
-                  className="footer-dev-name"
+                  key={social.label}
+                  href={social.href}
+                  className="footer-social-btn"
+                  aria-label={social.label}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <i className="bi bi-code-slash"></i> Nadeem Ali
+                  <i className={social.icon} aria-hidden="true"/>
+                  <span>{social.label}</span>
                 </a>
-              </div>
+              ))}
+            </div>
+
+            <div className="footer-dev-card">
+              <p>Designed &amp; Developed by</p>
+              <a
+                href="https://portfolio-nadeem-ali.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i className="bi bi-code-slash" aria-hidden="true"/>
+                Nadeem Ali
+              </a>
             </div>
           </div>
+        </div>
 
-          {/* Bottom Bar */}
-          <div className="footer-bottom">
-            <p className="footer-copyright">
-              © {currentYear} Building Creators And Consulting. All Rights Reserved.
-            </p>
-            <nav aria-label="Legal links" className="footer-legal">
-              <Link to="/privacy-policy">Privacy Policy</Link>
-              <span className="footer-divider">|</span>
-              <Link to="/terms-of-service">Terms of Service</Link>
-            </nav>
-          </div>
+        {/* ── Divider ── */}
+        <div className="footer-divider"/>
+
+        {/* ── Bottom Bar ── */}
+        <div className="footer-bottom">
+          <p className="footer-copy">
+            © {currentYear} <strong>Building Creators And Consulting.</strong> All Rights Reserved.
+          </p>
+          <nav aria-label="Legal links" className="footer-legal">
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <span aria-hidden="true">|</span>
+            <Link to="/terms-of-service">Terms of Service</Link>
+          </nav>
         </div>
       </div>
 
-      {/* Styles */}
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
         .footer {
           position: relative;
-          background: #0f172a;
-          color: #e2e8f0;
-          margin-top: 0;
+          background: transparent;
+          font-family: 'DM Sans', sans-serif;
         }
 
-        .footer-wave {
-          position: relative;
-          margin-top: -2px;
+        .footer-wave-wrap {
+          display: block;
+          margin-bottom: -2px;
+          line-height: 0;
         }
 
-        .footer-wave svg {
+        .footer-wave-wrap svg {
           display: block;
           width: 100%;
-          height: auto;
+          height: 70px;
         }
 
-        .footer-content {
-          padding: 60px 0 30px;
-          background: #0f172a;
+        /* 🔹 Lighter background */
+        .footer-body {
+          background: #131b2f;
+          position: relative;
+          overflow: hidden;
+          padding: 0 0 8px;
         }
 
-        .footer-grid {
-          display: grid;
-          grid-template-columns: 1.5fr 1fr 1fr;
-          gap: 40px;
-          margin-bottom: 40px;
+        .footer-grid-bg {
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 60px 60px;
+          pointer-events: none;
+          z-index: 0;
         }
 
-        .footer-logo {
+        .footer-glow-accent {
+          position: absolute;
+          top: -60px; right: -60px;
+          width: 340px; height: 340px;
+          background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .footer-topbar {
           display: flex;
           align-items: center;
-          margin-bottom: 16px;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 16px;
+          padding: 32px 48px 28px;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          margin-bottom: 48px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .footer-brand-lockup {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .footer-logo-box {
+          width: 54px; height: 54px;
+          border-radius: 14px;
+          background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 0 0 1px rgba(59,130,246,0.3), 0 8px 28px rgba(59,130,246,0.2);
+          flex-shrink: 0;
+          overflow: hidden;
         }
 
         .footer-logo-img {
-          width: 50px;
-          height: 50px;
-          border-radius: 12px;
+          width: 100%; height: 100%;
           object-fit: cover;
-          box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
         .footer-logo-fallback {
-          width: 50px;
-          height: 50px;
-          border-radius: 12px;
-          background: linear-gradient(135deg, #2563eb, #7c3aed);
-          color: white;
-          font-weight: 800;
-          font-size: 1.3rem;
-          display: flex;
+          font-family: 'Playfair Display', serif;
+          font-size: 18px; font-weight: 700;
+          color: #131b2f;
+          width: 100%; height: 100%;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
-        .footer-company-name {
-          font-size: 1.1rem;
-          font-weight: 700;
+        .footer-brand-text h2 {
+          font-family: 'Playfair Display', serif;
+          font-size: 15px; font-weight: 700;
           color: #ffffff;
-          margin-bottom: 8px;
+          margin: 0 0 3px;
+          letter-spacing: 0.01em;
+          line-height: 1.2;
         }
 
-        .footer-tagline {
-          color: #94a3b8;
-          font-size: 0.9rem;
-          line-height: 1.6;
-          margin-bottom: 16px;
+        .footer-brand-text p {
+          font-size: 10.5px; font-weight: 500;
+          color: #7ab7ef;
+          margin: 0;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
         }
 
-        .footer-contact {
+        .footer-est-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 18px;
+          border: 1px solid rgba(59,130,246,0.35);
+          border-radius: 40px;
+          font-size: 11px;
+          font-weight: 400;
+          color: #8ab4f0;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .footer-est-dot {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: #5b9aff;
+          box-shadow: 0 0 8px rgba(59,130,246,0.6);
+          flex-shrink: 0;
+        }
+
+        .footer-main-grid {
+          display: grid;
+          grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
+          gap: 44px;
+          padding: 0 48px 44px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .footer-section-label {
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #7ab7ef;
+          margin: 0 0 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .footer-section-label::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: rgba(59,130,246,0.25);
+          max-width: 36px;
+        }
+
+        .footer-about-desc {
+          font-size: 13.5px;
+          font-weight: 300;
+          line-height: 1.8;
+          color: #8a9bb0;
+          margin: 0 0 24px;
+        }
+
+        .footer-contacts {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
         }
 
         .footer-contact-item {
           display: flex;
           align-items: center;
-          gap: 8px;
-          color: #94a3b8;
+          gap: 12px;
           text-decoration: none;
-          font-size: 0.88rem;
-          transition: color 0.3s ease;
+          color: #8a9bb0;
+          font-size: 12.5px;
+          font-weight: 400;
+          transition: color 0.2s ease;
         }
 
-        .footer-contact-item i {
-          color: #3b82f6;
-          font-size: 0.9rem;
-          width: 18px;
-          text-align: center;
+        a.footer-contact-item:hover { color: #7ab7ef; }
+        a.footer-contact-item:hover .footer-contact-icon {
+          background: rgba(59,130,246,0.15);
+          border-color: rgba(59,130,246,0.45);
         }
 
-        a.footer-contact-item:hover {
-          color: #60a5fa;
+        .footer-contact-icon {
+          width: 34px; height: 34px;
+          border-radius: 9px;
+          background: rgba(59,130,246,0.1);
+          border: 1px solid rgba(59,130,246,0.25);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 13px;
+          color: #7ab7ef;
+          flex-shrink: 0;
+          transition: background 0.2s ease, border-color 0.2s ease;
         }
 
-        .footer-heading {
-          color: #ffffff;
-          font-size: 1rem;
-          font-weight: 700;
-          margin-bottom: 16px;
-          position: relative;
-          padding-bottom: 10px;
-        }
-
-        .footer-heading::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 30px;
-          height: 2px;
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-          border-radius: 1px;
-        }
-
-        .footer-links {
+        .footer-link-list {
           list-style: none;
-          padding: 0;
-          margin: 0;
+          padding: 0; margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
         }
 
-        .footer-links li {
-          margin-bottom: 8px;
-        }
-
-        .footer-link {
-          color: #94a3b8;
-          text-decoration: none;
-          font-size: 0.9rem;
+        .footer-nav-link {
           display: flex;
           align-items: center;
-          gap: 6px;
-          transition: all 0.3s ease;
-          padding: 4px 0;
+          justify-content: space-between;
+          color: #7e8ea3;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 400;
+          padding: 7px 0;
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          transition: all 0.2s ease;
+          letter-spacing: 0.01em;
         }
 
-        .footer-link i {
-          font-size: 0.7rem;
-          color: #3b82f6;
-          transition: transform 0.3s ease;
-        }
-
-        .footer-link:hover {
-          color: #60a5fa;
+        .footer-nav-link:hover {
+          color: #7ab7ef;
           padding-left: 5px;
+          border-bottom-color: rgba(59,130,246,0.25);
         }
 
-        .footer-link:hover i {
+        .footer-link-arrow {
+          font-size: 10px;
+          color: rgba(59,130,246,0.4);
+          transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .footer-nav-link:hover .footer-link-arrow {
+          color: #7ab7ef;
           transform: translateX(3px);
         }
 
-        .footer-social {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-bottom: 24px;
+        .footer-social-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          margin-bottom: 20px;
         }
 
-        .footer-social-icon {
-          width: 38px;
-          height: 38px;
-          border-radius: 10px;
-          background: rgba(255, 255, 255, 0.05);
-          color: #94a3b8;
+        .footer-social-btn {
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
+          gap: 5px;
+          padding: 12px 4px;
+          border-radius: 11px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.08);
           text-decoration: none;
-          font-size: 1rem;
-          transition: all 0.3s ease;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          color: #7e8ea3;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.03em;
+          transition: all 0.22s ease;
+          cursor: pointer;
         }
 
-        .footer-social-icon:hover {
-          background: linear-gradient(135deg, #2563eb, #7c3aed);
-          color: #ffffff;
-          transform: translateY(-3px);
-          box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
-          border-color: transparent;
+        .footer-social-btn i {
+          font-size: 17px;
         }
 
-        .footer-dev-credit {
-          padding-top: 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+        .footer-social-btn:hover {
+          background: rgba(59,130,246,0.12);
+          border-color: rgba(59,130,246,0.4);
+          color: #7ab7ef;
+          transform: translateY(-2px);
         }
 
-        .footer-dev-label {
-          color: #64748b;
-          font-size: 0.78rem;
-          margin-bottom: 4px;
+        .footer-dev-card {
+          padding: 14px 16px;
+          border-radius: 12px;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
         }
 
-        .footer-dev-name {
-          color: #38bdf8;
-          text-decoration: none;
+        .footer-dev-card p {
+          font-size: 10px;
+          color: #5b6e85;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          margin: 0 0 6px;
+          font-weight: 500;
+        }
+
+        .footer-dev-card a {
+          font-size: 13px;
           font-weight: 600;
-          font-size: 0.88rem;
+          color: #5b9aff;
+          text-decoration: none;
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          transition: color 0.3s ease;
+          transition: color 0.2s ease;
         }
 
-        .footer-dev-name:hover {
-          color: #7dd3fc;
+        .footer-dev-card a:hover { color: #7ab7ef; }
+
+        .footer-divider {
+          height: 1px;
+          background: rgba(255,255,255,0.08);
+          margin: 0 48px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .footer-divider::after {
+          content: '';
+          position: absolute;
+          left: 0; top: 0;
+          width: 100px; height: 1px;
+          background: linear-gradient(90deg, #5b9aff, transparent);
         }
 
         .footer-bottom {
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          justify-content: space-between;
           flex-wrap: wrap;
           gap: 12px;
-          padding-top: 24px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 20px 48px 28px;
+          position: relative;
+          z-index: 1;
         }
 
-        .footer-copyright {
-          color: #64748b;
-          font-size: 0.82rem;
+        .footer-copy {
+          font-size: 11.5px;
+          color: #5b6e85;
           margin: 0;
+          letter-spacing: 0.02em;
+        }
+
+        .footer-copy strong {
+          color: #7e8ea3;
+          font-weight: 500;
         }
 
         .footer-legal {
@@ -369,46 +533,64 @@ export default function Footer() {
         }
 
         .footer-legal a {
-          color: #64748b;
+          font-size: 11px;
+          color: #5b6e85;
           text-decoration: none;
-          font-size: 0.82rem;
-          transition: color 0.3s ease;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          font-weight: 500;
+          transition: color 0.2s ease;
         }
 
-        .footer-legal a:hover {
-          color: #60a5fa;
+        .footer-legal a:hover { color: #7ab7ef; }
+
+        .footer-legal span {
+          color: rgba(255,255,255,0.08);
+          font-size: 10px;
         }
 
-        .footer-divider {
-          color: #475569;
-          font-size: 0.8rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-          .footer-grid {
-            grid-template-columns: 1fr 1fr;
+        @media (max-width: 1100px) {
+          .footer-main-grid {
+            grid-template-columns: 1.6fr 1fr 1fr;
           }
-          .footer-brand {
-            grid-column: span 2;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .footer-grid {
-            grid-template-columns: 1fr;
-            gap: 30px;
-          }
-          .footer-brand {
+          .footer-main-grid .footer-col:last-child {
             grid-column: span 1;
           }
+        }
+
+        @media (max-width: 768px) {
+          .footer-topbar {
+            padding: 28px 24px 24px;
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .footer-main-grid {
+            grid-template-columns: 1fr 1fr;
+            padding: 0 24px 36px;
+            gap: 28px;
+          }
+          .footer-main-grid .footer-col:first-child {
+            grid-column: span 2;
+          }
+          .footer-divider { margin: 0 24px; }
+          .footer-bottom { padding: 18px 24px 24px; }
+        }
+
+        @media (max-width: 480px) {
+          .footer-main-grid {
+            grid-template-columns: 1fr;
+            padding: 0 20px 32px;
+          }
+          .footer-main-grid .footer-col:first-child {
+            grid-column: span 1;
+          }
+          .footer-topbar { padding: 24px 20px 20px; }
           .footer-bottom {
+            padding: 16px 20px 20px;
             flex-direction: column;
             text-align: center;
           }
-          .footer-content {
-            padding: 40px 0 20px;
-          }
+          .footer-divider { margin: 0 20px; }
         }
       `}</style>
     </footer>

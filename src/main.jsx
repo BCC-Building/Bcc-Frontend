@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-
+import { Analytics } from "@vercel/analytics/react"
 import App from './App.jsx';
 import AppProviders from './core/providers/AppProviders';
 import apiClient from './api/client';
