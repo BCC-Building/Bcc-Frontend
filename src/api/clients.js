@@ -13,7 +13,7 @@ import { API_BASE_URL } from '../utils/constants';
 export function getImageUrl(path) {
   if (!path) return 'https://placehold.co/600x400/e2e8f0/64748b?text=No+Image';
   if (path.startsWith('http')) return path;
-  const base = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:8080';
+  const base = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'VITE_API_URL=https://api.bcc.net.in';
   return base + (path.startsWith('/') ? path : '/' + path);
 }
 

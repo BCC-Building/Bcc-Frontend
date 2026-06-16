@@ -9,8 +9,8 @@ const getEnvVar = (key, fallback = '') => {
 
 export const ENV = {
   // API Configuration
-  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'http://localhost:8080/api'),
-  API_IMAGE_BASE_URL: getEnvVar('VITE_API_IMAGE_BASE_URL', 'http://localhost:8080'),
+  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'https://api.bcc.net.in/api'),
+  API_IMAGE_BASE_URL: getEnvVar('VITE_API_IMAGE_BASE_URL', 'https://api.bcc.net.in'),
   API_TIMEOUT: 30000,
 
   // Environment
