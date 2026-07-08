@@ -37,7 +37,7 @@ export default function ProjectsPreview() {
       <section style={{ padding: '80px 0', background: '#f8fafc' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 24 }}>
-            {[1, 2, 3].map(i => (
+            {[1, 2, 3, 4].map(i => (
               <div key={i} style={{
                 height: 340, borderRadius: 16, background: '#e2e8f0',
                 animation: 'bcc-pulse 1.4s ease-in-out infinite',
