@@ -1,5 +1,4 @@
-// src/components/ProjectsPreview.jsx
-// Homepage section — big company format, 3 featured projects with blur-on-load effect
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { publicAPI } from '../api/endpoints';
