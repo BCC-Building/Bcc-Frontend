@@ -21,7 +21,7 @@ export default function ProjectsPreview() {
       try {
         const res = await publicAPI.getProjects();
         if (res.data?.success) {
-          setProjects((res.data.data || []).slice(0, 3));
+          setProjects((res.data.data || []).slice(0, 4));
         }
       } catch (e) {
         console.error(e);
