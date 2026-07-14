@@ -1,11 +1,8 @@
-/**
- * Main App Component
- *
- * Responsibility: Setup routing for entire application
- */
+
 
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Analytics } from "@vercel/analytics/react"
 
 // ==================== SHARED COMPONENTS ====================
 import PageLoader     from './shared/components/Loading/PageLoader';
@@ -88,6 +85,7 @@ function AdminLayout({ children }) {
 export default function App() {
   return (
     <>
+      <Analytics />
       <WelcomePopup />
       <ScrollToTop />
       <WhatsAppButton />
