@@ -3,17 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import SEO from '../components/SEO';
 import Contact from '../components/Contact';  
 
-/**
- * ContactPage Component
- * Public contact page with form, map, and contact details
- * 
- * Backend:
- * - POST /api/contact (form submission)
- * - Saves to database + sends email notification
- * 
- * To change contact details: Update in .env file or Contact.jsx component
- * To change map location: Update Google Maps embed URL in Contact.jsx
- */
+
 export default function ContactPage() {
 
   // ==================== STRUCTURED DATA ====================

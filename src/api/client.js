@@ -1,9 +1,4 @@
-/**
- * API Client - Axios Instance
- * 
- * Responsibility: Single API client instance with base configuration
- * Does NOT include interceptors (injected separately)
- */
+
 
 import axios from 'axios';
 import { ENV } from '../config/env';

@@ -1,7 +1,4 @@
-#!/usr/bin/env node
-// Fetch Google Place Details (reviews) and write to public/reviews.json
-// Usage: set env vars GOOGLE_PLACES_API_KEY and GOOGLE_PLACE_ID, then run:
-//    node scripts/fetch-google-reviews.js
+
 
 const axios = require('axios');
 const fs = require('fs');

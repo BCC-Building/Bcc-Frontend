@@ -358,13 +358,16 @@ export default function CareersPage() {
     if (Object.keys(ve).length) { setErrors(ve); return; }
     setSubmitting(true);
     try {
-      const fd = new FormData();
-      fd.append('application', new Blob([JSON.stringify({
-        name: form.fullName, email: form.email, phone: form.phone,
-        position: form.position, experience: form.experience,
-        currentCompany: form.currentCompany, portfolio: form.portfolio,
-        coverLetter: form.message,
-      })], { type: 'application/json' }));
+      constfd.append('application', new Blob([JSON.stringify({
+  fullName: form.fullName,
+  email: form.email,
+  phone: form.phone,
+  jobTitle: form.position,
+  yearsOfExperience: form.experience,
+  currentCompany: form.currentCompany,
+  portfolioUrl: form.portfolio,
+  coverMessage: form.message,
+})], { type: 'application/json' }));
       if (fileRef.current?.files[0]) fd.append('resume', fileRef.current.files[0]);
       const res = await publicAPI.submitJobApplication(fd);
       if (res.data?.success) {
