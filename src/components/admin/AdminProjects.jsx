@@ -1,4 +1,4 @@
-// src/components/admin/AdminProjects.jsx
+
 import { useState, useEffect } from 'react';
 import { adminAPI } from '../../api/endpoints';
 import { getImageUrl } from '../../api/clients';
@@ -25,7 +25,7 @@ export default function AdminProjects() {
   const [additionalImageFiles, setAdditionalImageFiles] = useState([]);
   const [additionalPreviews, setAdditionalPreviews] = useState([]);
 
-  // ==================== FETCH ====================
+  // ==================== FETCH PROJECTS ====================
   const fetchProjects = async () => {
     setLoading(true);
     try {
