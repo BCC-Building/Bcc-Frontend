@@ -1,4 +1,5 @@
-
+// src/components/ProjectsPreview.jsx
+// ✅ Fixed: 404 Issue + Slider Arrows Position
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
@@ -83,8 +84,10 @@ const Slide = ({ project, isActive }) => {
               {project.description || 'Professional construction project delivered with quality and precision.'}
             </p>
 
+            {/* ✅ FIX 1: Correct Link - Use slug or navigate to projects page with scroll */}
             <Link
-              to={`/projects/${project.id}`}
+              to={`/projects`}
+              state={{ scrollTo: project.id }}
               className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm hover:gap-3 transition-all group"
               aria-label={`View details of ${project.title}`}
             >
@@ -257,32 +260,35 @@ export default function ProjectsPreview() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={prevSlide}
-              className="p-2.5 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-              aria-label="Previous project"
-            >
-              <FaArrowLeft className="text-sm text-gray-600" />
-            </button>
+          {/* ✅ FIX 2: Arrows ko View All ke neeche */}
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={prevSlide}
+                className="p-2.5 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
+                aria-label="Previous project"
+              >
+                <FaArrowLeft className="text-sm text-gray-600" />
+              </button>
 
-            <span className="text-xs text-gray-400 font-medium">
-              {currentIndex + 1} / {projects.length}
-            </span>
+              <span className="text-xs text-gray-400 font-medium">
+                {currentIndex + 1} / {projects.length}
+              </span>
 
-            <button
-              onClick={nextSlide}
-              className="p-2.5 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-              aria-label="Next project"
-            >
-              <FaArrowRight className="text-sm text-gray-600" />
-            </button>
+              <button
+                onClick={nextSlide}
+                className="p-2.5 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
+                aria-label="Next project"
+              >
+                <FaArrowRight className="text-sm text-gray-600" />
+              </button>
+            </div>
 
             <Link
               to="/projects"
-              className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-blue-600 text-blue-600 font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-blue-600 text-blue-600 font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap"
             >
-              View All
+              View All Projects
               <FaArrowRight className="text-xs" />
             </Link>
           </div>
