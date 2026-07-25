@@ -1,21 +1,48 @@
+
 import { useEffect, useState, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import logo from "../../../assets/img.webp";
 
 export default function WelcomePopup() {
+  const location = useLocation();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const showTimerRef = useRef(null);
   const autoCloseTimerRef = useRef(null);
 
-  // Show popup 600ms after mount (every time)
+  // ─── Check if popup should show ──────────────────────────────────────────
   useEffect(() => {
-    showTimerRef.current = setTimeout(() => setVisible(true), 600);
+    const checkPopup = () => {
+      //  1. Check if already seen
+      const hasSeen = localStorage.getItem("bcc_welcome_seen");
+      if (hasSeen) {
+        setVisible(false);
+        return;
+      }
+
+      //  2. Don't show on admin dashboard
+      const path = location.pathname;
+      if (path.includes("/admin") || path.includes("/dashboard")) {
+        setVisible(false);
+        return;
+      }
+
+      //  3. Show popup after 600ms
+      showTimerRef.current = setTimeout(() => {
+        setVisible(true);
+        //  3. Mark as seen immediately when shown
+        localStorage.setItem("bcc_welcome_seen", "true");
+      }, 600);
+    };
+
+    checkPopup();
+
     return () => {
       if (showTimerRef.current) clearTimeout(showTimerRef.current);
     };
-  }, []);
+  }, [location.pathname]);
 
-  // Auto-close 10 seconds after popup becomes visible
+  // ─── Auto-close after 10 seconds ──────────────────────────────────────────
   useEffect(() => {
     if (visible) {
       autoCloseTimerRef.current = setTimeout(() => {
@@ -51,7 +78,7 @@ export default function WelcomePopup() {
           className={`wp-popup ${closing ? "wp-popup--out" : "wp-popup--in"}`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Animated particles */}
+          {/* ─── Particles ─────────────────────────────────────────────────── */}
           {[15, 28, 45, 60, 75, 88].map((left, i) => (
             <span
               key={i}

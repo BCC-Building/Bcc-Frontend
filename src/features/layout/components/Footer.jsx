@@ -1,3 +1,5 @@
+// src/components/Footer.jsx
+// ✅ Fixed Service Links - Match actual slugs
 import { Link } from 'react-router-dom';
 import logo from "../../../assets/img.webp";
 
@@ -13,13 +15,19 @@ export default function Footer() {
     { to: "/blog", label: "Blog" },
   ];
 
+  // ✅ FIXED: Service links with actual slugs from servicesData.js
   const serviceLinks = [
-    { to: "/services/civil", label: "Civil Construction" },
-    { to: "/services/structural", label: "Structural Design" },
-    { to: "/services/management", label: "Project Management" },
-    { to: "/services/consulting", label: "Consulting" },
-    { to: "/services/interior", label: "Interior Works" },
-    { to: "/services/surveys", label: "Site Surveys" },
+    { to: "/services/architecture-work", label: "Architecture Work" },
+    { to: "/services/structure-design", label: "Structural Design" },
+    { to: "/services/interior-design", label: "Interior Works" },
+    { to: "/services/survey-work", label: "Site Surveys" },
+    { to: "/services/soil-investigation", label: "Soil Investigation" },
+    { to: "/services/material-testing", label: "Material Testing" },
+    { to: "/services/ndt-testing", label: "NDT Testing" },
+    { to: "/services/bridge-design", label: "Bridge Design" },
+    { to: "/services/water-supply-design", label: "Water Supply Design" },
+    { to: "/services/irrigation-design", label: "Irrigation Design" },
+    { to: "/services/estimation-consultancy", label: "Estimation & Consultancy" },
   ];
 
   const socialLinks = [
@@ -33,7 +41,7 @@ export default function Footer() {
 
   return (
     <footer className="footer" aria-label="Site footer">
-      {/* Top Wave SVG with navy gradient (matching new bg) */}
+      {/* Top Wave SVG */}
       <div className="footer-wave-wrap">
         <svg viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 35 C200 70 400 0 600 35 C800 70 1000 0 1200 35 L1200 70 L0 70 Z" fill="#131b2f"/>
@@ -42,7 +50,6 @@ export default function Footer() {
       </div>
 
       <div className="footer-body">
-        {/* Decorative grid background (lighter lines) */}
         <div className="footer-grid-bg" aria-hidden="true"/>
         <div className="footer-glow-accent" aria-hidden="true"/>
 
@@ -113,12 +120,12 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* Services */}
+          {/* ✅ Services - Fixed Links */}
           <div className="footer-col">
             <p className="footer-section-label">Services</p>
             <nav aria-label="Footer services">
               <ul className="footer-link-list">
-                {serviceLinks.map((link) => (
+                {serviceLinks.slice(0, 6).map((link) => (
                   <li key={link.to} className="footer-link-item">
                     <Link to={link.to} className="footer-nav-link">
                       {link.label}
@@ -200,7 +207,6 @@ export default function Footer() {
           height: 70px;
         }
 
-        /* 🔹 Lighter background */
         .footer-body {
           background: #131b2f;
           position: relative;

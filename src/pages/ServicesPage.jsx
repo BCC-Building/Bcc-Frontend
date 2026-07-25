@@ -8,16 +8,7 @@ import ServicesGrid from '../components/services/ServicesGrid';
 import ServicesPagination from '../components/services/ServicesPagination';
 import ServicesCTA from '../components/services/ServicesCTA';
 
-/**
- * ServicesPage Component
- * Lists all services with filtering, search, and pagination
- * 
- * To add new services: Edit ../data/ServicesData.js
- * To change categories: Update ServiceFilter component
- * To change services per page: Update SERVICES_PER_PAGE constant
- */
 
-/** Number of services shown per page */
 const SERVICES_PER_PAGE = 6;
 
 export default function ServicesPage() {

@@ -1,168 +1,50 @@
-// src/components/home/CTA.jsx
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 export default function CTA() {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6 }}
-      className="cta-section position-relative overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, #0a1628 0%, #0f2b3d 50%, #0a1628 100%)',
-        padding: '5rem 0',
-        isolation: 'isolate',
-      }}
-    >
-      {/* Animated background circles */}
-      <div className="position-absolute top-0 start-0 w-100 h-100 overflow-hidden" style={{ zIndex: 0 }}>
-        <div
-          className="position-absolute rounded-circle"
-          style={{
-            width: '300px',
-            height: '300px',
-            background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0) 70%)',
-            top: '-150px',
-            left: '-100px',
-          }}
-        />
-        <div
-          className="position-absolute rounded-circle"
-          style={{
-            width: '400px',
-            height: '400px',
-            background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0) 70%)',
-            bottom: '-200px',
-            right: '-150px',
-          }}
-        />
-        <div
-          className="position-absolute rounded-circle"
-          style={{
-            width: '200px',
-            height: '200px',
-            background: 'radial-gradient(circle, rgba(96,165,250,0.1) 0%, rgba(96,165,250,0) 70%)',
-            top: '40%',
-            left: '20%',
-          }}
-        />
-      </div>
+    <section className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-br from-[#0a1628] via-[#0f2b3d] to-[#0a1628]">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        
+        {/* 👇 Heading - Problem */}
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-white via-blue-100 to-blue-200 bg-clip-text text-transparent">
+          Stuck with Your <span className="text-blue-400">Construction Project?</span>
+        </h2>
 
-      <div className="container position-relative" style={{ zIndex: 2 }}>
-        <div className="row justify-content-center text-center">
-          <div className="col-lg-8 col-xl-7">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              className="display-5 fw-bold mb-3"
-              style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, #b9d8ff 100%)',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-                textShadow: '0 2px 10px rgba(0,0,0,0.2)',
-              }}
-            >
-              Ready to Start Your Project?
-            </motion.h2>
+        {/* 👇 Sub-heading - Solution */}
+        <p className="text-base sm:text-lg text-white/80 max-w-2xl mx-auto mt-4 mb-8 leading-relaxed">
+          From soil testing to structural design — our experts help you avoid costly mistakes, 
+          ensure safety, and deliver on time. <span className="text-blue-400 font-semibold">1200+ projects delivered.</span>
+        </p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="lead mb-5"
-              style={{
-                color: 'rgba(255,255,255,0.85)',
-                maxWidth: '600px',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                fontSize: '1.2rem',
-              }}
-            >
-              Get a free consultation and let us help you turn your vision into reality with expert planning and execution.
-            </motion.p>
+        {/* 👇 Action Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            to="/contact"
+            className="group w-full sm:w-auto px-8 py-3.5 rounded-full font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 flex items-center justify-center gap-2 min-w-[200px]"
+          >
+            🚀 Start Your Project
+            <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="d-flex justify-content-center gap-3 flex-wrap"
-            >
-              <Link
-                to="/contact"
-                className="btn fw-semibold px-4 py-3"
-                style={{
-                  borderRadius: '50px',
-                  background: 'linear-gradient(105deg, #2563eb, #1e3a8a)',
-                  border: 'none',
-                  color: 'white',
-                  boxShadow: '0 12px 28px -8px rgba(37,99,235,0.4)',
-                  transition: 'all 0.25s ease',
-                  fontSize: '1rem',
-                  minWidth: '220px',
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-3px) scale(1.02)';
-                  e.target.style.boxShadow = '0 20px 35px -10px rgba(37,99,235,0.6)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0) scale(1)';
-                  e.target.style.boxShadow = '0 12px 28px -8px rgba(37,99,235,0.4)';
-                }}
-              >
-                Get Free Consultation →
-              </Link>
+          <Link
+            to="/services"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-semibold text-white/90 bg-white/5 backdrop-blur-sm border border-blue-500/40 hover:bg-blue-500/20 hover:border-blue-400 transition-all duration-300 hover:-translate-y-0.5"
+          >
+            📋 Explore Services
+          </Link>
+        </div>
 
-              <Link
-                to="/schedule-call"
-                className="btn fw-semibold px-4 py-3"
-                style={{
-                  borderRadius: '50px',
-                  background: 'rgba(255,255,255,0.05)',
-                  backdropFilter: 'blur(8px)',
-                  border: '1.5px solid rgba(59,130,246,0.6)',
-                  color: '#e0f2fe',
-                  transition: 'all 0.25s ease',
-                  fontSize: '1rem',
-                  minWidth: '220px',
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = 'rgba(59,130,246,0.2)';
-                  e.target.style.borderColor = '#3b82f6';
-                  e.target.style.transform = 'translateY(-3px)';
-                  e.target.style.boxShadow = '0 12px 28px -8px rgba(59,130,246,0.3)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'rgba(255,255,255,0.05)';
-                  e.target.style.borderColor = 'rgba(59,130,246,0.6)';
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              >
-                📅 Schedule a Call
-              </Link>
-            </motion.div>
-
-            {/* Optional: small trust badge */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="mt-5 mb-0"
-              style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}
-            >
-              No obligation • Free consultation • 24h response
-            </motion.p>
-          </div>
+        {/* Trust Indicators */}
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-sm text-white/40">
+          <span>✅ Free Site Visit</span>
+          <span>⚡ 24h Response</span>
+          <span>🏗️ 1200+ Projects</span>
+          <span>📋 ISO Certified</span>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
