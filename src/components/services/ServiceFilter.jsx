@@ -1,4 +1,4 @@
-import { categories } from '../../data/ServicesData';
+import { categories } from '../../data/servicesData';
 
 const ServiceFilter = ({ selectedCategory, setSelectedCategory, searchTerm, setSearchTerm, services }) => {
   return (

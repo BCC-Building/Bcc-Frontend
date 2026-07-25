@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { services } from '../data/ServicesData.js';
+import { services } from '../data/servicesData.js';
 import ServiceDetailTabs from '../components/services/ServiceDetailTabs';
 
 

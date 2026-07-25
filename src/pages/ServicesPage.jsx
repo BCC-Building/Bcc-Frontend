@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import SEO from '../components/SEO';
-import { services } from '../data/ServicesData.js';
+import { services } from '../data/servicesData.js';
 import ServicesHero from '../components/services/ServicesHero';
 import ServiceFilter from '../components/services/ServiceFilter';
 import ServicesGrid from '../components/services/ServicesGrid';
