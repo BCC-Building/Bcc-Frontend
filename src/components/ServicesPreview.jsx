@@ -1,9 +1,8 @@
-// src/components/ServicesPreview.jsx
-// ✅ Production-Ready | With Image Support
+
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import { services } from '../data/servicesData';
+import { services } from '../data/servicesData.js';
 
 const AUTOPLAY_DELAY = 5000;
 const MAX_SERVICES = 6;
