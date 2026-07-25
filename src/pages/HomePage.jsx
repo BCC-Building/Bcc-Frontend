@@ -11,6 +11,7 @@ import TeamSection from '../components/about/TeamSection';
 import CTA from '../components/CTA';
 
 // Services Preview
+import { services } from "../data/servicesData.js";
 import ServicesPreview from '../components/ServicesPreview';
 import TeamPage from './TeamPage';
 import AboutSection from '../components/about/AboutSection';
