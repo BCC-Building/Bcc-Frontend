@@ -1,5 +1,5 @@
 // src/components/ProjectsPreview.jsx
-// ✅ Fixed: 404 Issue + Slider Arrows Position
+// ✅ Arrows + Dots ek saath neeche (Option 1)
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
@@ -40,7 +40,6 @@ const Slide = ({ project, isActive }) => {
     >
       <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-200">
         <div className="grid md:grid-cols-2 min-h-[320px] md:min-h-[400px]">
-          {/* Image */}
           <div className="relative h-56 md:h-auto overflow-hidden bg-gray-100">
             <img
               src={imgSrc}
@@ -54,8 +53,6 @@ const Slide = ({ project, isActive }) => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:hidden" />
           </div>
-
-          {/* Content */}
           <div className="p-6 md:p-8 flex flex-col justify-center">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               {project.status && <StatusBadge status={project.status} />}
@@ -65,11 +62,9 @@ const Slide = ({ project, isActive }) => {
                 </span>
               )}
             </div>
-
             <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-2">
               {project.title}
             </h3>
-
             {(project.location || project.clientName) && (
               <p className="text-sm text-gray-500 flex items-center gap-1.5 mb-3">
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -79,22 +74,17 @@ const Slide = ({ project, isActive }) => {
                 {project.location || project.clientName}
               </p>
             )}
-
             <p className="text-sm sm:text-base text-gray-600 leading-relaxed line-clamp-3 mb-4">
               {project.description || 'Professional construction project delivered with quality and precision.'}
             </p>
-
-            {/* ✅ FIX 1: Correct Link - Use slug or navigate to projects page with scroll */}
             <Link
-              to={`/projects`}
-              state={{ scrollTo: project.id }}
+              to="/projects"
               className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm hover:gap-3 transition-all group"
               aria-label={`View details of ${project.title}`}
             >
               View Project Details
               <FaArrowRight className="text-xs transition-transform group-hover:translate-x-1" />
             </Link>
-
             <div className="mt-4 h-0.5 w-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-400" />
           </div>
         </div>
@@ -124,20 +114,43 @@ const Skeleton = () => (
   </div>
 );
 
-const Dots = ({ total, current, onClick }) => (
-  <div className="flex justify-center gap-2 mt-6" role="tablist" aria-label="Project slides">
-    {[...Array(total)].map((_, index) => (
-      <button
-        key={index}
-        onClick={() => onClick(index)}
-        className={`h-2 rounded-full transition-all duration-300 ${
-          index === current ? 'w-8 bg-blue-600' : 'w-2 bg-gray-300 hover:bg-gray-400'
-        }`}
-        aria-label={`Go to slide ${index + 1}`}
-        role="tab"
-        aria-selected={index === current}
-      />
-    ))}
+// ─── Dots + Arrows Combined ──────────────────────────────────────────────────
+
+const Navigation = ({ total, current, onClick, onPrev, onNext }) => (
+  <div className="flex items-center justify-center gap-4 mt-6">
+    {/* Left Arrow */}
+    <button
+      onClick={onPrev}
+      className="p-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
+      aria-label="Previous project"
+    >
+      <FaArrowLeft className="text-sm text-gray-600" />
+    </button>
+
+    {/* Dots */}
+    <div className="flex gap-2" role="tablist" aria-label="Project slides">
+      {[...Array(total)].map((_, index) => (
+        <button
+          key={index}
+          onClick={() => onClick(index)}
+          className={`h-2 rounded-full transition-all duration-300 ${
+            index === current ? 'w-8 bg-blue-600' : 'w-2 bg-gray-300 hover:bg-gray-400'
+          }`}
+          aria-label={`Go to slide ${index + 1}`}
+          role="tab"
+          aria-selected={index === current}
+        />
+      ))}
+    </div>
+
+    {/* Right Arrow */}
+    <button
+      onClick={onNext}
+      className="p-2 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
+      aria-label="Next project"
+    >
+      <FaArrowRight className="text-sm text-gray-600" />
+    </button>
   </div>
 );
 
@@ -260,38 +273,13 @@ export default function ProjectsPreview() {
             </p>
           </div>
 
-          {/* ✅ FIX 2: Arrows ko View All ke neeche */}
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={prevSlide}
-                className="p-2.5 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-                aria-label="Previous project"
-              >
-                <FaArrowLeft className="text-sm text-gray-600" />
-              </button>
-
-              <span className="text-xs text-gray-400 font-medium">
-                {currentIndex + 1} / {projects.length}
-              </span>
-
-              <button
-                onClick={nextSlide}
-                className="p-2.5 rounded-full bg-white border border-gray-200 hover:bg-gray-50 hover:border-blue-300 transition-all shadow-sm"
-                aria-label="Next project"
-              >
-                <FaArrowRight className="text-sm text-gray-600" />
-              </button>
-            </div>
-
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-blue-600 text-blue-600 font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap"
-            >
-              View All Projects
-              <FaArrowRight className="text-xs" />
-            </Link>
-          </div>
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-blue-600 text-blue-600 font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap"
+          >
+            View All Projects
+            <FaArrowRight className="text-xs" />
+          </Link>
         </div>
 
         {/* Slider */}
@@ -309,8 +297,14 @@ export default function ProjectsPreview() {
           ))}
         </div>
 
-        {/* Dots */}
-        <Dots total={projects.length} current={currentIndex} onClick={goToSlide} />
+        {/* ✅ Navigation: Arrows + Dots Ek Saath Neeche */}
+        <Navigation
+          total={projects.length}
+          current={currentIndex}
+          onClick={goToSlide}
+          onPrev={prevSlide}
+          onNext={nextSlide}
+        />
 
         {/* Mobile View All */}
         <div className="text-center mt-6 sm:hidden">
