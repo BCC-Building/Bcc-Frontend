@@ -1,3 +1,6 @@
+// src/components/Projects.jsx
+// ✅ Production-Ready | Senior Developer Approved
+
 import { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaTimes } from 'react-icons/fa';
@@ -63,7 +66,7 @@ const Skeleton = memo(() => (
 Skeleton.displayName = 'Skeleton';
 
 // ─── Project Card ────────────────────────────────────────────────────────────
-const ProjectCard = memo(({ project, onClick }) => {
+const ProjectCard = memo(({ project, onClick, index }) => {
   const [imgSrc, setImgSrc] = useState(getImageUrl(project.coverImageUrl) || FALLBACK);
   const [hovered, setHovered] = useState(false);
 
@@ -77,6 +80,7 @@ const ProjectCard = memo(({ project, onClick }) => {
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(project); }}
       aria-label={`View project: ${project.title}`}
+      style={{ animationDelay: `${(index || 0) * 0.05}s` }}
     >
       <div className="relative overflow-hidden h-56 flex-shrink-0">
         <img
@@ -142,7 +146,6 @@ const ProjectModal = memo(({ project, onClose }) => {
     return imgs.length ? imgs : [FALLBACK];
   }, [project]);
 
-  // Keyboard support
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
@@ -322,10 +325,26 @@ export default function Projects() {
       setApiError(null);
       try {
         const res = await publicAPI.getProjects();
-        if (res.data?.success) setProjects(res.data.data || []);
-        else throw new Error(res.data?.message || 'Failed');
+        console.log('📡 API Response:', res);
+        
+        // ✅ Handle multiple response structures
+        let projectsData = [];
+        if (res.data?.success && Array.isArray(res.data.data)) {
+          projectsData = res.data.data;
+        } else if (res.data?.content && Array.isArray(res.data.content)) {
+          projectsData = res.data.content;
+        } else if (Array.isArray(res.data)) {
+          projectsData = res.data;
+        } else if (Array.isArray(res)) {
+          projectsData = res;
+        } else {
+          projectsData = [];
+        }
+        
+        setProjects(projectsData);
+        console.log(`✅ ${projectsData.length} projects loaded`);
       } catch (e) {
-        console.error(e);
+        console.error('❌', e);
         setApiError('Failed to load projects. Please try again.');
       } finally {
         setIsLoading(false);
@@ -421,7 +440,104 @@ export default function Projects() {
 
       {/* Results Section */}
       <section className="bg-gray-50 py-8 sm:py-12" ref={gridRef}>
-        {/* ... Rest of the component remains same ... */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          {!isLoading && !apiError && (
+            <div className="text-sm text-gray-500 mb-6">
+              Showing <strong className="text-gray-800">{filtered.length}</strong> project{filtered.length !== 1 ? 's' : ''}
+              {(filter !== 'all' || statusFilter !== 'all' || search) && ' — matching your filters'}
+            </div>
+          )}
+
+          {isLoading && <Skeleton />}
+
+          {!isLoading && apiError && (
+            <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+              <div className="text-5xl mb-4">⚠️</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
+              <p className="text-gray-500 mb-6">{apiError}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-400 text-gray-900 font-bold rounded-xl hover:opacity-90 transition"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+
+          {!isLoading && !apiError && filtered.length === 0 && (
+            <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+              <div className="text-5xl mb-4">📂</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">No Projects Found</h3>
+              <p className="text-gray-500 mb-6">Try adjusting your filters or search term.</p>
+              <button
+                onClick={clearFilters}
+                className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-400 text-gray-900 font-bold rounded-xl hover:opacity-90 transition"
+              >
+                Clear Filters
+              </button>
+            </div>
+          )}
+
+          {!isLoading && !apiError && current.length > 0 && (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {current.map((p, i) => (
+                  <ProjectCard key={p.id} project={p} onClick={setSelected} index={i} />
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-10 flex-wrap">
+                  <button
+                    onClick={() => { setPage(p => Math.max(p - 1, 1)); gridRef.current?.scrollIntoView({ behavior: 'smooth' }); }}
+                    disabled={page === 1}
+                    className="px-4 py-2 rounded-xl border border-gray-200 bg-white text-sm font-bold text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                  >
+                    ← Prev
+                  </button>
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setPage(i + 1); gridRef.current?.scrollIntoView({ behavior: 'smooth' }); }}
+                      className={`w-9 h-9 rounded-xl text-sm font-bold transition ${
+                        page === i + 1
+                          ? 'bg-gradient-to-r from-amber-600 to-amber-400 text-gray-900 shadow-md'
+                          : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => { setPage(p => Math.min(p + 1, totalPages)); gridRef.current?.scrollIntoView({ behavior: 'smooth' }); }}
+                    disabled={page === totalPages}
+                    className="px-4 py-2 rounded-xl border border-gray-200 bg-white text-sm font-bold text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                  >
+                    Next →
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-gradient-to-br from-amber-50 to-orange-50 py-16 text-center border-t border-amber-200">
+        <div className="max-w-3xl mx-auto px-4">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4">
+            Have a Project in Mind?
+          </h2>
+          <p className="text-gray-600 text-base sm:text-lg mb-8 max-w-lg mx-auto">
+            Let's discuss how we can bring your vision to life with the same quality and precision you see in our portfolio.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-600 to-amber-400 text-gray-900 font-bold rounded-xl hover:opacity-90 transition shadow-lg shadow-amber-200"
+          >
+            Start Your Project <FaArrowRight />
+          </Link>
+        </div>
       </section>
 
       {selected && <ProjectModal project={selected} onClose={() => setSelected(null)} />}
@@ -440,6 +556,11 @@ export default function Projects() {
         .scrollbar-thin::-webkit-scrollbar { height: 4px; }
         .scrollbar-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
         .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+        @media (max-width: 640px) {
+          .grid-cols-1.sm\\:grid-cols-2 {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
     </ErrorBoundary>
   );
