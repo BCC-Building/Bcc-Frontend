@@ -1,7 +1,6 @@
 
-
-import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, memo } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Analytics } from "@vercel/analytics/react"
 
 // ==================== SHARED COMPONENTS ====================
@@ -19,7 +18,6 @@ import HomePage  from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import TeamPage  from './pages/TeamPage';
 import FaqPage   from './pages/FaqPage';
-import WelcomePopup from './features/layout/components/WelcomePopup';
 
 // ==================== PUBLIC PAGES (LAZY LOADED - NON-CRITICAL) ====================
 const ServicesPage     = lazy(() => import('./pages/ServicesPage'));
@@ -39,8 +37,14 @@ const AdminLogin     = lazy(() => import('./components/admin/AdminLogin'));
 const AdminVerifyOTP = lazy(() => import('./components/admin/AdminVerifyOTP'));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
 
+//  WelcomePopup only on home page
+const WelcomePopup = lazy(() => import('./features/layout/components/WelcomePopup'));
+
 // ==================== PUBLIC LAYOUT ====================
-function Layout({ children }) {
+const Layout = memo(({ children }) => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
     <>
       <a href="#main-content" className="skip-link">
@@ -48,6 +52,13 @@ function Layout({ children }) {
       </a>
 
       <Navbar />
+
+      {/* WelcomePopup only on home page */}
+      {isHomePage && (
+        <Suspense fallback={null}>
+          <WelcomePopup />
+        </Suspense>
+      )}
 
       <main
         id="main-content"
@@ -61,12 +72,13 @@ function Layout({ children }) {
       </main>
 
       <Footer />
+      <WhatsAppButton />
     </>
   );
-}
+});
 
 // ==================== ADMIN LAYOUT ====================
-function AdminLayout({ children }) {
+const AdminLayout = memo(({ children }) => {
   return (
     <main
       id="main-content"
@@ -79,16 +91,14 @@ function AdminLayout({ children }) {
       </Suspense>
     </main>
   );
-}
+});
 
 // ==================== APP COMPONENT ====================
 export default function App() {
   return (
     <>
       <Analytics />
-      <WelcomePopup />
       <ScrollToTop />
-      <WhatsAppButton />
 
       <Routes>
         {/* ==================== PUBLIC ROUTES ==================== */}
