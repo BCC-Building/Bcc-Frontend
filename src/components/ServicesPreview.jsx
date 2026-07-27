@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import services from '../data/servicesData.js'; 
+import { services } from "../data/servicesData.js"; 
 
 const AUTOPLAY_DELAY = 5000;
 const MAX_SERVICES = 6;
