@@ -1,8 +1,26 @@
 // src/pages/ClientsPage.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import {
+  LayoutGrid,
+  Shield,
+  Landmark,
+  Zap,
+  TrainFront,
+  Building2,
+  ScrollText,
+  Award,
+  Lock,
+  ClipboardCheck,
+  Star,
+  ArrowUpRight,
+  ArrowRight,
+  PhoneCall,
+  Clock3,
+  UserCheck2,
+} from "lucide-react";
 import SEO from "../components/SEO";
 import ClientsHero from "../components/clients/ClientsHero";
 
@@ -12,14 +30,9 @@ import ClientsHero from "../components/clients/ClientsHero";
 
 const CLIENT_CATEGORIES = [
   {
-    id: "all",
-    label: "All Clients",
-    icon: "◈",
-  },
-  {
     id: "defence",
     label: "Defence & Strategic",
-    icon: "🛡",
+    icon: Shield,
     num: "01",
     clients: [
       {
@@ -28,6 +41,7 @@ const CLIENT_CATEGORIES = [
         bg: "#1e3a5f",
         desc: "Defence infrastructure & cantonment projects",
         website: "https://mes.gov.in",
+        logo: null, // add e.g. "/assets/clients/mes.svg" once cleared for use
       },
       {
         name: "DRDO",
@@ -35,6 +49,7 @@ const CLIENT_CATEGORIES = [
         bg: "#1c2b3a",
         desc: "Research facility construction & labs",
         website: "https://drdo.gov.in",
+        logo: null,
       },
       {
         name: "Indian Army",
@@ -42,6 +57,7 @@ const CLIENT_CATEGORIES = [
         bg: "#3b5323",
         desc: "Barracks, training facilities & housing",
         website: "https://indianarmy.nic.in",
+        logo: null,
       },
       {
         name: "Border Roads Organisation",
@@ -49,6 +65,7 @@ const CLIENT_CATEGORIES = [
         bg: "#5d4e37",
         desc: "Strategic road & bridge projects",
         website: "https://bro.gov.in",
+        logo: null,
       },
       {
         name: "Indian Air Force",
@@ -56,13 +73,14 @@ const CLIENT_CATEGORIES = [
         bg: "#1a3a6b",
         desc: "Runway & hangar infrastructure",
         website: "https://indianairforce.nic.in",
+        logo: null,
       },
     ],
   },
   {
     id: "government",
     label: "Government Departments",
-    icon: "🏛",
+    icon: Landmark,
     num: "02",
     clients: [
       {
@@ -71,6 +89,7 @@ const CLIENT_CATEGORIES = [
         bg: "#005a9e",
         desc: "Central government building & infrastructure",
         website: "https://cpwd.gov.in",
+        logo: null,
       },
       {
         name: "State PWD Uttarakhand",
@@ -78,6 +97,7 @@ const CLIENT_CATEGORIES = [
         bg: "#2e7d32",
         desc: "State road, bridge & building projects",
         website: "https://pwduk.uk.gov.in",
+        logo: null,
       },
       {
         name: "Nagar Nigam",
@@ -85,6 +105,7 @@ const CLIENT_CATEGORIES = [
         bg: "#e65100",
         desc: "Urban civic infrastructure & development",
         website: "#",
+        logo: null,
       },
       {
         name: "Rural Development Dept.",
@@ -92,6 +113,7 @@ const CLIENT_CATEGORIES = [
         bg: "#33691e",
         desc: "Rural infrastructure & connectivity",
         website: "#",
+        logo: null,
       },
       {
         name: "Irrigation Department",
@@ -99,13 +121,14 @@ const CLIENT_CATEGORIES = [
         bg: "#0277bd",
         desc: "Canal, dam & water management projects",
         website: "#",
+        logo: null,
       },
     ],
   },
   {
     id: "energy",
     label: "Energy & Petroleum",
-    icon: "⚡",
+    icon: Zap,
     num: "03",
     clients: [
       {
@@ -114,6 +137,7 @@ const CLIENT_CATEGORIES = [
         bg: "#d84315",
         desc: "Refinery & fuel station construction",
         website: "https://bharatpetroleum.com",
+        logo: null,
       },
       {
         name: "Indian Oil Corporation",
@@ -121,6 +145,7 @@ const CLIENT_CATEGORIES = [
         bg: "#bf360c",
         desc: "Terminal & pipeline infrastructure",
         website: "https://iocl.com",
+        logo: null,
       },
       {
         name: "NHPC Limited",
@@ -128,6 +153,7 @@ const CLIENT_CATEGORIES = [
         bg: "#01579b",
         desc: "Hydropower civil works",
         website: "https://nhpc.nic.in",
+        logo: null,
       },
       {
         name: "Power Grid Corporation",
@@ -135,6 +161,7 @@ const CLIENT_CATEGORIES = [
         bg: "#4a148c",
         desc: "Substation & transmission infrastructure",
         website: "https://powergridindia.com",
+        logo: null,
       },
       {
         name: "NTPC Limited",
@@ -142,13 +169,14 @@ const CLIENT_CATEGORIES = [
         bg: "#1a237e",
         desc: "Thermal plant civil construction",
         website: "https://ntpc.co.in",
+        logo: null,
       },
     ],
   },
   {
     id: "transport",
     label: "Transport & Infrastructure",
-    icon: "🚆",
+    icon: TrainFront,
     num: "04",
     clients: [
       {
@@ -157,6 +185,7 @@ const CLIENT_CATEGORIES = [
         bg: "#880e4f",
         desc: "Railway station & track infrastructure",
         website: "https://rvnl.org",
+        logo: null,
       },
       {
         name: "Airports Authority of India",
@@ -164,6 +193,7 @@ const CLIENT_CATEGORIES = [
         bg: "#004d40",
         desc: "Airport terminal & runway projects",
         website: "https://aai.aero",
+        logo: null,
       },
       {
         name: "NHAI",
@@ -171,6 +201,7 @@ const CLIENT_CATEGORIES = [
         bg: "#1b5e20",
         desc: "Highway & expressway construction",
         website: "https://nhai.gov.in",
+        logo: null,
       },
       {
         name: "RITES Limited",
@@ -178,28 +209,23 @@ const CLIENT_CATEGORIES = [
         bg: "#3e2723",
         desc: "Transport consultancy & project management",
         website: "https://rites.com",
+        logo: null,
       },
     ],
   },
   {
     id: "psu",
     label: "Public Sector Undertakings",
-    icon: "🏢",
+    icon: Building2,
     num: "05",
     clients: [
-      {
-        name: "BHEL",
-        abbr: "BHEL",
-        bg: "#00695c",
-        desc: "Heavy engineering & plant construction",
-        website: "https://bhel.com",
-      },
       {
         name: "HAL",
         abbr: "HAL",
         bg: "#263238",
         desc: "Aerospace facility construction",
         website: "https://hal-india.co.in",
+        logo: null,
       },
       {
         name: "BARC",
@@ -207,6 +233,7 @@ const CLIENT_CATEGORIES = [
         bg: "#311b92",
         desc: "Atomic research facility infrastructure",
         website: "https://barc.gov.in",
+        logo: null,
       },
       {
         name: "CIDCO",
@@ -214,13 +241,14 @@ const CLIENT_CATEGORIES = [
         bg: "#bf360c",
         desc: "Township & urban planning projects",
         website: "https://cidco.maharashtra.gov.in",
+        logo: null,
       },
     ],
   },
   {
     id: "state",
     label: "State Government Bodies",
-    icon: "📜",
+    icon: ScrollText,
     num: "06",
     clients: [
       {
@@ -229,6 +257,7 @@ const CLIENT_CATEGORIES = [
         bg: "#006064",
         desc: "Water supply & sanitation projects",
         website: "#",
+        logo: null,
       },
       {
         name: "UP Housing Board",
@@ -236,6 +265,7 @@ const CLIENT_CATEGORIES = [
         bg: "#4e342e",
         desc: "Residential township development",
         website: "#",
+        logo: null,
       },
       {
         name: "Delhi Development Authority",
@@ -243,6 +273,7 @@ const CLIENT_CATEGORIES = [
         bg: "#0d47a1",
         desc: "Urban development & housing",
         website: "https://dda.org.in",
+        logo: null,
       },
       {
         name: "Punjab Mandi Board",
@@ -250,9 +281,15 @@ const CLIENT_CATEGORIES = [
         bg: "#827717",
         desc: "Agricultural market infrastructure",
         website: "#",
+        logo: null,
       },
     ],
   },
+];
+
+const TABS = [
+  { id: "all", label: "All Partners", icon: LayoutGrid },
+  ...CLIENT_CATEGORIES.map((c) => ({ id: c.id, label: c.label, icon: c.icon })),
 ];
 
 const STATS = [
@@ -268,10 +305,16 @@ const MARQUEE_ITEMS = [
 ];
 
 const TRUST_INDICATORS = [
-  { icon: "🏆", title: "ISO 9001:2015 Certified", desc: "Quality management across all operations" },
-  { icon: "🔒", title: "Defence Cleared Contractor", desc: "Authorised for sensitive infrastructure" },
-  { icon: "📋", title: "Pre-Qualified Vendor", desc: "Empanelled with CPWD, MES, PWD & PSUs" },
-  { icon: "⭐", title: "15+ Years Track Record", desc: "Zero default on delivery commitments" },
+  { icon: Award, title: "ISO 9001:2015 Certified", desc: "Quality management across all operations" },
+  { icon: Lock, title: "Defence Cleared Contractor", desc: "Authorised for sensitive infrastructure" },
+  { icon: ClipboardCheck, title: "Pre-Qualified Vendor", desc: "Empanelled with CPWD, MES, PWD & PSUs" },
+  { icon: Star, title: "9+ Years Track Record", desc: "Zero default on delivery commitments" },
+];
+
+const CTA_FEATURES = [
+  { icon: UserCheck2, text: "Free project consultation" },
+  { icon: Clock3, text: "Response within 24 hours" },
+  { icon: PhoneCall, text: "Dedicated account manager" },
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -508,6 +551,7 @@ const css = `
     cursor: pointer;
     transition: all 0.25s ease;
   }
+  .cl-tab-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
   .cl-tab-btn:hover {
     border-color: var(--gold-l);
     color: var(--gold-d);
@@ -558,6 +602,7 @@ const css = `
     align-items: center;
     gap: 12px;
   }
+  .cl-cat-title svg { width: 22px; height: 22px; color: var(--gold); flex-shrink: 0; }
   .cl-cat-count {
     font-family: var(--fb);
     font-size: 11.5px;
@@ -601,6 +646,17 @@ const css = `
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     flex-shrink: 0;
   }
+  .cl-card-logo-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    background: #fff;
+    padding: 6px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
   .cl-card-category {
     font-family: var(--fb);
     font-size: 10.5px;
@@ -632,10 +688,11 @@ const css = `
     position: absolute;
     bottom: 16px;
     right: 20px;
-    font-size: 20px;
     color: var(--gold-l);
     transition: color 0.3s, transform 0.3s;
+    display: inline-flex;
   }
+  .cl-card-corner svg { width: 18px; height: 18px; }
   .cl-card:hover .cl-card-corner { color: var(--gold); transform: translate(2px, -2px); }
 
   /* ── TRUST INDICATORS ── */
@@ -665,9 +722,9 @@ const css = `
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
     flex-shrink: 0;
   }
+  .cl-trust-icon svg { width: 22px; height: 22px; color: var(--gold-d); }
   .cl-trust-title {
     font-family: var(--fb);
     font-weight: 700;
@@ -683,8 +740,34 @@ const css = `
 
   /* ── CTA ── */
   .cl-cta {
+    position: relative;
     background: var(--ink);
-    padding: 80px 56px;
+    padding: 88px 56px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .cl-cta::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 560px;
+    height: 560px;
+    background: radial-gradient(circle, rgba(200,134,74,0.16) 0%, rgba(200,134,74,0) 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .cl-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse at 70% 20%, black, transparent 65%);
+    mask-image: radial-gradient(ellipse at 70% 20%, black, transparent 65%);
+    z-index: -1;
+    pointer-events: none;
   }
   .cl-cta-inner {
     max-width: 1200px;
@@ -694,6 +777,19 @@ const css = `
     gap: 4rem;
     align-items: center;
   }
+  .cl-cta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--fb);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.4rem;
+  }
+  .cl-cta-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
   .cl-cta-h {
     font-family: var(--fd);
     font-size: clamp(2rem, 3.5vw, 3.2rem);
@@ -708,14 +804,41 @@ const css = `
     font-size: 15px;
     font-weight: 300;
     color: rgba(255,255,255,0.45);
-    margin: 0;
+    margin: 0 0 1.8rem;
     line-height: 1.7;
+    max-width: 460px;
   }
+  .cl-cta-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cl-cta-feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--fb);
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 14px 8px 10px;
+    border-radius: 100px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .cl-cta-feature:hover {
+    border-color: rgba(200,134,74,0.4);
+    background: rgba(200,134,74,0.08);
+  }
+  .cl-cta-feature svg { width: 14px; height: 14px; color: var(--gold); flex-shrink: 0; }
+
   .cl-cta-buttons { display: flex; flex-direction: column; gap: 12px; }
   .cl-cta-btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 20px;
     font-family: var(--fb);
     font-size: 11.5px;
     font-weight: 500;
@@ -724,15 +847,27 @@ const css = `
     color: var(--ink);
     background: var(--gold);
     text-decoration: none;
-    padding: 16px 36px;
-    transition: background 0.3s, transform 0.3s;
+    padding: 16px 22px 16px 36px;
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
     white-space: nowrap;
+    box-shadow: 0 0 0 0 rgba(200,134,74,0.4);
   }
-  .cl-cta-btn-primary:hover { background: var(--gold-l); transform: translateY(-2px); }
+  .cl-cta-btn-primary svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+  .cl-cta-btn-primary:hover {
+    background: var(--gold-l);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -6px rgba(200,134,74,0.5);
+  }
+  .cl-cta-btn-primary:hover svg { transform: translateX(4px); }
   .cl-cta-btn-secondary {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 20px;
     font-family: var(--fb);
     font-size: 11.5px;
     font-weight: 400;
@@ -740,12 +875,45 @@ const css = `
     text-transform: uppercase;
     color: rgba(255,255,255,0.6);
     text-decoration: none;
-    padding: 16px 36px;
+    padding: 16px 22px 16px 36px;
     border: 1px solid rgba(255,255,255,0.15);
-    transition: border-color 0.3s, color 0.3s;
+    transition: border-color 0.3s, color 0.3s, background 0.3s;
     white-space: nowrap;
   }
-  .cl-cta-btn-secondary:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
+  .cl-cta-btn-secondary svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+  .cl-cta-btn-secondary:hover {
+    border-color: rgba(255,255,255,0.4);
+    color: var(--white);
+    background: rgba(255,255,255,0.03);
+  }
+  .cl-cta-btn-secondary:hover svg { transform: translateX(4px); }
+
+  .cl-cta-direct {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    font-family: var(--fb);
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.4);
+  }
+  .cl-cta-direct a {
+    color: var(--gold-l);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(232,201,154,0.3);
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .cl-cta-direct a:hover { color: var(--gold); border-color: var(--gold); }
+  .cl-cta-direct svg { width: 14px; height: 14px; color: var(--gold-l); flex-shrink: 0; }
+
+  @media (max-width: 900px) {
+    .cl-cta-features { gap: 8px; }
+  }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
@@ -829,13 +997,11 @@ function ClientsIllustration() {
 
       <g transform="translate(360, 200)">
         <rect width="80" height="60" rx="4" fill="rgba(18,16,14,0.4)" stroke="rgba(200,134,74,0.15)" strokeWidth="0.6"/>
-        <text x="40" y="26" textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="9" fontFamily="'Jost',sans-serif">⚡</text>
         <text x="40" y="44" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="7" fontFamily="'Jost',sans-serif">ENERGY</text>
       </g>
 
       <g transform="translate(120, 420)">
         <rect width="80" height="60" rx="4" fill="rgba(18,16,14,0.4)" stroke="rgba(200,134,74,0.15)" strokeWidth="0.6"/>
-        <text x="40" y="26" textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="9" fontFamily="'Jost',sans-serif">🛡</text>
         <text x="40" y="44" textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="7" fontFamily="'Jost',sans-serif">DEFENCE</text>
       </g>
     </svg>
@@ -850,14 +1016,16 @@ function useCountUp(target, duration = 2000, start = false) {
   useEffect(() => {
     if (!start) return;
     let startTime = null;
+    let rafId;
     const step = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
+      if (progress < 1) rafId = requestAnimationFrame(step);
     };
-    requestAnimationFrame(step);
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
   }, [target, duration, start]);
   return count;
 }
@@ -880,6 +1048,30 @@ function StatBlock({ value, suffix, label, index, inView }) {
   );
 }
 
+function ClientLogo({ client }) {
+  const [failed, setFailed] = useState(false);
+
+  if (client.logo && !failed) {
+    return (
+      <img
+        src={client.logo}
+        alt={`${client.name} logo`}
+        className="cl-card-logo-img"
+        loading="lazy"
+        onError={() => setFailed(true)}
+      />
+    );
+  }
+
+  // Fallback: initials badge — used until a cleared logo file is added,
+  // or automatically if the image fails to load.
+  return (
+    <span className="cl-card-logo" style={{ background: client.bg }} aria-hidden="true">
+      {client.abbr.slice(0, 2)}
+    </span>
+  );
+}
+
 function ClientCard({ client, index, categoryLabel }) {
   const fadeUp = {
     hidden: { opacity: 0, y: 24 },
@@ -895,18 +1087,19 @@ function ClientCard({ client, index, categoryLabel }) {
       whileInView="show"
       viewport={{ once: true }}
     >
-      <span className="cl-card-logo" style={{ background: client.bg }} aria-hidden="true">
-        {client.abbr.slice(0, 2)}
-      </span>
+      <ClientLogo client={client} />
       <span className="cl-card-category">{categoryLabel}</span>
       <h4 className="cl-card-title">{client.name}</h4>
       <p className="cl-card-desc">{client.desc}</p>
-      <span className="cl-card-corner" aria-hidden="true">→</span>
+      <span className="cl-card-corner" aria-hidden="true">
+        <ArrowUpRight />
+      </span>
     </motion.div>
   );
 }
 
 function CategoryBlock({ category }) {
+  const Icon = category.icon;
   return (
     <motion.div
       className="cl-cat-block"
@@ -918,7 +1111,7 @@ function CategoryBlock({ category }) {
       <div className="cl-cat-header">
         <span className="cl-cat-num">{category.num}</span>
         <h3 className="cl-cat-title">
-          <span>{category.icon}</span>
+          <Icon aria-hidden="true" />
           {category.label}
           <span className="cl-cat-count">{category.clients.length} Clients</span>
         </h3>
@@ -992,22 +1185,12 @@ export default function ClientsPage() {
   const statsRef = useRef(null);
   const statsInView = useInView(statsRef, { once: true });
 
-  const { org, breadcrumb, faq } = buildSchemas();
+  const { org, breadcrumb, faq } = useMemo(() => buildSchemas(), []);
 
   const visibleCategories =
     activeTab === "all"
-      ? CLIENT_CATEGORIES.filter((c) => c.id !== "all")
+      ? CLIENT_CATEGORIES
       : CLIENT_CATEGORIES.filter((c) => c.id === activeTab);
-
-  // For tabs, we need labels even for non-"all"
-  const TABS = [
-    { id: "all", label: "All Partners", icon: "◈" },
-    ...CLIENT_CATEGORIES.filter((c) => c.id !== "all").map((c) => ({
-      id: c.id,
-      label: c.label,
-      icon: c.icon,
-    })),
-  ];
 
   return (
     <>
@@ -1056,18 +1239,21 @@ export default function ClientsPage() {
 
         {/* ══ FILTER TABS ══ */}
         <div className="cl-tabs" role="tablist" aria-label="Filter clients by category">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              role="tab"
-              aria-selected={activeTab === tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`cl-tab-btn${activeTab === tab.id ? ' active' : ''}`}
-            >
-              <span aria-hidden="true">{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`cl-tab-btn${activeTab === tab.id ? ' active' : ''}`}
+              >
+                <Icon aria-hidden="true" />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* ══ CATEGORY SECTIONS ══ */}
@@ -1090,45 +1276,88 @@ export default function ClientsPage() {
         {/* ══ TRUST INDICATORS ══ */}
         <section className="cl-trust-section" aria-label="Why trust BCC">
           <div className="cl-trust-grid">
-            {TRUST_INDICATORS.map((item, i) => (
-              <motion.div
-                key={i}
-                className="cl-trust-item"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="cl-trust-icon" aria-hidden="true">{item.icon}</div>
-                <div>
-                  <div className="cl-trust-title">{item.title}</div>
-                  <div className="cl-trust-desc">{item.desc}</div>
-                </div>
-              </motion.div>
-            ))}
+            {TRUST_INDICATORS.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={i}
+                  className="cl-trust-item"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <div className="cl-trust-icon" aria-hidden="true">
+                    <Icon />
+                  </div>
+                  <div>
+                    <div className="cl-trust-title">{item.title}</div>
+                    <div className="cl-trust-desc">{item.desc}</div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </section>
 
         {/* ══ CTA ══ */}
         <section className="cl-cta" aria-label="Partner call to action">
           <div className="cl-cta-inner">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <p className="cl-cta-tag">Become a Partner</p>
               <h2 className="cl-cta-h">
                 Ready to Join Our<br />
                 <em>Trusted Network?</em>
               </h2>
               <p className="cl-cta-p">
-                Partner with BCC and experience infrastructure delivery that sets benchmarks.
+                Partner with BCC and experience infrastructure delivery that sets
+                benchmarks — from tender to handover.
               </p>
-            </div>
-            <div className="cl-cta-buttons">
+              <div className="cl-cta-features">
+                {CTA_FEATURES.map((f, i) => {
+                  const Icon = f.icon;
+                  return (
+                    <motion.span
+                      key={i}
+                      className="cl-cta-feature"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.2 + i * 0.08 }}
+                    >
+                      <Icon aria-hidden="true" />
+                      {f.text}
+                    </motion.span>
+                  );
+                })}
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="cl-cta-buttons"
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            >
               <Link to="/contact" className="cl-cta-btn-primary">
-                Start Your Project →
+                Start Your Project
+                <ArrowRight aria-hidden="true" />
               </Link>
               <Link to="/projects" className="cl-cta-btn-secondary">
                 View Our Work
+                <ArrowRight aria-hidden="true" />
               </Link>
-            </div>
+              <p className="cl-cta-direct">
+                <PhoneCall aria-hidden="true" />
+                Or call us directly at <a href="tel:+911234567890">+91 8057540906</a>
+              </p>
+            </motion.div>
           </div>
         </section>
 
