@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-import { publicAPI } from '../api/endpoints'; // 👈 ADD THIS IMPORT
+import { publicAPI } from '../api/endpoints';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -128,7 +128,8 @@ export default function Contact() {
                   className="btn btn-light px-4"
                   aria-label="Call us at +91 8057540906"
                 >
-                  📞 Call Now
+                  <i className="bi bi-telephone-fill me-2" aria-hidden="true" />
+                  Call Now
                 </a>
                 <a 
                   href="#contact-form" 
@@ -220,14 +221,14 @@ export default function Contact() {
               {/* SUCCESS MESSAGE - UPDATED */}
               {submitted && (
                 <div className="alert alert-success" role="alert">
-                  ✅ Thank you! Your message has been received. We'll get back to you soon.
+                  Thank you! Your message has been received. We'll get back to you soon.
                 </div>
               )}
 
               {/* ERROR MESSAGE - NEW */}
               {error && (
                 <div className="alert alert-danger" role="alert">
-                  ❌ {error}
+                  {error}
                 </div>
               )}
 

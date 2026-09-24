@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { AlertTriangle, Award, BriefcaseBusiness, GraduationCap, HeartPulse, Scale, Rocket, WalletCards, Inbox } from 'lucide-react';
 import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 
@@ -11,12 +12,12 @@ import { publicAPI } from '../api/endpoints';
 const FALLBACK_IMG = 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1600';
 
 const BENEFITS = [
-  { icon: '🚀', title: 'Fast-Track Growth',   desc: 'Structured career paths with leadership programs and mentorship from senior engineers.' },
-  { icon: '📚', title: 'Learning Budget',      desc: '₹50,000/year for certifications, workshops and industry conferences.' },
-  { icon: '💰', title: 'Top Compensation',     desc: 'Industry-best CTC with performance bonuses and equity-linked incentives.' },
-  { icon: '⚖️', title: 'Work-Life Balance',    desc: 'Flexible work hours, hybrid options, and 30 days of annual paid leave.' },
-  { icon: '🏆', title: 'Recognition',          desc: 'Annual excellence awards, peer recognition and public project credits.' },
-  { icon: '💊', title: 'Health & Wellness',    desc: 'Comprehensive medical insurance covering self, spouse, children and parents.' },
+  { icon: Rocket, title: 'Fast-Track Growth',   desc: 'Structured career paths with leadership programs and mentorship from senior engineers.' },
+  { icon: GraduationCap, title: 'Learning Budget',      desc: '₹50,000/year for certifications, workshops and industry conferences.' },
+  { icon: WalletCards, title: 'Top Compensation',     desc: 'Industry-best CTC with performance bonuses and equity-linked incentives.' },
+  { icon: Scale, title: 'Work-Life Balance',    desc: 'Flexible work hours, hybrid options, and 30 days of annual paid leave.' },
+  { icon: Award, title: 'Recognition',          desc: 'Annual excellence awards, peer recognition and public project credits.' },
+  { icon: HeartPulse, title: 'Health & Wellness',    desc: 'Comprehensive medical insurance covering self, spouse, children and parents.' },
 ];
 
 const PROCESS = [
@@ -102,7 +103,7 @@ const JobCard = ({ job, onView, onApply, index }) => {
           color: hovered ? '#6366f1' : '#94a3b8',
           transition: 'color .2s', whiteSpace: 'nowrap', minWidth: 80, textAlign: 'right',
         }}>
-          {hovered && job.salary ? job.salary : '💼 Competitive'}
+          {hovered && job.salary ? job.salary : 'Competitive'}
         </div>
       </div>
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -675,7 +676,7 @@ export default function CareersPage() {
 
           {!loading && jobsError && (
             <div style={{ textAlign:'center',padding:'60px 20px' }}>
-              <div style={{ fontSize:48,marginBottom:16 }}>⚠️</div>
+              <AlertTriangle size={48} style={{ marginBottom:16, color:'#d97706' }} aria-hidden="true" />
               <h3 style={{ color:'#0f172a',marginBottom:8 }}>Could Not Load Jobs</h3>
               <p style={{ color:'#64748b',marginBottom:20 }}>{jobsError}</p>
               <button onClick={() => window.location.reload()} style={{padding:'10px 24px',borderRadius:8,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',border:'none',fontWeight:700,cursor:'pointer'}}>Retry</button>
@@ -684,7 +685,7 @@ export default function CareersPage() {
 
           {!loading && !jobsError && filtered.length === 0 && (
             <div style={{textAlign:'center',padding:'60px 24px',background:'#fff',borderRadius:16,border:'1.5px solid #e8ecf0'}}>
-              <div style={{ fontSize:48,marginBottom:16 }}>📭</div>
+              <Inbox size={48} style={{ marginBottom:16, color:'#64748b' }} aria-hidden="true" />
               <h3 style={{ color:'#0f172a',marginBottom:8,fontSize:18 }}>No Openings Found</h3>
               <p style={{ color:'#64748b',maxWidth:400,margin:'0 auto 24px',lineHeight:1.6 }}>We don't have matching positions right now, but we're always looking for great talent. Send us an open application!</p>
               <Link to="/contact" style={{display:'inline-block',padding:'11px 24px',borderRadius:10,background:'linear-gradient(135deg,#6366f1,#8b5cf6)',color:'#fff',textDecoration:'none',fontWeight:700}}>Send Open Application</Link>
@@ -713,8 +714,8 @@ export default function CareersPage() {
         <div className="cc-container">
           <SectionHeader eyebrow="Apply Now" title={selectedJob ? `Applying for: ${selectedJob.title}` : 'Submit Your Application'} sub="Our recruitment team responds within 48 hours of receiving your application." />
           <div style={{maxWidth:780,margin:'0 auto',background:'#f8fafc',border:'1.5px solid #e8ecf0',borderRadius:20,padding:'36px 40px'}}>
-            {success && <div style={{padding:'14px 20px',background:'#dcfce7',color:'#15803d',borderRadius:10,marginBottom:24,display:'flex',alignItems:'center',gap:10,fontWeight:600,fontSize:14}}>✅ Application submitted! We'll be in touch within 48 hours.</div>}
-            {errors.submit && <div style={{padding:'14px 20px',background:'#fee2e2',color:'#991b1b',borderRadius:10,marginBottom:24,fontWeight:600,fontSize:14}}>❌ {errors.submit}</div>}
+            {success && <div style={{padding:'14px 20px',background:'#dcfce7',color:'#15803d',borderRadius:10,marginBottom:24,display:'flex',alignItems:'center',gap:10,fontWeight:600,fontSize:14}}><BriefcaseBusiness size={18} aria-hidden="true" /> Application submitted! We'll be in touch within 48 hours.</div>}
+            {errors.submit && <div style={{padding:'14px 20px',background:'#fee2e2',color:'#991b1b',borderRadius:10,marginBottom:24,display:'flex',alignItems:'center',gap:10,fontWeight:600,fontSize:14}}><AlertTriangle size={18} aria-hidden="true" /> {errors.submit}</div>}
             <form onSubmit={handleSubmit}>
               <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px 20px' }}>
                 <FormField label="Full Name *" error={errors.fullName}><input name="fullName" value={form.fullName} onChange={handleChange} placeholder="Rahul Sharma" style={inputStyle} /></FormField>
@@ -781,9 +782,10 @@ function SectionHeader({ eyebrow, title, sub }) {
 
 function BenefitCard({ b, index }) {
   const [hovered, setHovered] = useState(false);
+  const BenefitIcon = b.icon;
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{background:'#fff',border:hovered?'1.5px solid #6366f1':'1.5px solid #e8ecf0',borderRadius:16,padding:'28px 24px',transition:'all .25s ease',boxShadow:hovered?'0 12px 32px rgba(99,102,241,.1)':'0 2px 8px rgba(0,0,0,.04)',transform:hovered?'translateY(-4px)':'none',animation:'cc-fadeup .5s ease both',animationDelay:`${index*.08}s`}}>
-      <div style={{ fontSize:32, marginBottom:14 }}>{b.icon}</div>
+      <BenefitIcon size={32} style={{ marginBottom:14, color:'#6366f1' }} aria-hidden="true" />
       <h3 style={{ margin:'0 0 8px',fontSize:15,fontWeight:800,color:'#0f172a' }}>{b.title}</h3>
       <p style={{ margin:0,fontSize:13,color:'#64748b',lineHeight:1.65 }}>{b.desc}</p>
     </div>

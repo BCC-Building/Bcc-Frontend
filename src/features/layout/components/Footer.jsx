@@ -1,5 +1,5 @@
 // src/components/Footer.jsx
-// ✅ Fixed Service Links - Match actual slugs
+// Fixed service links match the actual slugs.
 import { Link } from 'react-router-dom';
 import logo from "../../../assets/img.webp";
 
@@ -15,7 +15,7 @@ export default function Footer() {
     { to: "/blog", label: "Blog" },
   ];
 
-  // ✅ FIXED: Service links with actual slugs from servicesData.js
+  // Service links use the actual slugs from servicesData.js.
   const serviceLinks = [
     { to: "/services/architecture-work", label: "Architecture Work" },
     { to: "/services/structure-design", label: "Structural Design" },
@@ -120,7 +120,7 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* ✅ Services - Fixed Links */}
+          {/* Services */}
           <div className="footer-col">
             <p className="footer-section-label">Services</p>
             <nav aria-label="Footer services">

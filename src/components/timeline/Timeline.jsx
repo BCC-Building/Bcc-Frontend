@@ -16,7 +16,7 @@ const Timeline = () => {
             whileHover={{ scale: 1.1 }}
           >
             <div className="timeline-year">{item.year}</div>
-            <div className="timeline-icon">{item.icon}</div>
+            <div className="timeline-icon"><item.icon aria-hidden="true" /></div>
           </motion.div>
         ))}
       </div>

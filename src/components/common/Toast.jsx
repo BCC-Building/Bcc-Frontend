@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, createContext, useContext } from 'react';
+import { X } from 'lucide-react';
 
 const ToastContext = createContext(null);
 
@@ -36,7 +37,7 @@ export function ToastProvider({ children }) {
           >
             <span className="flex-1">{toast.message}</span>
             <button onClick={() => removeToast(toast.id)} className="text-white hover:opacity-80">
-              ✕
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
         ))}

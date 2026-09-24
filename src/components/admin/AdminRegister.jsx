@@ -104,7 +104,7 @@ export default function AdminRegister() {
         {/* Success Message */}
         {successMessage && (
           <div className="bg-green-50 text-green-700 p-3 rounded-lg mb-4 text-sm" role="status">
-            ✅ {successMessage}
+            {successMessage}
           </div>
         )}
 

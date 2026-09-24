@@ -228,7 +228,7 @@ export default function AdminBlogs() {
                   <td className="p-3 font-medium">{blog.title}</td>
                   <td className="p-3">{blog.category}</td>
                   <td className="p-3">{blog.author}</td>
-                  <td className="p-3">{blog.isPublished ? '✅' : '❌'}</td>
+                  <td className="p-3">{blog.isPublished ? 'Published' : 'Draft'}</td>
                   <td className="p-3 flex gap-2">
                     <button onClick={() => handleEdit(blog)} className="text-blue-600 hover:underline">Edit</button>
                     <button onClick={() => handleDelete(blog.id)} className="text-red-600 hover:underline">Delete</button>

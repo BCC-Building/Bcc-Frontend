@@ -101,9 +101,7 @@ function StatCard({ stats }) {
       }}
     >
       <div className="text-center mb-3">
-        <span style={{ fontSize: '3rem' }} role="img" aria-label="building">
-          🏢
-        </span>
+        <Building2 className="text-white mx-auto" size={48} aria-hidden="true" />
       </div>
       <h2 className="h5 text-white mb-3 text-center fw-bold">
         Trusted by Leading Clients
@@ -188,9 +186,9 @@ export default function Hero() {
 
   const heroStats = useMemo(
     () => [
-      { value: 1200, suffix: '+', label: 'Projects Completed', icon: '🏗️' },
-      { value: 40,   suffix: '+', label: 'Expert Engineers',   icon: '👷' },
-      { value: 100,  suffix: '%', label: 'Client Satisfaction', icon: '⭐' },
+      { value: 1200, suffix: '+', label: 'Projects Completed', icon: Building2 },
+      { value: 40,   suffix: '+', label: 'Expert Engineers',   icon: Ruler },
+      { value: 100,  suffix: '%', label: 'Client Satisfaction', icon: CheckCircle2 },
     ],
     []
   );
@@ -346,13 +344,7 @@ export default function Hero() {
                   transition={{ delay: 0.8 + i * 0.15 }}
                 >
                   <div className="d-flex align-items-center gap-2 mb-1">
-                    <span
-                      style={{ fontSize: '1.3rem' }}
-                      role="img"
-                      aria-hidden="true"
-                    >
-                      {item.icon}
-                    </span>
+                    <item.icon size={20} aria-hidden="true" />
                     <AnimatedCounter target={item.value} suffix={item.suffix} />
                   </div>
                   <small

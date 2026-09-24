@@ -37,7 +37,7 @@ const ServiceSlide = ({ service, isActive }) => {
             
             {/* Icon Overlay on Image */}
             <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-2xl shadow-lg">
-              {service.icon}
+              <service.icon aria-hidden="true" />
             </div>
 
             {/* Category Badge on Image */}

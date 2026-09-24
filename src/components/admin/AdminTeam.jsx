@@ -78,7 +78,7 @@ export default function AdminTeam() {
     }
   };
 
-  // ✅ CORRECTED handleSubmit – matches backend @RequestPart("member") and @RequestPart("image")
+  // Matches backend @RequestPart("member") and @RequestPart("image").
  const handleSubmit = async (e) => {
   e.preventDefault();
   setError(''); setSuccess('');
@@ -296,7 +296,7 @@ export default function AdminTeam() {
                   <td className="p-3 font-medium">{member.name}</td>
                   <td className="p-3">{member.designation}</td>
                   <td className="p-3">{member.department}</td>
-                  <td className="p-3">{member.isActive ? '✅' : '❌'}</td>
+                  <td className="p-3">{member.isActive ? 'Active' : 'Inactive'}</td>
                   <td className="p-3 flex gap-2">
                     <button onClick={() => handleEdit(member)} className="text-blue-600 hover:underline">Edit</button>
                     <button onClick={() => handleDelete(member.id)} className="text-red-600 hover:underline">Delete</button>

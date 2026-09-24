@@ -181,7 +181,7 @@ export default function AdminCareers() {
                   <td className="p-3">{job.department}</td>
                   <td className="p-3">{job.location}</td>
                   <td className="p-3">{job.jobType}</td>
-                  <td className="p-3">{job.isActive ? '✅' : '❌'}</td>
+                  <td className="p-3">{job.isActive ? 'Active' : 'Inactive'}</td>
                   <td className="p-3 flex gap-2">
                     <button onClick={() => handleEdit(job)} className="text-blue-600 hover:underline">Edit</button>
                     <button onClick={() => handleDelete(job.id)} className="text-red-600 hover:underline">Delete</button>

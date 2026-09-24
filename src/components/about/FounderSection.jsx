@@ -360,7 +360,7 @@ export default function FounderSection({
                 }}
               >
                 <FaStar style={{ fontSize: 11 }} />
-                15+ Years Experience
+                12+ Years Experience
               </div>
 
             </div>

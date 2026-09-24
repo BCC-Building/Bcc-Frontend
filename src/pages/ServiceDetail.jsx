@@ -68,7 +68,7 @@ export default function ServiceDetail() {
             <div className="service-detail-content">
               {/* Icon */}
               <div className="service-icon-large" aria-hidden="true">
-                {service.icon}
+                <service.icon aria-hidden="true" />
               </div>
 
               {/* Title */}

@@ -6,6 +6,7 @@ import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import BlogHero from '../components/blog/BlogHero';
+import { AlertTriangle, Bookmark, Heart, Inbox } from 'lucide-react';
 
 // --- constants ----------------------------------------------------------------
 const CATEGORIES = ['All', 'Architecture', 'Design', 'Business', 'Soil Testing', 'Survey', 'Construction', 'Engineering'];
@@ -311,13 +312,13 @@ const BlogDetail = ({ post, onBack }) => {
             onClick={() => setLiked(!liked)}
             className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-center text-base"
           >
-            {liked ? '❤️' : '🤍'}
+            <Heart size={16} fill={liked ? 'currentColor' : 'none'} aria-hidden="true" />
           </button>
           <button
             onClick={() => setBookmarked(!bookmarked)}
             className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-center text-base"
           >
-            {bookmarked ? '🔖' : '📌'}
+            <Bookmark size={16} fill={bookmarked ? 'currentColor' : 'none'} aria-hidden="true" />
           </button>
           <button
             onClick={() => setShareOpen(!shareOpen)}
@@ -493,7 +494,7 @@ export default function BlogPage() {
             <BlogHero />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
-              {/* ✅ Mobile-First Grid */}
+              {/* Mobile-first grid */}
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
                 {/* Left Column */}
                 <div>
@@ -528,7 +529,7 @@ export default function BlogPage() {
                   {/* Error */}
                   {!loading && apiError && (
                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-                      <div className="text-5xl mb-4">⚠️</div>
+                      <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-amber-500" aria-hidden="true" />
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
                       <p className="text-gray-500 mb-6">{apiError}</p>
                       <button
@@ -543,7 +544,7 @@ export default function BlogPage() {
                   {/* No Results */}
                   {!loading && !apiError && filtered.length === 0 && (
                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-                      <div className="text-5xl mb-4">📭</div>
+                      <Inbox className="mx-auto mb-4 h-12 w-12 text-gray-400" aria-hidden="true" />
                       <h3 className="text-xl font-bold text-gray-900 mb-2">No Articles Found</h3>
                       <p className="text-gray-500 mb-6">
                         {search ? `No results for "${search}".` : 'No articles in this category yet.'}
@@ -610,7 +611,7 @@ export default function BlogPage() {
         )}
       </div>
 
-      {/* ✅ Tailwind Animations */}
+      {/* Tailwind animations */}
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(12px); }

@@ -27,6 +27,7 @@ const ServiceCard = ({
   };
 
   const showFeatures = variant !== 'compact';
+  const ServiceIcon = service.icon;
 
   return (
     <motion.div
@@ -45,7 +46,7 @@ const ServiceCard = ({
         />
         <div className="absolute top-4 right-4">
           <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
-            <span className="text-2xl">{service.icon}</span>
+            <ServiceIcon className="text-2xl" aria-hidden="true" />
           </div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">

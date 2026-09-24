@@ -1,6 +1,7 @@
 // src/components/WhatsAppButton.jsx - Production-Ready Enhanced Version
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HardHat, Wrench, MessageCircle, Siren } from 'lucide-react';
 
 // ==================== CONFIGURATION ====================
 
@@ -12,7 +13,7 @@ const WHATSAPP_CONFIG = {
       name: 'Architecture & Design',
       number: '9411311544',
       message: "Hi! I'm interested in your architecture and design services.",
-      icon: '🏗️',
+      icon: HardHat,
       role: 'Architecture Specialist',
       available: 'Online',
       responseTime: '< 5 min',
@@ -23,7 +24,7 @@ const WHATSAPP_CONFIG = {
       name: 'Technical Support',
       number: '9411311544',
       message: 'Hello! I need technical assistance with my project.',
-      icon: '🛠️',
+      icon: Wrench,
       role: 'Technical Expert',
       available: 'Online',
       responseTime: '< 10 min',
@@ -34,7 +35,7 @@ const WHATSAPP_CONFIG = {
       name: 'Customer Care',
       number: '9411311544',
       message: 'I have a query about your services.',
-      icon: '💬',
+      icon: MessageCircle,
       role: 'Customer Support',
       available: '24/7',
       responseTime: '< 2 hours',
@@ -45,7 +46,7 @@ const WHATSAPP_CONFIG = {
       name: 'Emergency Support',
       number: '9411311544',
       message: 'URGENT: Need immediate assistance!',
-      icon: '🚨',
+      icon: Siren,
       role: 'Emergency Response',
       available: '24/7',
       responseTime: 'Immediate',
@@ -59,7 +60,7 @@ const WHATSAPP_CONFIG = {
     bottomOffset: 30,
     sideOffset: 30,
     showTooltip: true,
-    tooltipText: 'Chat with us 💬',
+    tooltipText: 'Chat with us',
     showOnlineBadge: true,
     trackAnalytics: true,
     closeOnOutsideClick: true,
@@ -236,7 +237,7 @@ const MultiContactMenu = ({ contacts, trackEvent }) => {
                     className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0 text-left"
                     aria-label={`Chat with ${contact.name} on WhatsApp`}>
                     <div className={`w-11 h-11 rounded-full flex items-center justify-center text-xl flex-shrink-0 ${contact.urgent ? 'bg-red-100' : 'bg-green-100'}`} aria-hidden="true">
-                      {contact.icon}
+                      <contact.icon size={18} aria-hidden="true" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-gray-800 flex items-center gap-2">

@@ -1,5 +1,6 @@
 // src/components/admin/AdminDashboard.jsx
 import { useState } from 'react';
+import { BriefcaseBusiness, ClipboardList, FileText, FolderKanban, Images, Mail, Users } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import AdminProjects from './AdminProjects';
 import AdminBlogs from './AdminBlogs';
@@ -8,7 +9,6 @@ import AdminTeam from './AdminTeam';
 import AdminGallery from './AdminGallery';
 import AdminContacts from './AdminContacts';
 import AdminApplications from './AdminApplication';
-// 👇 Import your logo
 import logo from '../../assets/img.webp';
 
 export default function AdminDashboard() {
@@ -17,13 +17,13 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const tabs = [
-    { key: 'projects', label: 'Projects', icon: '📁' },
-    { key: 'blogs', label: 'Blogs', icon: '📝' },
-    { key: 'careers', label: 'Careers', icon: '💼' },
-    { key: 'team', label: 'Team', icon: '👥' },
-    { key: 'gallery', label: 'Gallery', icon: '🖼️' },
-    { key: 'contacts', label: 'Messages', icon: '📧' },
-    { key: 'applications', label: 'Applications', icon: '📋' },
+    { key: 'projects', label: 'Projects', icon: FolderKanban },
+    { key: 'blogs', label: 'Blogs', icon: FileText },
+    { key: 'careers', label: 'Careers', icon: BriefcaseBusiness },
+    { key: 'team', label: 'Team', icon: Users },
+    { key: 'gallery', label: 'Gallery', icon: Images },
+    { key: 'contacts', label: 'Messages', icon: Mail },
+    { key: 'applications', label: 'Applications', icon: ClipboardList },
   ];
 
   return (
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
                   : 'text-gray-300 hover:bg-white/5 hover:text-white'
               }`}
             >
-              <span className="text-lg">{tab.icon}</span>
+              <tab.icon className="h-5 w-5" aria-hidden="true" />
               <span>{tab.label}</span>
               {activeTab === tab.key && (
                 <span className="ml-auto w-2 h-2 rounded-full bg-white animate-pulse" />

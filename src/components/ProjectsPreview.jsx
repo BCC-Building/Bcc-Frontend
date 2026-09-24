@@ -1,5 +1,5 @@
 // src/components/ProjectsPreview.jsx
-// ✅ Arrows + Dots ek saath neeche (Option 1)
+// Arrows and dots share the same navigation row.
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
@@ -297,7 +297,7 @@ export default function ProjectsPreview() {
           ))}
         </div>
 
-        {/* ✅ Navigation: Arrows + Dots Ek Saath Neeche */}
+        {/* Navigation: arrows and dots share the same row. */}
         <Navigation
           total={projects.length}
           current={currentIndex}
