@@ -1,16 +1,4 @@
-/**
- * FounderSection
- * ───────────────
- * Dark cinematic section with founder quote (left) and portrait (right).
- * Features: large decorative quote mark, stat strip, branded badge on image.
- *
- * Props:
- *   imageUrl      string  — override portrait photo
- *   name          string  — founder name
- *   designation   string  — title line
- *   quote         string  — the message text
- *   stats         array   — [["15+","Years"],["250+","Projects"],["100%","Commitment"]]
- */
+
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -29,7 +17,7 @@ const DEFAULTS = {
   subQuote:
     "Every project we undertake is a responsibility we deliver with unwavering integrity, uncompromising quality, and relentless passion.",
   stats: [
-    ["15+", "Years of Excellence"],
+    ["12+", "Years of Excellence"],
     ["1200+", "Projects Delivered"],
     ["100%", "Client Commitment"],
   ],

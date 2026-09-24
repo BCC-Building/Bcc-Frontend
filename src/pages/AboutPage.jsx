@@ -13,6 +13,7 @@ import MarqueeStrip        from "../components/about/MarqueeStrip";
 import StatsSection        from "../components/about/StatsSection";
 import StorySection        from "../components/about/StorySection";
 import MissionSection      from "../components/about/MissionSection";
+import PrincipalsSection   from "../components/about/PrincipalsSection";
 import TimelineSection     from "../components/about/TimelineSection";
 import FounderSection      from "../components/about/FounderSection";
 import TeamSection         from "../components/about/TeamSection";
@@ -49,6 +50,7 @@ export default function AboutPage() {
         <StatsSection />
         <StorySection />
         <MissionSection />
+        <PrincipalsSection />
         <TimelineSection />
         <FounderSection />
         <TeamSection />

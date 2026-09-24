@@ -38,10 +38,74 @@ export default function HomePage() {
         {/* 2. Recent Projects Preview */}
         <ProjectsPreview />
 
+<<<<<<< HEAD
         
 
         {/* 3. Featured Services */}
         <ServicesPreview />
+=======
+        {/* 3. Services Preview Section */}
+        <section className="py-16 md:py-20" style={{ background: '#f6f4ef' }} aria-labelledby="services-heading">
+          <div className="container mx-auto px-4 md:px-6">
+            <SectionHeader
+              useTailwind={true}
+              badge="What We Offer"
+              title="Our Professional Services"
+              subtitle="Expert engineering and consulting solutions for every project"
+              id="services-heading"
+            />
+
+            {/* Services Grid - First 4 services */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+              {services.slice(0, 4).map((service, index) => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  index={index}
+                  variant="home"
+                />
+              ))}
+            </div>
+
+            {/* View All Button */}
+            <motion.div
+              className="text-center mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              <Link
+                to="/services"
+                className="inline-flex items-center gap-2 px-8 py-3.5 font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                style={{
+                  background: '#111827',
+                  color: '#fff',
+                  borderRadius: 4,
+                  textDecoration: 'none',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  fontSize: 13,
+                }}
+                aria-label="View all services"
+              >
+                View All Services
+                <svg
+                  className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* 4. Company Overview / Stats */}
+>>>>>>> d315c3a (update navigation and founder experiance)
   
 
         {/* 5. Why Choose BCC */}

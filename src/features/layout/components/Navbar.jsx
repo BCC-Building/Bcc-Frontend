@@ -1,6 +1,3 @@
-// src/components/Navbar.jsx
-// Dual-Row Premium Navbar — Building Creators & Consulting Pvt. Ltd.
-// Top info bar + Bottom nav strip | SEO | WCAG AA | Mobile-first | Production ready
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
@@ -18,11 +15,11 @@ const NAV_LINKS = [
   { path: '/',          name: 'Home'         },
   { path: '/about',     name: 'About Us'},
   { path: '/services',  name: 'Services'},
+  { path: '/projects',  name: 'Projects'     },
   { path: '/achievements', name: 'Achievements' },
   { path: '/team',      name: 'Our Experts'  },
   { path: '/clients',   name: 'Our Clients'  },
-  { path: '/gallery',   name: 'Gallery'      },
-  { path: '/projects',  name: 'Projects'     },
+  { path: '/gallery',   name: 'Gallery'      }, 
   {path: '/blog',     name: 'Blogs'        },
   {path: '/faq',  name: 'FAQ'      }, 
   { path: '/careers',   name: 'Career'       },

@@ -6,9 +6,13 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 
+<<<<<<< HEAD
 const FALLBACK = 'https://placehold.co/800x600/1a1a2e/ffffff?text=BCC+Project';
 const MAX_PROJECTS = 6;
 const AUTOPLAY_DELAY = 5000;
+=======
+const FALLBACK = 'https://placehold.co/800x600/111827/f5d77d?text=BCC+Project';
+>>>>>>> d315c3a (update navigation and founder experiance)
 
 const StatusColors = {
   Completed: { bg: 'bg-emerald-100', color: 'text-emerald-700', dot: 'bg-emerald-500' },
@@ -232,6 +236,7 @@ export default function ProjectsPreview() {
   // ─── Loading ──────────────────────────────────────────────────────────────
   if (loading) {
     return (
+<<<<<<< HEAD
       <section className="py-12 sm:py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center mb-8">
@@ -239,6 +244,18 @@ export default function ProjectsPreview() {
               <div className="h-6 w-32 bg-gray-200 rounded-full animate-pulse mb-2" />
               <div className="h-8 w-64 bg-gray-200 rounded animate-pulse" />
             </div>
+=======
+      <section style={{ padding: '84px 0', background: '#f6f4ef' }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 24 }}>
+            {[1, 2, 3].map(i => (
+              <div key={i} style={{
+                height: 340, borderRadius: 6, background: '#e1ded5',
+                animation: 'bcc-pulse 1.4s ease-in-out infinite',
+                animationDelay: `${i * 0.15}s`,
+              }} />
+            ))}
+>>>>>>> d315c3a (update navigation and founder experiance)
           </div>
           <Skeleton />
         </div>
@@ -250,6 +267,7 @@ export default function ProjectsPreview() {
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
+<<<<<<< HEAD
     <section
       className="py-12 sm:py-16 bg-gray-50"
       onMouseEnter={() => setIsPaused(true)}
@@ -267,6 +285,29 @@ export default function ProjectsPreview() {
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">
               The Proof Is in the <span className="text-blue-600">Projects</span>
+=======
+    <section style={{ padding: '84px 0', background: '#f6f4ef' }}>
+      <div className="container">
+        {/* header */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between',
+          alignItems: 'flex-end', marginBottom: 40, flexWrap: 'wrap', gap: 16,
+        }}>
+          <div>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              background: '#fff', border: '1px solid #e2d5b5',
+              padding: '5px 14px', borderRadius: 4,
+              marginBottom: 12,
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#c9a84c', display: 'inline-block' }} />
+              <span style={{ color: '#111827', fontSize: 11, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase' }}>
+                Featured Work
+              </span>
+            </div>
+            <h2 style={{ margin: 0, fontSize: 'clamp(1.8rem,3.2vw,2.8rem)', fontWeight: 800, color: '#111827', lineHeight: 1.08, letterSpacing: 0 }}>
+              Featured Projects
+>>>>>>> d315c3a (update navigation and founder experiance)
             </h2>
             <p className="text-sm sm:text-base text-gray-500 max-w-md mt-1">
               {projects.length} projects • Swipe to explore
@@ -275,7 +316,19 @@ export default function ProjectsPreview() {
 
           <Link
             to="/projects"
+<<<<<<< HEAD
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-blue-600 text-blue-600 font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap"
+=======
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 22px', borderRadius: 10,
+              border: '1px solid #111827',
+              color: '#111827', fontWeight: 800, fontSize: 13,
+              textDecoration: 'none', whiteSpace: 'nowrap',
+              textTransform: 'uppercase', letterSpacing: '.05em',
+              transition: 'all .2s',
+            }}
+>>>>>>> d315c3a (update navigation and founder experiance)
           >
             View All Projects
             <FaArrowRight className="text-xs" />
@@ -319,4 +372,111 @@ export default function ProjectsPreview() {
       </div>
     </section>
   );
+<<<<<<< HEAD
 }
+=======
+}
+
+function PreviewCard({ project, index }) {
+  const [imgSrc,  setImgSrc]  = useState(getImageUrl(project.coverImageUrl) || FALLBACK);
+  const [hovered, setHovered] = useState(false);
+  const sc = StatusColors[project.status] || { bg: '#f1f5f9', color: '#475569' };
+
+  return (
+    <Link
+      to="/projects"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'block', textDecoration: 'none',
+        borderRadius: 6, overflow: 'hidden',
+        background: '#fff',
+        border: '1px solid #e5e0d7',
+        transition: 'transform .28s ease, box-shadow .28s ease',
+        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
+        boxShadow: hovered ? '0 22px 46px rgba(17,24,39,.14)' : '0 2px 12px rgba(17,24,39,.06)',
+        animation: 'bcc-fadeup .5s ease both',
+        animationDelay: `${index * 0.1}s`,
+      }}
+    >
+      {/* image */}
+      <div style={{ position: 'relative', height: 210, overflow: 'hidden' }}>
+        <img
+          src={imgSrc}
+          alt={project.title}
+          onError={() => setImgSrc(FALLBACK)}
+          loading="lazy"
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover',
+            transition: 'transform .45s ease',
+            transform: hovered ? 'scale(1.07)' : 'scale(1)',
+            display: 'block',
+          }}
+        />
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to top,rgba(10,15,30,.55) 0%,transparent 60%)',
+          opacity: hovered ? 1 : 0, transition: 'opacity .28s ease',
+        }} />
+        {/* type badge */}
+        {project.projectType && (
+          <div style={{
+            position: 'absolute', top: 12, left: 12,
+            background: 'rgba(255,255,255,.92)',
+            backdropFilter: 'blur(4px)',
+            padding: '3px 10px', borderRadius: 20,
+            fontSize: 10, fontWeight: 700,
+            color: '#0f172a', textTransform: 'uppercase', letterSpacing: '.4px',
+          }}>{project.projectType}</div>
+        )}
+        {/* status */}
+        {project.status && (
+          <div style={{
+            position: 'absolute', top: 12, right: 12,
+            background: sc.bg, color: sc.color,
+            padding: '3px 10px', borderRadius: 20,
+            fontSize: 10, fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '.4px',
+          }}>{project.status}</div>
+        )}
+      </div>
+
+      {/* body */}
+      <div style={{ padding: '16px 18px 18px' }}>
+        <h3 style={{
+          margin: '0 0 6px', fontSize: 15, fontWeight: 700,
+          color: '#0f172a', lineHeight: 1.35,
+          display: '-webkit-box', WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>{project.title}</h3>
+
+        {(project.location || project.clientName) && (
+          <p style={{ margin: '0 0 8px', fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                stroke="currentColor" strokeWidth="2" fill="none"/>
+              <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+            {project.location || project.clientName}
+          </p>
+        )}
+
+        <p style={{
+          margin: 0, fontSize: 13, color: '#64748b', lineHeight: 1.6,
+          display: '-webkit-box', WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
+          {project.description || 'Professional construction project delivered with quality and precision.'}
+        </p>
+
+        <div style={{
+            marginTop: 14, height: 2, borderRadius: 2,
+          background: 'linear-gradient(90deg,#c9a84c,#111827)',
+          width: hovered ? '100%' : '28px',
+          transition: 'width .35s ease',
+        }} />
+      </div>
+    </Link>
+  );
+}
+>>>>>>> d315c3a (update navigation and founder experiance)
