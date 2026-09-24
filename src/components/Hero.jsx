@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Building2, CheckCircle2, ClipboardCheck, Phone, Ruler } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 
 const heroStats = [
   { value: '1200+', label: 'Projects completed' },
@@ -9,7 +10,10 @@ const heroStats = [
   { value: '09+', label: 'Years of delivery' },
 ];
 
-<<<<<<< HEAD
+
+function AnimatedCounter({ target, suffix = '', duration = 1200 }) {
+  const [count, setCount] = useState(0);
+
   useEffect(() => {
     let animationId;
     let startTime = null;
@@ -39,6 +43,7 @@ const heroStats = [
     </h3>
   );
 }
+
 
 function TypingText({ texts, typeSpeed = 60, pauseDuration = 2000 }) {
   const [index, setIndex] = useState(0);
@@ -383,104 +388,6 @@ export default function Hero() {
           border-color: rgba(122, 183, 239, 0.5);
         }
       `}</style>
-=======
-const capabilities = [
-  'Architecture',
-  'Structural design',
-  'Soil investigation',
-  'Quality testing',
-];
-
-export default function Hero() {
-  return (
-    <section className="bcc-hero" aria-label="Building Creators and Consulting">
-      <div className="bcc-hero-media" aria-hidden="true">
-        <img
-          src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=86"
-          alt=""
-          fetchPriority="high"
-          decoding="sync"
-          width="1800"
-          height="1100"
-        />
-      </div>
-
-      <div className="bcc-hero-shade" aria-hidden="true" />
-
-      <div className="bcc-hero-inner">
-        <motion.div
-          className="bcc-hero-copy"
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: 'easeOut' }}
-        >
-          <span className="bcc-kicker">
-            <Building2 size={16} aria-hidden="true" />
-            Building Creators & Consulting
-          </span>
-
-          <h1>Engineering clarity for buildings that have to last.</h1>
-
-          <p>
-            BCC brings architecture, structural engineering, testing, survey and
-            project supervision into one accountable consulting team.
-          </p>
-
-          <div className="bcc-hero-actions">
-            <Link to="/contact" className="bcc-btn bcc-btn-primary">
-              Start a Project
-              <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-            <a href="tel:+918057540906" className="bcc-btn bcc-btn-ghost">
-              <Phone size={17} aria-hidden="true" />
-              +91 80575 40906
-            </a>
-          </div>
-        </motion.div>
-
-        <motion.aside
-          className="bcc-hero-panel"
-          initial={{ opacity: 0, x: 28 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.18, duration: 0.55, ease: 'easeOut' }}
-          aria-label="BCC highlights"
-        >
-          <div className="bcc-panel-head">
-            <span>01</span>
-            <p>Integrated project consultancy</p>
-          </div>
-
-          <div className="bcc-panel-grid">
-            {heroStats.map((item) => (
-              <div className="bcc-stat" key={item.label}>
-                <strong>{item.value}</strong>
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="bcc-capability-list" role="list">
-            {capabilities.map((item) => (
-              <div role="listitem" key={item}>
-                <CheckCircle2 size={16} aria-hidden="true" />
-                {item}
-              </div>
-            ))}
-          </div>
-
-          <div className="bcc-panel-footer">
-            <div>
-              <Ruler size={20} aria-hidden="true" />
-              <span>Design to execution support</span>
-            </div>
-            <div>
-              <ClipboardCheck size={20} aria-hidden="true" />
-              <span>Quality controlled delivery</span>
-            </div>
-          </div>
-        </motion.aside>
-      </div>
->>>>>>> d315c3a (update navigation and founder experiance)
-    </section>
+      </section>
   );
 }
