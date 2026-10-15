@@ -54,7 +54,6 @@ html {
 }
 
 body {
-  padding-top: var(--navbar-height);
   background-color: #f6f4ef;
   color: var(--color-gray-700);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -821,10 +820,6 @@ footer a.text-white-50:hover {
 }
 
 @media (max-width: 767.98px) {
-  body {
-    padding-top: 64px;
-  }
-
   .contact-hero {
     min-height: 320px;
   }

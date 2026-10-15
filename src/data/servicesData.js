@@ -15,6 +15,10 @@ import {
   Sprout,
 } from "lucide-react";
 
+// Unsplash image helper
+const img = (id) =>
+  `https://images.unsplash.com/${id}?q=80&w=1400&auto=format&fit=crop`;
+
 export const services = [
   {
     id: 1,
@@ -22,7 +26,8 @@ export const services = [
     name: "Architecture Work",
     shortDesc: "Innovative architectural design for residential & commercial spaces",
     desc: "Professional architectural planning and design services for residential, commercial, and industrial projects.",
-    image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1400&auto=format&fit=crop",
+    // Modern building / architecture
+    image: img("photo-1487958449943-2429e8be8625"),
     icon: Landmark,
     category: "Design",
     features: [
@@ -44,7 +49,8 @@ export const services = [
     name: "Structure Design",
     shortDesc: "Safe, durable, and cost-effective structural engineering",
     desc: "Comprehensive structural design services for all types of buildings and infrastructure.",
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1400&auto=format&fit=crop",
+    // Building under construction / structural frame
+    image: img("photo-1503387762-592deb58ef4e"),
     icon: Building2,
     category: "Engineering",
     features: [
@@ -66,7 +72,8 @@ export const services = [
     name: "Interior Design",
     shortDesc: "Beautiful, functional interior spaces",
     desc: "Complete interior design solutions for homes, offices, and commercial spaces.",
-    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1400&auto=format&fit=crop",
+    // Designed living room interior
+    image: img("photo-1618221195710-dd6b41faaea6"),
     icon: Sofa,
     category: "Design",
     features: [
@@ -88,7 +95,8 @@ export const services = [
     name: "Soil Investigation & Geotechnical Work",
     shortDesc: "Precise soil testing for strong foundations",
     desc: "Comprehensive geotechnical investigation and soil testing services.",
-    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1400&auto=format&fit=crop",
+    // Soil / earth
+    image: img("photo-1560493676-04071c5f467b"),
     icon: Globe,
     category: "Testing",
     features: [
@@ -110,7 +118,9 @@ export const services = [
     name: "Non Destructive Testing (NDT)",
     shortDesc: "Advanced testing without structural damage",
     desc: "Non-destructive testing services for quality assessment of structures.",
-    image: "https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?q=80&w=1400&auto=format&fit=crop",
+    // TODO: yahan apni NDT (rebound hammer / UPV) ki building ya bridge par photo lagayein
+    // e.g. image: "/images/services/ndt-testing.jpg",
+    image: img("photo-1581094794329-c8112a89af12"),
     icon: Microscope,
     category: "Testing",
     features: [
@@ -132,7 +142,9 @@ export const services = [
     name: "Material Testing",
     shortDesc: "Comprehensive construction material testing",
     desc: "Quality testing for all construction materials.",
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1400&auto=format&fit=crop",
+    // TODO: yahan apni concrete cube testing / CTM machine ki photo lagayein
+    // e.g. image: "/images/services/material-testing.jpg",
+    image: img("photo-1532187863486-abf9dbad1b69"),
     icon: FlaskConical,
     category: "Testing",
     features: [
@@ -154,7 +166,8 @@ export const services = [
     name: "Third Party Inspection (Quality Control)",
     shortDesc: "Independent quality assurance services",
     desc: "Independent quality inspection and quality control services.",
-    image: "https://images.unsplash.com/photo-1581092335871-4f2e5f9c7a9a?q=80&w=1400&auto=format&fit=crop",
+    // Inspector at construction site
+    image: img("photo-1504307651254-35680f356dfd"),
     icon: BadgeCheck,
     category: "Inspection",
     features: [
@@ -176,7 +189,8 @@ export const services = [
     name: "Survey Work",
     shortDesc: "Precise land and construction surveying",
     desc: "Comprehensive surveying services for various applications.",
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1400&auto=format&fit=crop",
+    // Surveyor using theodolite / total station on site - verified Pexels photo
+    image: "https://images.pexels.com/photos/30379884/pexels-photo-30379884.jpeg?auto=compress&cs=tinysrgb&w=1400",
     icon: Ruler,
     category: "Survey",
     features: [
@@ -200,7 +214,8 @@ export const services = [
     name: "Supervision Consultant",
     shortDesc: "Expert project supervision and management",
     desc: "Professional supervision and project management consultancy.",
-    image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=1400&auto=format&fit=crop",
+    // Engineers with hard hats on site
+    image: img("photo-1504917595217-d4dc5ebe6122"),
     icon: HardHat,
     category: "Consultancy",
     features: [
@@ -222,7 +237,8 @@ export const services = [
     name: "Bridge Design",
     shortDesc: "Specialized bridge engineering and design",
     desc: "Expert bridge design and engineering services.",
-    image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1400&auto=format&fit=crop",
+    // Cable-stayed bridge (Arthur Ravenel Jr. Bridge) - verified Unsplash photo
+    image: img("photo-1533852990198-bdd4082bf8c0"),
     icon: Landmark,
     category: "Engineering",
     features: [
@@ -244,7 +260,8 @@ export const services = [
     name: "Water Supply Design",
     shortDesc: "Efficient water distribution systems",
     desc: "Complete water supply system design and planning.",
-    image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=1400&auto=format&fit=crop",
+    // Water
+    image: img("photo-1538300342682-cf57afb97285"),
     icon: Droplets,
     category: "Infrastructure",
     features: [
@@ -266,7 +283,8 @@ export const services = [
     name: "Irrigation Design Work",
     shortDesc: "Sustainable irrigation solutions",
     desc: "Comprehensive irrigation system design for agriculture.",
-    image: "https://images.unsplash.com/photo-1589923188654-7d8f3b8b15a7?q=80&w=1400&auto=format&fit=crop",
+    // Green farmland
+    image: img("photo-1500382017468-9049fed747ef"),
     icon: Sprout,
     category: "Infrastructure",
     features: [
@@ -288,7 +306,8 @@ export const services = [
     name: "Plate Load Test",
     shortDesc: "Accurate bearing capacity assessment",
     desc: "On-site plate load testing for foundation design.",
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1400&auto=format&fit=crop",
+    // Excavation / foundation work
+    image: img("photo-1580901368919-7738efb0f87e"),
     icon: Scale,
     category: "Testing",
     features: [
@@ -310,7 +329,8 @@ export const services = [
     name: "Estimation & Consultancy",
     shortDesc: "Accurate cost estimation and expert advice",
     desc: "Professional estimation and consultancy services.",
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1400&auto=format&fit=crop",
+    // Planning / costing at desk
+    image: img("photo-1454165804606-c3d57bc86b40"),
     icon: BarChart3,
     category: "Consultancy",
     features: [
