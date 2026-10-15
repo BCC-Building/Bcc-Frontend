@@ -1,6 +1,7 @@
 // src/components/home/Hero.jsx
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+<<<<<<< HEAD
 import { useEffect, useState, useMemo } from 'react';
 import { BadgeCheck, Building2, HardHat } from 'lucide-react';
 
@@ -11,8 +12,19 @@ const HERO_IMAGES = [
   'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1800&q=85',
   'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85',
 ];
+=======
+import { ArrowRight, Building2, CheckCircle2, ClipboardCheck, Phone, Ruler } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+>>>>>>> origin/main
 
-function AnimatedCounter({ target, suffix, duration = 1500 }) {
+const heroStats = [
+  { value: '1200+', label: 'Projects completed' },
+  { value: '10+', label: 'States served' },
+  { value: '09+', label: 'Years of delivery' },
+];
+
+
+function AnimatedCounter({ target, suffix = '', duration = 1200 }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -44,6 +56,7 @@ function AnimatedCounter({ target, suffix, duration = 1500 }) {
     </h3>
   );
 }
+
 
 function TypingText({ texts, typeSpeed = 60, pauseDuration = 2000 }) {
   const [index, setIndex] = useState(0);
@@ -101,7 +114,11 @@ function StatCard({ stats }) {
       }}
     >
       <div className="text-center mb-3">
+<<<<<<< HEAD
         <Building2 size={44} strokeWidth={1.6} aria-hidden="true" />
+=======
+        <Building2 className="text-white mx-auto" size={48} aria-hidden="true" />
+>>>>>>> origin/main
       </div>
       <h2 className="h5 text-white mb-3 text-center fw-bold">
         Trusted by Leading Clients
@@ -197,8 +214,13 @@ export default function Hero() {
   const heroStats = useMemo(
     () => [
       { value: 1200, suffix: '+', label: 'Projects Completed', icon: Building2 },
+<<<<<<< HEAD
       { value: 40,   suffix: '+', label: 'Expert Engineers',   icon: HardHat },
       { value: 100,  suffix: '%', label: 'Client Satisfaction', icon: BadgeCheck },
+=======
+      { value: 40,   suffix: '+', label: 'Expert Engineers',   icon: Ruler },
+      { value: 100,  suffix: '%', label: 'Client Satisfaction', icon: CheckCircle2 },
+>>>>>>> origin/main
     ],
     []
   );
@@ -360,7 +382,11 @@ export default function Hero() {
                   transition={{ delay: 0.8 + i * 0.15 }}
                 >
                   <div className="d-flex align-items-center gap-2 mb-1">
+<<<<<<< HEAD
                     <item.icon size={20} strokeWidth={1.8} aria-hidden="true" />
+=======
+                    <item.icon size={20} aria-hidden="true" />
+>>>>>>> origin/main
                     <AnimatedCounter target={item.value} suffix={item.suffix} />
                   </div>
                   <small
@@ -396,6 +422,6 @@ export default function Hero() {
           border-color: rgba(122, 183, 239, 0.5);
         }
       `}</style>
-    </section>
+      </section>
   );
 }

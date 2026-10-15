@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 import { Award, ArrowRight, Check } from 'lucide-react';
+=======
+import { Award, Check } from 'lucide-react';
+>>>>>>> origin/main
 
 const ServiceDetailTabs = ({ service }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -47,10 +51,14 @@ const ServiceDetailTabs = ({ service }) => {
         {activeTab === 'features' && (
           <ul className="features-list">
             {service.features.map((feature, idx) => (
+<<<<<<< HEAD
               <li key={idx}>
                 <Check size={15} className="inline-block mr-2 text-emerald-600" aria-hidden="true" />
                 {feature}
               </li>
+=======
+              <li key={idx}><Check size={15} aria-hidden="true" /> {feature}</li>
+>>>>>>> origin/main
             ))}
           </ul>
         )}
@@ -66,10 +74,14 @@ const ServiceDetailTabs = ({ service }) => {
               <div className="certifications">
                 <h3>Certifications</h3>
                 {service.certifications.map((cert, idx) => (
+<<<<<<< HEAD
                   <p key={idx}>
                     <Award size={16} className="inline-block mr-2 text-amber-500" aria-hidden="true" />
                     {cert}
                   </p>
+=======
+                  <p key={idx}><Award size={15} aria-hidden="true" /> {cert}</p>
+>>>>>>> origin/main
                 ))}
               </div>
             )}

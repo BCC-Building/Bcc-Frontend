@@ -1,10 +1,14 @@
 // src/components/Projects.jsx
-// ✅ Production-Ready | Senior Developer Approved
+// Production-ready project listing.
 
 import { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaTimes } from 'react-icons/fa';
+<<<<<<< HEAD
 import { AlertTriangle, FolderSearch } from 'lucide-react';
+=======
+import { AlertTriangle } from 'lucide-react';
+>>>>>>> origin/main
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import ErrorBoundary from './ErrorBoundary';
@@ -328,7 +332,7 @@ export default function Projects() {
         const res = await publicAPI.getProjects();
         console.log('📡 API Response:', res);
         
-        // ✅ Handle multiple response structures
+        // Handle multiple response structures.
         let projectsData = [];
         if (res.data?.success && Array.isArray(res.data.data)) {
           projectsData = res.data.data;
@@ -343,9 +347,9 @@ export default function Projects() {
         }
         
         setProjects(projectsData);
-        console.log(`✅ ${projectsData.length} projects loaded`);
+        console.log(`${projectsData.length} projects loaded`);
       } catch (e) {
-        console.error('❌', e);
+        console.error('Projects request failed:', e);
         setApiError('Failed to load projects. Please try again.');
       } finally {
         setIsLoading(false);
@@ -453,7 +457,11 @@ export default function Projects() {
 
           {!isLoading && apiError && (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
+<<<<<<< HEAD
               <AlertTriangle size={44} strokeWidth={1.5} className="mx-auto mb-4 text-amber-500" aria-hidden="true" />
+=======
+              <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-amber-500" aria-hidden="true" />
+>>>>>>> origin/main
               <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
               <p className="text-gray-500 mb-6">{apiError}</p>
               <button

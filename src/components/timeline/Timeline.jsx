@@ -16,9 +16,13 @@ const Timeline = () => {
             whileHover={{ scale: 1.1 }}
           >
             <div className="timeline-year">{item.year}</div>
+<<<<<<< HEAD
             <div className="timeline-icon">
               <item.icon size={22} strokeWidth={1.8} aria-hidden="true" />
             </div>
+=======
+            <div className="timeline-icon"><item.icon aria-hidden="true" /></div>
+>>>>>>> origin/main
           </motion.div>
         ))}
       </div>

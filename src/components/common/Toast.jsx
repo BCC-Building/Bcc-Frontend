@@ -36,7 +36,11 @@ export function ToastProvider({ children }) {
             }`}
           >
             <span className="flex-1">{toast.message}</span>
+<<<<<<< HEAD
             <button onClick={() => removeToast(toast.id)} className="text-white hover:opacity-80" aria-label="Dismiss notification">
+=======
+            <button onClick={() => removeToast(toast.id)} className="text-white hover:opacity-80">
+>>>>>>> origin/main
               <X size={16} aria-hidden="true" />
             </button>
           </div>

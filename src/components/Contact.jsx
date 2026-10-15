@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
+<<<<<<< HEAD
 import { CircleCheck, CircleX, Phone } from 'lucide-react';
 import { publicAPI } from '../api/endpoints'; // 👈 ADD THIS IMPORT
+=======
+import { publicAPI } from '../api/endpoints';
+>>>>>>> origin/main
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -129,7 +133,12 @@ export default function Contact() {
                   className="btn btn-light px-4"
                   aria-label="Call us at +91 8057540906"
                 >
+<<<<<<< HEAD
                   <Phone size={16} className="mr-2" aria-hidden="true" />Call Now
+=======
+                  <i className="bi bi-telephone-fill me-2" aria-hidden="true" />
+                  Call Now
+>>>>>>> origin/main
                 </a>
                 <a 
                   href="#contact-form" 
@@ -221,7 +230,10 @@ export default function Contact() {
               {/* SUCCESS MESSAGE - UPDATED */}
               {submitted && (
                 <div className="alert alert-success" role="alert">
+<<<<<<< HEAD
                   <CircleCheck size={18} className="mr-2" aria-hidden="true" />
+=======
+>>>>>>> origin/main
                   Thank you! Your message has been received. We'll get back to you soon.
                 </div>
               )}
@@ -229,7 +241,10 @@ export default function Contact() {
               {/* ERROR MESSAGE - NEW */}
               {error && (
                 <div className="alert alert-danger" role="alert">
+<<<<<<< HEAD
                   <CircleX size={18} className="mr-2" aria-hidden="true" />
+=======
+>>>>>>> origin/main
                   {error}
                 </div>
               )}

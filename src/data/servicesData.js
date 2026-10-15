@@ -1,4 +1,5 @@
 // src/data/servicesData.js
+<<<<<<< HEAD
 import {
   BadgeCheck,
   BarChart3,
@@ -14,6 +15,9 @@ import {
   Sofa,
   Sprout,
 } from "lucide-react";
+=======
+import { FaBalanceScale, FaBuilding, FaChartBar, FaCheckCircle, FaGlobe, FaHardHat, FaCouch, FaUserTie, FaFlask, FaVial, FaRuler, FaTint, FaLeaf } from 'react-icons/fa';
+>>>>>>> origin/main
 
 export const services = [
   {
@@ -23,7 +27,11 @@ export const services = [
     shortDesc: "Innovative architectural design for residential & commercial spaces",
     desc: "Professional architectural planning and design services for residential, commercial, and industrial projects.",
     image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Landmark,
+=======
+    icon: FaBuilding,
+>>>>>>> origin/main
     category: "Design",
     features: [
       "2D & 3D Architectural Planning",
@@ -45,7 +53,11 @@ export const services = [
     shortDesc: "Safe, durable, and cost-effective structural engineering",
     desc: "Comprehensive structural design services for all types of buildings and infrastructure.",
     image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Building2,
+=======
+    icon: FaHardHat,
+>>>>>>> origin/main
     category: "Engineering",
     features: [
       "Seismic & Wind Load Analysis",
@@ -67,7 +79,11 @@ export const services = [
     shortDesc: "Beautiful, functional interior spaces",
     desc: "Complete interior design solutions for homes, offices, and commercial spaces.",
     image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Sofa,
+=======
+    icon: FaCouch,
+>>>>>>> origin/main
     category: "Design",
     features: [
       "Space Planning & Layout",
@@ -89,7 +105,11 @@ export const services = [
     shortDesc: "Precise soil testing for strong foundations",
     desc: "Comprehensive geotechnical investigation and soil testing services.",
     image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Globe,
+=======
+    icon: FaGlobe,
+>>>>>>> origin/main
     category: "Testing",
     features: [
       "Standard Penetration Test (SPT)",
@@ -111,7 +131,11 @@ export const services = [
     shortDesc: "Advanced testing without structural damage",
     desc: "Non-destructive testing services for quality assessment of structures.",
     image: "https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Microscope,
+=======
+    icon: FaFlask,
+>>>>>>> origin/main
     category: "Testing",
     features: [
       "Ultrasonic Pulse Velocity Test",
@@ -133,7 +157,11 @@ export const services = [
     shortDesc: "Comprehensive construction material testing",
     desc: "Quality testing for all construction materials.",
     image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: FlaskConical,
+=======
+    icon: FaVial,
+>>>>>>> origin/main
     category: "Testing",
     features: [
       "Concrete Testing (Cube, Cylinder, Core)",
@@ -155,7 +183,11 @@ export const services = [
     shortDesc: "Independent quality assurance services",
     desc: "Independent quality inspection and quality control services.",
     image: "https://images.unsplash.com/photo-1581092335871-4f2e5f9c7a9a?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: BadgeCheck,
+=======
+    icon: FaCheckCircle,
+>>>>>>> origin/main
     category: "Inspection",
     features: [
       "Quality Control Monitoring",
@@ -177,7 +209,11 @@ export const services = [
     shortDesc: "Precise land and construction surveying",
     desc: "Comprehensive surveying services for various applications.",
     image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Ruler,
+=======
+    icon: FaRuler,
+>>>>>>> origin/main
     category: "Survey",
     features: [
       "Topographical Survey",
@@ -201,7 +237,11 @@ export const services = [
     shortDesc: "Expert project supervision and management",
     desc: "Professional supervision and project management consultancy.",
     image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: HardHat,
+=======
+    icon: FaUserTie,
+>>>>>>> origin/main
     category: "Consultancy",
     features: [
       "Site Supervision",
@@ -223,7 +263,11 @@ export const services = [
     shortDesc: "Specialized bridge engineering and design",
     desc: "Expert bridge design and engineering services.",
     image: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Landmark,
+=======
+    icon: FaBuilding,
+>>>>>>> origin/main
     category: "Engineering",
     features: [
       "RCC Bridge Design",
@@ -245,7 +289,11 @@ export const services = [
     shortDesc: "Efficient water distribution systems",
     desc: "Complete water supply system design and planning.",
     image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Droplets,
+=======
+    icon: FaTint,
+>>>>>>> origin/main
     category: "Infrastructure",
     features: [
       "Water Demand Calculation",
@@ -267,7 +315,11 @@ export const services = [
     shortDesc: "Sustainable irrigation solutions",
     desc: "Comprehensive irrigation system design for agriculture.",
     image: "https://images.unsplash.com/photo-1589923188654-7d8f3b8b15a7?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Sprout,
+=======
+    icon: FaLeaf,
+>>>>>>> origin/main
     category: "Infrastructure",
     features: [
       "Canal Design",
@@ -289,7 +341,11 @@ export const services = [
     shortDesc: "Accurate bearing capacity assessment",
     desc: "On-site plate load testing for foundation design.",
     image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: Scale,
+=======
+    icon: FaBalanceScale,
+>>>>>>> origin/main
     category: "Testing",
     features: [
       "Static Plate Load Test",
@@ -311,7 +367,11 @@ export const services = [
     shortDesc: "Accurate cost estimation and expert advice",
     desc: "Professional estimation and consultancy services.",
     image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1400&auto=format&fit=crop",
+<<<<<<< HEAD
     icon: BarChart3,
+=======
+    icon: FaChartBar,
+>>>>>>> origin/main
     category: "Consultancy",
     features: [
       "Detailed Project Estimation",

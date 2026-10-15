@@ -1,5 +1,5 @@
 // src/components/ProjectsPreview.jsx
-// ✅ Arrows + Dots ek saath neeche (Option 1)
+// Arrows and dots share the same navigation row.
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
@@ -297,7 +297,7 @@ export default function ProjectsPreview() {
           ))}
         </div>
 
-        {/* ✅ Navigation: Arrows + Dots Ek Saath Neeche */}
+        {/* Navigation: arrows and dots share the same row. */}
         <Navigation
           total={projects.length}
           current={currentIndex}
@@ -318,5 +318,108 @@ export default function ProjectsPreview() {
         </div>
       </div>
     </section>
+  );
+}
+
+function PreviewCard({ project, index }) {
+  const [imgSrc,  setImgSrc]  = useState(getImageUrl(project.coverImageUrl) || FALLBACK);
+  const [hovered, setHovered] = useState(false);
+  const sc = StatusColors[project.status] || { bg: '#f1f5f9', color: '#475569' };
+
+  return (
+    <Link
+      to="/projects"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'block', textDecoration: 'none',
+        borderRadius: 6, overflow: 'hidden',
+        background: '#fff',
+        border: '1px solid #e5e0d7',
+        transition: 'transform .28s ease, box-shadow .28s ease',
+        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
+        boxShadow: hovered ? '0 22px 46px rgba(17,24,39,.14)' : '0 2px 12px rgba(17,24,39,.06)',
+        animation: 'bcc-fadeup .5s ease both',
+        animationDelay: `${index * 0.1}s`,
+      }}
+    >
+      {/* image */}
+      <div style={{ position: 'relative', height: 210, overflow: 'hidden' }}>
+        <img
+          src={imgSrc}
+          alt={project.title}
+          onError={() => setImgSrc(FALLBACK)}
+          loading="lazy"
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover',
+            transition: 'transform .45s ease',
+            transform: hovered ? 'scale(1.07)' : 'scale(1)',
+            display: 'block',
+          }}
+        />
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to top,rgba(10,15,30,.55) 0%,transparent 60%)',
+          opacity: hovered ? 1 : 0, transition: 'opacity .28s ease',
+        }} />
+        {/* type badge */}
+        {project.projectType && (
+          <div style={{
+            position: 'absolute', top: 12, left: 12,
+            background: 'rgba(255,255,255,.92)',
+            backdropFilter: 'blur(4px)',
+            padding: '3px 10px', borderRadius: 20,
+            fontSize: 10, fontWeight: 700,
+            color: '#0f172a', textTransform: 'uppercase', letterSpacing: '.4px',
+          }}>{project.projectType}</div>
+        )}
+        {/* status */}
+        {project.status && (
+          <div style={{
+            position: 'absolute', top: 12, right: 12,
+            background: sc.bg, color: sc.color,
+            padding: '3px 10px', borderRadius: 20,
+            fontSize: 10, fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '.4px',
+          }}>{project.status}</div>
+        )}
+      </div>
+
+      {/* body */}
+      <div style={{ padding: '16px 18px 18px' }}>
+        <h3 style={{
+          margin: '0 0 6px', fontSize: 15, fontWeight: 700,
+          color: '#0f172a', lineHeight: 1.35,
+          display: '-webkit-box', WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>{project.title}</h3>
+
+        {(project.location || project.clientName) && (
+          <p style={{ margin: '0 0 8px', fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                stroke="currentColor" strokeWidth="2" fill="none"/>
+              <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none"/>
+            </svg>
+            {project.location || project.clientName}
+          </p>
+        )}
+
+        <p style={{
+          margin: 0, fontSize: 13, color: '#64748b', lineHeight: 1.6,
+          display: '-webkit-box', WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>
+          {project.description || 'Professional construction project delivered with quality and precision.'}
+        </p>
+
+        <div style={{
+            marginTop: 14, height: 2, borderRadius: 2,
+          background: 'linear-gradient(90deg,#c9a84c,#111827)',
+          width: hovered ? '100%' : '28px',
+          transition: 'width .35s ease',
+        }} />
+      </div>
+    </Link>
   );
 }

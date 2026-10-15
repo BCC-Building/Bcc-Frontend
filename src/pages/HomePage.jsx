@@ -38,8 +38,6 @@ export default function HomePage() {
         {/* 2. Recent Projects Preview */}
         <ProjectsPreview />
 
-        
-
         {/* 3. Featured Services */}
         <ServicesPreview />
   
