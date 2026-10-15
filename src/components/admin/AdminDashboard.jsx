@@ -1,6 +1,5 @@
 // src/components/admin/AdminDashboard.jsx
 import { useState } from 'react';
-<<<<<<< HEAD
 import {
   BriefcaseBusiness,
   ClipboardList,
@@ -11,9 +10,6 @@ import {
   Mail,
   Users,
 } from 'lucide-react';
-=======
-import { BriefcaseBusiness, ClipboardList, FileText, FolderKanban, Images, Mail, Users } from 'lucide-react';
->>>>>>> origin/main
 import { useAuth } from '../../hooks/useAuth';
 import AdminProjects from './AdminProjects';
 import AdminBlogs from './AdminBlogs';
@@ -92,11 +88,7 @@ export default function AdminDashboard() {
                   : 'text-gray-300 hover:bg-white/5 hover:text-white'
               }`}
             >
-<<<<<<< HEAD
               <tab.icon size={19} strokeWidth={1.8} aria-hidden="true" />
-=======
-              <tab.icon className="h-5 w-5" aria-hidden="true" />
->>>>>>> origin/main
               <span>{tab.label}</span>
               {activeTab === tab.key && (
                 <span className="ml-auto w-2 h-2 rounded-full bg-white animate-pulse" />

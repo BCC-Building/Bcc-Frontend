@@ -105,10 +105,7 @@ export default function AdminRegister() {
         {/* Success Message */}
         {successMessage && (
           <div className="bg-green-50 text-green-700 p-3 rounded-lg mb-4 text-sm" role="status">
-<<<<<<< HEAD
             <CircleCheck size={16} className="inline-block mr-1" aria-hidden="true" />
-=======
->>>>>>> origin/main
             {successMessage}
           </div>
         )}

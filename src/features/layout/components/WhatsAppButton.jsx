@@ -1,11 +1,7 @@
 // src/components/WhatsAppButton.jsx - Production-Ready Enhanced Version
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-<<<<<<< HEAD
 import { ArrowRight, CircleAlert, Clock3, HardHat, MessageCircle, Wrench } from 'lucide-react';
-=======
-import { HardHat, Wrench, MessageCircle, Siren } from 'lucide-react';
->>>>>>> origin/main
 
 // ==================== CONFIGURATION ====================
 
@@ -50,11 +46,7 @@ const WHATSAPP_CONFIG = {
       name: 'Emergency Support',
       number: '9411311544',
       message: 'URGENT: Need immediate assistance!',
-<<<<<<< HEAD
       icon: CircleAlert,
-=======
-      icon: Siren,
->>>>>>> origin/main
       role: 'Emergency Response',
       available: '24/7',
       responseTime: 'Immediate',
@@ -244,13 +236,8 @@ const MultiContactMenu = ({ contacts, trackEvent }) => {
                   <button key={contact.id} onClick={() => handleContactClick(contact)}
                     className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0 text-left"
                     aria-label={`Chat with ${contact.name} on WhatsApp`}>
-<<<<<<< HEAD
                     <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${contact.urgent ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`} aria-hidden="true">
                       <contact.icon size={21} strokeWidth={1.8} />
-=======
-                    <div className={`w-11 h-11 rounded-full flex items-center justify-center text-xl flex-shrink-0 ${contact.urgent ? 'bg-red-100' : 'bg-green-100'}`} aria-hidden="true">
-                      <contact.icon size={18} aria-hidden="true" />
->>>>>>> origin/main
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-gray-800 flex items-center gap-2">

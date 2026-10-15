@@ -70,11 +70,7 @@ export default function ServiceDetail() {
             <div className="service-detail-content">
               {/* Icon */}
               <div className="service-icon-large" aria-hidden="true">
-<<<<<<< HEAD
                 <ServiceIcon size={34} strokeWidth={1.7} />
-=======
-                <service.icon aria-hidden="true" />
->>>>>>> origin/main
               </div>
 
               {/* Title */}

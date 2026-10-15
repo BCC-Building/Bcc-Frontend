@@ -47,11 +47,7 @@ const ServiceCard = ({
         />
         <div className="absolute top-4 right-4">
           <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
-<<<<<<< HEAD
             <service.icon size={22} strokeWidth={1.8} className="text-blue-700" aria-hidden="true" />
-=======
-            <ServiceIcon className="text-2xl" aria-hidden="true" />
->>>>>>> origin/main
           </div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">

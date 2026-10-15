@@ -6,11 +6,7 @@ import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import BlogHero from '../components/blog/BlogHero';
-<<<<<<< HEAD
 import { AlertTriangle, Bookmark, CircleCheck, Heart, Inbox, Search, Share2 } from 'lucide-react';
-=======
-import { AlertTriangle, Bookmark, Heart, Inbox } from 'lucide-react';
->>>>>>> origin/main
 
 // --- constants ----------------------------------------------------------------
 const CATEGORIES = ['All', 'Architecture', 'Design', 'Business', 'Soil Testing', 'Survey', 'Construction', 'Engineering'];
@@ -317,22 +313,14 @@ const BlogDetail = ({ post, onBack }) => {
             aria-label={liked ? 'Unlike article' : 'Like article'}
             className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-center text-base"
           >
-<<<<<<< HEAD
             <Heart size={17} className={liked ? 'text-rose-600' : 'text-gray-500'} fill={liked ? 'currentColor' : 'none'} aria-hidden="true" />
-=======
-            <Heart size={16} fill={liked ? 'currentColor' : 'none'} aria-hidden="true" />
->>>>>>> origin/main
           </button>
           <button
             onClick={() => setBookmarked(!bookmarked)}
             aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark article'}
             className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-center text-base"
           >
-<<<<<<< HEAD
             <Bookmark size={17} className={bookmarked ? 'text-blue-600' : 'text-gray-500'} fill={bookmarked ? 'currentColor' : 'none'} aria-hidden="true" />
-=======
-            <Bookmark size={16} fill={bookmarked ? 'currentColor' : 'none'} aria-hidden="true" />
->>>>>>> origin/main
           </button>
           <button
             onClick={() => setShareOpen(!shareOpen)}
@@ -544,11 +532,7 @@ export default function BlogPage() {
                   {/* Error */}
                   {!loading && apiError && (
                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-<<<<<<< HEAD
                       <AlertTriangle size={44} strokeWidth={1.5} className="mx-auto mb-4 text-amber-500" aria-hidden="true" />
-=======
-                      <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-amber-500" aria-hidden="true" />
->>>>>>> origin/main
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
                       <p className="text-gray-500 mb-6">{apiError}</p>
                       <button
@@ -563,11 +547,7 @@ export default function BlogPage() {
                   {/* No Results */}
                   {!loading && !apiError && filtered.length === 0 && (
                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-<<<<<<< HEAD
                       <Inbox size={44} strokeWidth={1.5} className="mx-auto mb-4 text-gray-400" aria-hidden="true" />
-=======
-                      <Inbox className="mx-auto mb-4 h-12 w-12 text-gray-400" aria-hidden="true" />
->>>>>>> origin/main
                       <h3 className="text-xl font-bold text-gray-900 mb-2">No Articles Found</h3>
                       <p className="text-gray-500 mb-6">
                         {search ? `No results for "${search}".` : 'No articles in this category yet.'}

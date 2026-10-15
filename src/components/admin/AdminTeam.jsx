@@ -297,15 +297,11 @@ export default function AdminTeam() {
                   <td className="p-3 font-medium">{member.name}</td>
                   <td className="p-3">{member.designation}</td>
                   <td className="p-3">{member.department}</td>
-<<<<<<< HEAD
                   <td className="p-3">
                     {member.isActive
                       ? <span className="inline-flex items-center gap-1 text-emerald-700"><CircleCheck size={16} aria-hidden="true" />Active</span>
                       : <span className="inline-flex items-center gap-1 text-gray-500"><CircleX size={16} aria-hidden="true" />Inactive</span>}
                   </td>
-=======
-                  <td className="p-3">{member.isActive ? 'Active' : 'Inactive'}</td>
->>>>>>> origin/main
                   <td className="p-3 flex gap-2">
                     <button onClick={() => handleEdit(member)} className="text-blue-600 hover:underline">Edit</button>
                     <button onClick={() => handleDelete(member.id)} className="text-red-600 hover:underline">Delete</button>

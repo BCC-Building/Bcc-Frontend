@@ -313,12 +313,7 @@ export default function FAQPage() {
                 href="tel:+918057540906"
                 className="inline-block bg-blue-500 text-white px-7 py-3 rounded-lg font-semibold border border-blue-400 hover:bg-blue-600 transition"
               >
-<<<<<<< HEAD
                 <Phone size={16} className="mr-2" aria-hidden="true" />Call Now
-=======
-                <Phone size={16} className="me-2" aria-hidden="true" />
-                Call Now
->>>>>>> origin/main
               </a>
             </div>
           </motion.div>
