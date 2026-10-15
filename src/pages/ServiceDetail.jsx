@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { services } from "../data/servicesData.js";
 import ServiceDetailTabs from '../components/services/ServiceDetailTabs';
-
+import { Search } from 'lucide-react';
 
 
 export default function ServiceDetail() {
@@ -24,7 +24,7 @@ export default function ServiceDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center py-24 px-4 max-w-md">
-          <div className="text-6xl mb-6">🔍</div>
+          <Search size={48} strokeWidth={1.5} className="mx-auto mb-6 text-gray-400" aria-hidden="true" />
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
             Service Not Found
           </h1>
@@ -41,6 +41,8 @@ export default function ServiceDetail() {
       </div>
     );
   }
+
+  const ServiceIcon = service.icon;
 
   // ==================== RENDER ====================
   return (
@@ -68,7 +70,7 @@ export default function ServiceDetail() {
             <div className="service-detail-content">
               {/* Icon */}
               <div className="service-icon-large" aria-hidden="true">
-                {service.icon}
+                <ServiceIcon size={34} strokeWidth={1.7} />
               </div>
 
               {/* Title */}

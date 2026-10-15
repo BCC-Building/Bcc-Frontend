@@ -1,4 +1,5 @@
 import { categories } from '../../data/servicesData';
+import { X } from 'lucide-react';
 
 const ServiceFilter = ({ selectedCategory, setSelectedCategory, searchTerm, setSearchTerm, services }) => {
   return (
@@ -9,7 +10,7 @@ const ServiceFilter = ({ selectedCategory, setSelectedCategory, searchTerm, setS
           <div className="relative">
             <input 
               type="text" 
-              placeholder="🔍 Search services by name, category, or keyword..." 
+              placeholder="Search services by name, category, or keyword..."
               className="w-full px-5 py-3 pl-12 rounded-full border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -21,8 +22,9 @@ const ServiceFilter = ({ selectedCategory, setSelectedCategory, searchTerm, setS
               <button 
                 onClick={() => setSearchTerm("")}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                aria-label="Clear service search"
               >
-                ✕
+                <X size={16} aria-hidden="true" />
               </button>
             )}
           </div>

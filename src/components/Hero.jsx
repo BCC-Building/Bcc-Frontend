@@ -2,6 +2,15 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useEffect, useState, useMemo } from 'react';
+import { BadgeCheck, Building2, HardHat } from 'lucide-react';
+
+const HERO_IMAGES = [
+  'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=85',
+  'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=85',
+  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1800&q=85',
+  'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1800&q=85',
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85',
+];
 
 function AnimatedCounter({ target, suffix, duration = 1500 }) {
   const [count, setCount] = useState(0);
@@ -92,9 +101,7 @@ function StatCard({ stats }) {
       }}
     >
       <div className="text-center mb-3">
-        <span style={{ fontSize: '3rem' }} role="img" aria-label="building">
-          🏢
-        </span>
+        <Building2 size={44} strokeWidth={1.6} aria-hidden="true" />
       </div>
       <h2 className="h5 text-white mb-3 text-center fw-bold">
         Trusted by Leading Clients
@@ -168,6 +175,16 @@ function StatCard({ stats }) {
 }
 
 export default function Hero() {
+  const [activeImage, setActiveImage] = useState(0);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveImage((currentImage) => (currentImage + 1) % HERO_IMAGES.length);
+    }, 3000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
   const taglines = useMemo(
     () => [
       "Engineering Excellence",
@@ -179,9 +196,9 @@ export default function Hero() {
 
   const heroStats = useMemo(
     () => [
-      { value: 1200, suffix: '+', label: 'Projects Completed', icon: '🏗️' },
-      { value: 40,   suffix: '+', label: 'Expert Engineers',   icon: '👷' },
-      { value: 100,  suffix: '%', label: 'Client Satisfaction', icon: '⭐' },
+      { value: 1200, suffix: '+', label: 'Projects Completed', icon: Building2 },
+      { value: 40,   suffix: '+', label: 'Expert Engineers',   icon: HardHat },
+      { value: 100,  suffix: '%', label: 'Client Satisfaction', icon: BadgeCheck },
     ],
     []
   );
@@ -195,24 +212,30 @@ export default function Hero() {
       }}
       aria-label="Hero section"
     >
-      {/* Background image */}
-      <img
-        src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=90"
-        alt="Construction site with engineers"
-        fetchPriority="high"
-        decoding="sync"
-        width="1600"
-        height="900"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center',
-          zIndex: 0,
-        }}
-      />
+      {/* Architecture and interior backgrounds rotate every three seconds. */}
+      {HERO_IMAGES.map((image, index) => (
+        <img
+          key={image}
+          src={image}
+          alt=""
+          aria-hidden="true"
+          fetchPriority={index === 0 ? 'high' : 'auto'}
+          decoding="async"
+          width="1600"
+          height="900"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            opacity: activeImage === index ? 1 : 0,
+            transition: 'opacity 1.2s ease-in-out',
+            zIndex: 0,
+          }}
+        />
+      ))}
 
       {/* Gradient overlay */}
       <div
@@ -337,13 +360,7 @@ export default function Hero() {
                   transition={{ delay: 0.8 + i * 0.15 }}
                 >
                   <div className="d-flex align-items-center gap-2 mb-1">
-                    <span
-                      style={{ fontSize: '1.3rem' }}
-                      role="img"
-                      aria-hidden="true"
-                    >
-                      {item.icon}
-                    </span>
+                    <item.icon size={20} strokeWidth={1.8} aria-hidden="true" />
                     <AnimatedCounter target={item.value} suffix={item.suffix} />
                   </div>
                   <small

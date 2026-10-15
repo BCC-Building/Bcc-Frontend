@@ -1,3 +1,12 @@
+import {
+  Award,
+  BarChart3,
+  Building2,
+  Crown,
+  Rocket,
+  Trophy,
+} from 'lucide-react';
+
 export const testimonials = [
   {
     name: 'Ramesh Gupta',
@@ -29,10 +38,10 @@ export const testimonials = [
 ];
 
 export const milestones = [
-  { year: 2017, title: 'Foundation', desc: 'Company established in Rudrapur UttraKhand', icon: '🏗️' },
-  { year: 2019, title: 'First Milestone', desc: '200+ projects completed', icon: '🏢' },
-  { year: 2022, title: 'Consulting Launch', desc: 'Added consulting services', icon: '📊' },
-  { year: 2023, title: 'ISO Certified', desc: 'International quality standards', icon: '✅' },
-  { year: 2025, title: '950+ Projects', desc: 'Major expansion phase', icon: '🏆' },
-  { year: 2026, title: 'Industry Leader', desc: 'Top construction company', icon: '👑' }
+  { year: 2017, title: 'Foundation', desc: 'Company established in Rudrapur UttraKhand', icon: Rocket },
+  { year: 2019, title: 'First Milestone', desc: '200+ projects completed', icon: Building2 },
+  { year: 2022, title: 'Consulting Launch', desc: 'Added consulting services', icon: BarChart3 },
+  { year: 2023, title: 'ISO Certified', desc: 'International quality standards', icon: Award },
+  { year: 2025, title: '950+ Projects', desc: 'Major expansion phase', icon: Trophy },
+  { year: 2026, title: 'Industry Leader', desc: 'Top construction company', icon: Crown }
 ];

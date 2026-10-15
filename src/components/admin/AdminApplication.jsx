@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { X } from 'lucide-react';
 import { adminAPI } from '../../api/endpoints';
 import { ENV } from '../../config/env';
 
@@ -83,7 +84,7 @@ export default function AdminApplications() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold">Application Details</h3>
-              <button onClick={() => setViewApp(null)} className="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+              <button onClick={() => setViewApp(null)} className="text-gray-400 hover:text-gray-600" aria-label="Close application details"><X size={20} aria-hidden="true" /></button>
             </div>
             <div className="space-y-3">
               <div><span className="text-sm text-gray-500">Name:</span><p className="font-medium">{viewApp.fullName || 'N/A'}</p></div>

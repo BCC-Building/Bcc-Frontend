@@ -1,6 +1,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
+import { X } from "lucide-react";
 import logo from "../../../assets/img.webp";
 
 export default function WelcomePopup() {
@@ -102,7 +103,7 @@ export default function WelcomePopup() {
             onClick={handleClose}
             aria-label="Close welcome popup"
           >
-            ✕
+            <X size={18} aria-hidden="true" />
           </button>
 
           {/* Header */}
@@ -137,7 +138,7 @@ export default function WelcomePopup() {
             <h2 className="wp-title">
               Building Creators<br />And Consulting
             </h2>
-            <p className="wp-sub">Rudrapur, Uttarakhand · Est. 2017</p>
+            <p className="wp-sub">Bilaspur, Rampur, Uttar Pradesh · Est. 2017</p>
           </div>
 
           {/* Divider */}

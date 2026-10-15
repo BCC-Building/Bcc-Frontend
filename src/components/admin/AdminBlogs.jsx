@@ -1,5 +1,6 @@
 // src/components/admin/AdminBlogs.jsx
 import { useState, useEffect } from 'react';
+import { CircleCheck, CircleX } from 'lucide-react';
 import { adminAPI } from '../../api/endpoints';
 import { getImageUrl } from '../../api/clients';
 
@@ -228,7 +229,11 @@ export default function AdminBlogs() {
                   <td className="p-3 font-medium">{blog.title}</td>
                   <td className="p-3">{blog.category}</td>
                   <td className="p-3">{blog.author}</td>
-                  <td className="p-3">{blog.isPublished ? '✅' : '❌'}</td>
+                  <td className="p-3">
+                    {blog.isPublished
+                      ? <span className="inline-flex items-center gap-1 text-emerald-700"><CircleCheck size={16} aria-hidden="true" />Published</span>
+                      : <span className="inline-flex items-center gap-1 text-gray-500"><CircleX size={16} aria-hidden="true" />Draft</span>}
+                  </td>
                   <td className="p-3 flex gap-2">
                     <button onClick={() => handleEdit(blog)} className="text-blue-600 hover:underline">Edit</button>
                     <button onClick={() => handleDelete(blog.id)} className="text-red-600 hover:underline">Delete</button>

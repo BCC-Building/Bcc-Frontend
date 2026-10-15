@@ -1,5 +1,6 @@
 // src/components/admin/AdminCareers.jsx
 import { useState, useEffect } from 'react';
+import { CircleCheck, CircleX } from 'lucide-react';
 import { adminAPI } from '../../api/endpoints';
 
 /**
@@ -181,7 +182,11 @@ export default function AdminCareers() {
                   <td className="p-3">{job.department}</td>
                   <td className="p-3">{job.location}</td>
                   <td className="p-3">{job.jobType}</td>
-                  <td className="p-3">{job.isActive ? '✅' : '❌'}</td>
+                  <td className="p-3">
+                    {job.isActive
+                      ? <span className="inline-flex items-center gap-1 text-emerald-700"><CircleCheck size={16} aria-hidden="true" />Active</span>
+                      : <span className="inline-flex items-center gap-1 text-gray-500"><CircleX size={16} aria-hidden="true" />Inactive</span>}
+                  </td>
                   <td className="p-3 flex gap-2">
                     <button onClick={() => handleEdit(job)} className="text-blue-600 hover:underline">Edit</button>
                     <button onClick={() => handleDelete(job.id)} className="text-red-600 hover:underline">Delete</button>

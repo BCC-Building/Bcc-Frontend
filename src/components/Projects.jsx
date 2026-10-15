@@ -4,6 +4,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaTimes } from 'react-icons/fa';
+import { AlertTriangle, FolderSearch } from 'lucide-react';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import ErrorBoundary from './ErrorBoundary';
@@ -452,7 +453,7 @@ export default function Projects() {
 
           {!isLoading && apiError && (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-              <div className="text-5xl mb-4">⚠️</div>
+              <AlertTriangle size={44} strokeWidth={1.5} className="mx-auto mb-4 text-amber-500" aria-hidden="true" />
               <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
               <p className="text-gray-500 mb-6">{apiError}</p>
               <button
@@ -466,7 +467,7 @@ export default function Projects() {
 
           {!isLoading && !apiError && filtered.length === 0 && (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-              <div className="text-5xl mb-4">📂</div>
+              <FolderSearch size={44} strokeWidth={1.5} className="mx-auto mb-4 text-gray-400" aria-hidden="true" />
               <h3 className="text-xl font-bold text-gray-900 mb-2">No Projects Found</h3>
               <p className="text-gray-500 mb-6">Try adjusting your filters or search term.</p>
               <button

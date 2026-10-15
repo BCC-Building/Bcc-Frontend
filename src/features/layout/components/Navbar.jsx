@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { X } from 'lucide-react';
 import logo from "../../../assets/img.webp";
 
 /* ─── CONFIG ─── */
@@ -12,7 +13,7 @@ const COMPANY_SHORT = 'BCC';
 const PHONE         = '+918057540906';
 const PHONE_DISPLAY = '+91 80575 40906';
 const EMAIL         = 'bcc06.info@gmail.com';
-const ADDRESS       = 'Guru Angad Dev Complex, 4th Floor, Rudrapur (U.S.Nagar), Uttarakhand';
+const ADDRESS       = 'Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur, Uttar Pradesh';
 
 const NAV_LINKS = [
   { path: '/',          name: 'Home'         },
@@ -600,7 +601,7 @@ export default function Navbar() {
                   className="nb-search-close"
                   onClick={() => setSearchOpen(false)}
                   aria-label="Close search"
-                >✕</button>
+                ><X size={18} aria-hidden="true" /></button>
               </div>
             </div>
           </div>
@@ -731,7 +732,7 @@ export default function Navbar() {
               <span className="nb-logo-addr" style={{ display: 'block', color: 'rgba(255,255,255,.5)', fontSize: 10 }}>Pvt. Ltd.</span>
             </div>
           </Link>
-          <button className="nb-drawer-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
+          <button className="nb-drawer-close" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X size={20} aria-hidden="true" /></button>
         </div>
 
         {/* Mobile contact strip */}

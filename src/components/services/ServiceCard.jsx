@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ArrowRight, Check } from 'lucide-react';
 
 const ServiceCard = ({ 
   service, 
@@ -45,7 +46,7 @@ const ServiceCard = ({
         />
         <div className="absolute top-4 right-4">
           <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
-            <span className="text-2xl">{service.icon}</span>
+            <service.icon size={22} strokeWidth={1.8} className="text-blue-700" aria-hidden="true" />
           </div>
         </div>
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
@@ -64,7 +65,8 @@ const ServiceCard = ({
         <div className="flex flex-wrap gap-2 mb-4">
           {service.features?.slice(0, 2).map((feature, idx) => (
             <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-              ✓ {feature.length > 20 ? feature.substring(0, 20) + '...' : feature}
+              <Check size={13} className="inline-block mr-1 text-emerald-600" aria-hidden="true" />
+              {feature.length > 20 ? feature.substring(0, 20) + '...' : feature}
             </span>
           ))}
           {service.features?.length > 2 && (
@@ -80,9 +82,7 @@ const ServiceCard = ({
         className="inline-flex items-center gap-2 text-purple-600 font-semibold text-sm hover:gap-3 transition-all group"
       >
         Learn More
-        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
+        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
       </Link>
     </motion.div>
   );

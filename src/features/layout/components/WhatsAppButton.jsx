@@ -1,6 +1,7 @@
 // src/components/WhatsAppButton.jsx - Production-Ready Enhanced Version
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, CircleAlert, Clock3, HardHat, MessageCircle, Wrench } from 'lucide-react';
 
 // ==================== CONFIGURATION ====================
 
@@ -12,7 +13,7 @@ const WHATSAPP_CONFIG = {
       name: 'Architecture & Design',
       number: '9411311544',
       message: "Hi! I'm interested in your architecture and design services.",
-      icon: '🏗️',
+      icon: HardHat,
       role: 'Architecture Specialist',
       available: 'Online',
       responseTime: '< 5 min',
@@ -23,7 +24,7 @@ const WHATSAPP_CONFIG = {
       name: 'Technical Support',
       number: '9411311544',
       message: 'Hello! I need technical assistance with my project.',
-      icon: '🛠️',
+      icon: Wrench,
       role: 'Technical Expert',
       available: 'Online',
       responseTime: '< 10 min',
@@ -34,7 +35,7 @@ const WHATSAPP_CONFIG = {
       name: 'Customer Care',
       number: '9411311544',
       message: 'I have a query about your services.',
-      icon: '💬',
+      icon: MessageCircle,
       role: 'Customer Support',
       available: '24/7',
       responseTime: '< 2 hours',
@@ -45,7 +46,7 @@ const WHATSAPP_CONFIG = {
       name: 'Emergency Support',
       number: '9411311544',
       message: 'URGENT: Need immediate assistance!',
-      icon: '🚨',
+      icon: CircleAlert,
       role: 'Emergency Response',
       available: '24/7',
       responseTime: 'Immediate',
@@ -59,7 +60,7 @@ const WHATSAPP_CONFIG = {
     bottomOffset: 30,
     sideOffset: 30,
     showTooltip: true,
-    tooltipText: 'Chat with us 💬',
+    tooltipText: 'Chat with us',
     showOnlineBadge: true,
     trackAnalytics: true,
     closeOnOutsideClick: true,
@@ -215,7 +216,7 @@ const MultiContactMenu = ({ contacts, trackEvent }) => {
           >
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
               <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
-                <h3 className="font-bold text-lg flex items-center gap-2"><span aria-hidden="true">💬</span><span>Chat with us</span></h3>
+                <h3 className="font-bold text-lg flex items-center gap-2"><MessageCircle size={19} aria-hidden="true" /><span>Chat with us</span></h3>
                 <p className="text-sm text-green-100 mt-1">Choose a department to connect instantly</p>
               </div>
               <div className="p-4 border-b border-gray-100">
@@ -235,8 +236,8 @@ const MultiContactMenu = ({ contacts, trackEvent }) => {
                   <button key={contact.id} onClick={() => handleContactClick(contact)}
                     className="w-full flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0 text-left"
                     aria-label={`Chat with ${contact.name} on WhatsApp`}>
-                    <div className={`w-11 h-11 rounded-full flex items-center justify-center text-xl flex-shrink-0 ${contact.urgent ? 'bg-red-100' : 'bg-green-100'}`} aria-hidden="true">
-                      {contact.icon}
+                    <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 ${contact.urgent ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-700'}`} aria-hidden="true">
+                      <contact.icon size={21} strokeWidth={1.8} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-gray-800 flex items-center gap-2">
@@ -247,10 +248,10 @@ const MultiContactMenu = ({ contacts, trackEvent }) => {
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs text-green-600 font-medium">{contact.available}</span>
                         <span className="text-xs text-gray-300">•</span>
-                        <span className="text-xs text-gray-400">⏱️ {contact.responseTime}</span>
+                        <span className="text-xs text-gray-400 inline-flex items-center gap-1"><Clock3 size={12} aria-hidden="true" />{contact.responseTime}</span>
                       </div>
                     </div>
-                    <span className="text-gray-400 group-hover:text-green-500 transition-colors flex-shrink-0" aria-hidden="true">→</span>
+                    <ArrowRight size={16} className="text-gray-400 group-hover:text-green-500 transition-colors flex-shrink-0" aria-hidden="true" />
                   </button>
                 ))}
               </div>

@@ -75,7 +75,7 @@ export default function Footer() {
           </div>
           <div className="footer-est-badge">
             <span className="footer-est-dot" aria-hidden="true"/>
-            Est. 2017 &nbsp;·&nbsp; Rudrapur, Uttarakhand
+            Est. 2017 &nbsp;·&nbsp; Bilaspur, Rampur, Uttar Pradesh
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export default function Footer() {
               </a>
               <span className="footer-contact-item">
                 <span className="footer-contact-icon"><i className="bi bi-geo-alt-fill" aria-hidden="true"/></span>
-                Rudrapur, Uttarakhand
+                Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur, Uttar Pradesh
               </span>
             </div>
           </div>

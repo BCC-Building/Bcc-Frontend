@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { Check } from 'lucide-react';
 import { services } from "../data/servicesData.js"; 
 
 const AUTOPLAY_DELAY = 5000;
@@ -37,7 +38,7 @@ const ServiceSlide = ({ service, isActive }) => {
             
             {/* Icon Overlay on Image */}
             <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-2xl shadow-lg">
-              {service.icon}
+              <service.icon size={22} strokeWidth={1.8} className="text-purple-700" aria-hidden="true" />
             </div>
 
             {/* Category Badge on Image */}
@@ -62,7 +63,8 @@ const ServiceSlide = ({ service, isActive }) => {
             <div className="flex flex-wrap gap-2 mb-4">
               {service.features?.slice(0, 3).map((feature, idx) => (
                 <span key={idx} className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">
-                  ✓ {feature.length > 20 ? feature.slice(0, 20) + '…' : feature}
+                  <Check size={13} className="inline-block mr-1 text-emerald-600" aria-hidden="true" />
+                  {feature.length > 20 ? feature.slice(0, 20) + '…' : feature}
                 </span>
               ))}
               {service.features?.length > 3 && (

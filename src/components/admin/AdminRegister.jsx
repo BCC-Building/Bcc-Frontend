@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from "../../api/endpoints";
+import { CircleCheck } from 'lucide-react';
 
 /**
  * AdminRegister Component
@@ -104,7 +105,8 @@ export default function AdminRegister() {
         {/* Success Message */}
         {successMessage && (
           <div className="bg-green-50 text-green-700 p-3 rounded-lg mb-4 text-sm" role="status">
-            ✅ {successMessage}
+            <CircleCheck size={16} className="inline-block mr-1" aria-hidden="true" />
+            {successMessage}
           </div>
         )}
 

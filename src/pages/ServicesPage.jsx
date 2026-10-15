@@ -66,8 +66,8 @@ export default function ServicesPage() {
       {/* SEO */}
       <SEO
         title="Our Services | Architecture, Soil Testing, NDT, Survey & More | BCC"
-        description="BCC offers 14+ expert services in Rudrapur, Uttarakhand — Architecture, Structure Design, Soil Investigation, NDT, Material Testing, Survey, Bridge Design & more."
-        keywords="architecture Rudrapur, soil testing Uttarakhand, NDT testing, land survey, structure design, interior design, bridge design, material testing"
+        description="BCC offers 14+ expert services in Bilaspur, Rampur, Uttar Pradesh — Architecture, Structure Design, Soil Investigation, NDT, Material Testing, Survey, Bridge Design & more."
+        keywords="architecture Rampur, soil testing Uttar Pradesh, NDT testing, land survey, structure design, interior design, bridge design, material testing"
         url="https://bcc.net.in/services"
       />
 

@@ -22,7 +22,7 @@ export default function HomePage() {
       <SEO
         title="BCC Consulting | Structural Engineering & Construction Services"
         description="BCC delivers structural engineering, architecture design, soil testing & construction consulting. 1200+ projects completed. ISO 9001:2015 certified. Free consultation."
-        keywords="structural engineering services India, construction consulting, architecture design, soil investigation, material testing, NDT testing, engineering services Rudrapur"
+        keywords="structural engineering services India, construction consulting, architecture design, soil investigation, material testing, NDT testing, engineering services Rampur Uttar Pradesh"
         url="https://bcc.net.in/"
         image="https://bcc.net.in/og-home.jpg"
         schemaType="LocalBusiness"

@@ -12,7 +12,7 @@ export default function CTASection({
   secondaryTo = "/projects",
   phone = "+91 80575 40906",
   email = "bcc06.info@gmail.com",
-  address = "Rudrapur, Uttarakhand",
+  address = "Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur, Uttar Pradesh",
 }) {
   return (
     <motion.section

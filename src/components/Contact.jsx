@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
+import { CircleCheck, CircleX, Phone } from 'lucide-react';
 import { publicAPI } from '../api/endpoints'; // 👈 ADD THIS IMPORT
 
 export default function Contact() {
@@ -128,7 +129,7 @@ export default function Contact() {
                   className="btn btn-light px-4"
                   aria-label="Call us at +91 8057540906"
                 >
-                  📞 Call Now
+                  <Phone size={16} className="mr-2" aria-hidden="true" />Call Now
                 </a>
                 <a 
                   href="#contact-form" 
@@ -168,10 +169,10 @@ export default function Contact() {
             {
               icon: 'bi-geo-alt-fill',
               title: 'Visit Us',
-              text: 'Guru Angad Dev Complex, 4th Floor, Rudrapur, (U.S. Nagar)',
-              sub: 'Uttarakhand - India',
+              text: 'Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur, Uttar Pradesh',
+              sub: 'India',
               color: 'bg-warning',
-              ariaLabel: 'Office address: Guru Angad Dev Complex, 4th Floor, Rudrapur',
+              ariaLabel: 'Office address: Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur, Uttar Pradesh',
             },
             {
               icon: 'bi-clock-fill',
@@ -220,14 +221,16 @@ export default function Contact() {
               {/* SUCCESS MESSAGE - UPDATED */}
               {submitted && (
                 <div className="alert alert-success" role="alert">
-                  ✅ Thank you! Your message has been received. We'll get back to you soon.
+                  <CircleCheck size={18} className="mr-2" aria-hidden="true" />
+                  Thank you! Your message has been received. We'll get back to you soon.
                 </div>
               )}
 
               {/* ERROR MESSAGE - NEW */}
               {error && (
                 <div className="alert alert-danger" role="alert">
-                  ❌ {error}
+                  <CircleX size={18} className="mr-2" aria-hidden="true" />
+                  {error}
                 </div>
               )}
 
@@ -344,7 +347,7 @@ export default function Contact() {
                 title="Building Creators And Consulting location on Google Maps"
                 className="w-100"
                 style={{ minHeight: '420px', border: 0 }}
-                src="https://www.google.com/maps?q=Guru+Angad+Dev+Complex%2C4th+Floor%2C+Rudrapur%2C(U.S.Nagar)Uttrakhand&output=embed"
+                src="https://www.google.com/maps?q=Plot+No-5+South+Avenue+Bharatpur+Rampur+Road+Near+Ark+Hotel+Tehsil-Bilaspur+District-Rampur+Uttar+Pradesh&output=embed"
                 loading="lazy"
                 allowFullScreen=""
                 referrerPolicy="no-referrer-when-downgrade"

@@ -1,10 +1,11 @@
 import ServiceCard from './ServiceCard';
+import { Search } from 'lucide-react';
 
 const ServicesGrid = ({ services, filteredCount, searchTerm, onClearFilters }) => {
   if (services.length === 0) {
     return (
       <div className="text-center py-20">
-        <div className="text-6xl mb-4">🔍</div>
+        <Search size={44} strokeWidth={1.5} className="mx-auto mb-4 text-gray-400" aria-hidden="true" />
         <h3 className="text-2xl font-bold text-gray-800 mb-2">No services found</h3>
         <p className="text-gray-600 mb-6">We couldn't find any services matching "{searchTerm}"</p>
         <button 
@@ -21,7 +22,7 @@ const ServicesGrid = ({ services, filteredCount, searchTerm, onClearFilters }) =
     <>
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm text-sm text-gray-600">
-          <span>🔍</span>
+          <Search size={15} aria-hidden="true" />
           <span>Showing <strong className="text-purple-600">{services.length}</strong> of <strong>{filteredCount}</strong> services</span>
         </div>
       </div>

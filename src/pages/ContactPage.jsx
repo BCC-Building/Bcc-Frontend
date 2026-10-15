@@ -23,10 +23,9 @@ export default function ContactPage() {
     },
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Guru Angad Dev Complex, 4th Floor',
-      addressLocality: 'Rudrapur',
-      addressRegion: 'Uttarakhand',
-      postalCode: '263153',
+      streetAddress: 'Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur',
+      addressLocality: 'Bilaspur',
+      addressRegion: 'Uttar Pradesh',
       addressCountry: 'IN',
     },
     sameAs: [

@@ -103,16 +103,10 @@ export default function SEO({
       priceRange: '₹₹₹',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'Plot No. XYZ, Industrial Area',
-        addressLocality: 'Rudrapur',
-        addressRegion: 'Uttarakhand',
-        postalCode: '263153',
+        streetAddress: 'Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur',
+        addressLocality: 'Bilaspur',
+        addressRegion: 'Uttar Pradesh',
         addressCountry: 'IN'
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: '29.3389',
-        longitude: '79.4192'
       },
       openingHoursSpecification: {
         '@type': 'OpeningHoursSpecification',
@@ -257,8 +251,8 @@ export default function SEO({
 
       {/* ==================== ADDITIONAL META TAGS ==================== */}
       <meta name="format-detection" content="telephone=+91-9876543210" />
-      <meta name="geo.placename" content="Rudrapur" />
-      <meta name="geo.region" content="IN" />
+      <meta name="geo.placename" content="Bilaspur, Rampur, Uttar Pradesh" />
+      <meta name="geo.region" content="IN-UP" />
 
       {/* ==================== JSON-LD STRUCTURED DATA ==================== */}
       <script type="application/ld+json">

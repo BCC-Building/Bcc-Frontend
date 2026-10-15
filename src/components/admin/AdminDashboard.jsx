@@ -1,5 +1,15 @@
 // src/components/admin/AdminDashboard.jsx
 import { useState } from 'react';
+import {
+  BriefcaseBusiness,
+  ClipboardList,
+  FileText,
+  FolderKanban,
+  Images,
+  LogOut,
+  Mail,
+  Users,
+} from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import AdminProjects from './AdminProjects';
 import AdminBlogs from './AdminBlogs';
@@ -17,13 +27,13 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const tabs = [
-    { key: 'projects', label: 'Projects', icon: '📁' },
-    { key: 'blogs', label: 'Blogs', icon: '📝' },
-    { key: 'careers', label: 'Careers', icon: '💼' },
-    { key: 'team', label: 'Team', icon: '👥' },
-    { key: 'gallery', label: 'Gallery', icon: '🖼️' },
-    { key: 'contacts', label: 'Messages', icon: '📧' },
-    { key: 'applications', label: 'Applications', icon: '📋' },
+    { key: 'projects', label: 'Projects', icon: FolderKanban },
+    { key: 'blogs', label: 'Blogs', icon: FileText },
+    { key: 'careers', label: 'Careers', icon: BriefcaseBusiness },
+    { key: 'team', label: 'Team', icon: Users },
+    { key: 'gallery', label: 'Gallery', icon: Images },
+    { key: 'contacts', label: 'Messages', icon: Mail },
+    { key: 'applications', label: 'Applications', icon: ClipboardList },
   ];
 
   return (
@@ -79,7 +89,7 @@ export default function AdminDashboard() {
                   : 'text-gray-300 hover:bg-white/5 hover:text-white'
               }`}
             >
-              <span className="text-lg">{tab.icon}</span>
+              <tab.icon size={19} strokeWidth={1.8} aria-hidden="true" />
               <span>{tab.label}</span>
               {activeTab === tab.key && (
                 <span className="ml-auto w-2 h-2 rounded-full bg-white animate-pulse" />
@@ -94,7 +104,7 @@ export default function AdminDashboard() {
             onClick={logout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all duration-200 text-sm font-medium"
           >
-            <span className="text-lg">🚪</span>
+            <LogOut size={18} aria-hidden="true" />
             <span>Logout</span>
           </button>
         </div>
@@ -135,7 +145,7 @@ export default function AdminDashboard() {
                 onClick={logout}
                 className="hidden lg:flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition"
               >
-                <span>🚪</span> Logout
+                <LogOut size={16} aria-hidden="true" /> Logout
               </button>
             </div>
           </div>

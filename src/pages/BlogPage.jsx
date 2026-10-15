@@ -6,6 +6,7 @@ import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import BlogHero from '../components/blog/BlogHero';
+import { AlertTriangle, Bookmark, CircleCheck, Heart, Inbox, Search, Share2 } from 'lucide-react';
 
 // --- constants ----------------------------------------------------------------
 const CATEGORIES = ['All', 'Architecture', 'Design', 'Business', 'Soil Testing', 'Survey', 'Construction', 'Engineering'];
@@ -163,7 +164,7 @@ const NewsletterBox = () => {
         disabled={status === 'loading'}
         className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-bold text-sm hover:opacity-90 transition disabled:opacity-50 whitespace-nowrap"
       >
-        {status === 'loading' ? '…' : status === 'success' ? '✓ Subscribed!' : 'Subscribe'}
+        {status === 'loading' ? '…' : status === 'success' ? <><CircleCheck size={15} className="inline-block mr-1" aria-hidden="true" />Subscribed!</> : 'Subscribe'}
       </button>
     </form>
   );
@@ -183,7 +184,7 @@ const Sidebar = ({ recent, onPost, search, setSearch }) => (
           placeholder="Search articles..."
           className="w-full px-4 py-2.5 pr-10 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+        <Search size={17} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
       </div>
     </div>
 
@@ -309,21 +310,24 @@ const BlogDetail = ({ post, onBack }) => {
         <div className="flex items-center gap-2 relative">
           <button
             onClick={() => setLiked(!liked)}
+            aria-label={liked ? 'Unlike article' : 'Like article'}
             className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-center text-base"
           >
-            {liked ? '❤️' : '🤍'}
+            <Heart size={17} className={liked ? 'text-rose-600' : 'text-gray-500'} fill={liked ? 'currentColor' : 'none'} aria-hidden="true" />
           </button>
           <button
             onClick={() => setBookmarked(!bookmarked)}
+            aria-label={bookmarked ? 'Remove bookmark' : 'Bookmark article'}
             className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-center text-base"
           >
-            {bookmarked ? '🔖' : '📌'}
+            <Bookmark size={17} className={bookmarked ? 'text-blue-600' : 'text-gray-500'} fill={bookmarked ? 'currentColor' : 'none'} aria-hidden="true" />
           </button>
           <button
             onClick={() => setShareOpen(!shareOpen)}
+            aria-label="Share article"
             className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition flex items-center justify-center text-base"
           >
-            ↗️
+            <Share2 size={17} className="text-gray-500" aria-hidden="true" />
           </button>
           {shareOpen && (
             <div className="absolute top-10 right-0 bg-white rounded-xl border border-gray-200 shadow-xl p-1.5 z-50 min-w-[140px] animate-fadeIn">
@@ -528,7 +532,7 @@ export default function BlogPage() {
                   {/* Error */}
                   {!loading && apiError && (
                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-                      <div className="text-5xl mb-4">⚠️</div>
+                      <AlertTriangle size={44} strokeWidth={1.5} className="mx-auto mb-4 text-amber-500" aria-hidden="true" />
                       <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
                       <p className="text-gray-500 mb-6">{apiError}</p>
                       <button
@@ -543,7 +547,7 @@ export default function BlogPage() {
                   {/* No Results */}
                   {!loading && !apiError && filtered.length === 0 && (
                     <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-                      <div className="text-5xl mb-4">📭</div>
+                      <Inbox size={44} strokeWidth={1.5} className="mx-auto mb-4 text-gray-400" aria-hidden="true" />
                       <h3 className="text-xl font-bold text-gray-900 mb-2">No Articles Found</h3>
                       <p className="text-gray-500 mb-6">
                         {search ? `No results for "${search}".` : 'No articles in this category yet.'}

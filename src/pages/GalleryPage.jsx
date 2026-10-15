@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Building2, FlaskConical, Images, Ruler, Sofa } from "lucide-react";
 import SEO from "../components/SEO";
 import { getMediaUrl } from "../utils/media";
 import { publicAPI } from "../api/endpoints";
@@ -11,11 +12,11 @@ import GalleryHero from "../components/gallery/GalleryHero";
 // ==================== CONSTANTS ====================
 
 const CATEGORIES = [
-  { id: "all", name: "All Projects" },
-  { id: "Construction", name: "Construction" },
-  { id: "Interior", name: "Interior Design" },
-  { id: "Survey", name: "Survey Work" },
-  { id: "Testing", name: "Testing" },
+  { id: "all", name: "All Projects", icon: Images },
+  { id: "Construction", name: "Construction", icon: Building2 },
+  { id: "Interior", name: "Interior Design", icon: Sofa },
+  { id: "Survey", name: "Survey Work", icon: Ruler },
+  { id: "Testing", name: "Testing", icon: FlaskConical },
 ];
 
 const ITEMS_PER_PAGE = 6;
@@ -283,7 +284,7 @@ export default function GalleryPage() {
                 aria-pressed={activeCategory === category.id}
                 aria-label={`Filter by ${category.name}`}
               >
-                {category.icon && <span aria-hidden="true">{category.icon}</span>}
+                {category.icon && <category.icon size={16} strokeWidth={1.8} aria-hidden="true" />}
                 <span>{category.name}</span>
               </button>
             ))}
@@ -471,5 +472,4 @@ export default function GalleryPage() {
     </>
   );
 }
-
 

@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import { adminAPI } from '../../api/endpoints';
 import { getImageUrl } from '../../api/clients';
 
@@ -185,7 +186,7 @@ export default function AdminProjects() {
           flex justify-between items-center">
           <span>{error}</span>
           <button onClick={() => setError('')} 
-            className="text-red-500 hover:text-red-700">✕</button>
+            className="text-red-500 hover:text-red-700" aria-label="Close form"><X size={18} aria-hidden="true" /></button>
         </div>
       )}
       {success && (
@@ -193,7 +194,7 @@ export default function AdminProjects() {
           flex justify-between items-center">
           <span>{success}</span>
           <button onClick={() => setSuccess('')} 
-            className="text-green-500 hover:text-green-700">✕</button>
+            className="text-green-500 hover:text-green-700" aria-label="Close message"><X size={18} aria-hidden="true" /></button>
         </div>
       )}
 

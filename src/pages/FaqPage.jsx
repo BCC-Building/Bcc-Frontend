@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
+import { Phone } from "lucide-react";
 import SEO from "../components/SEO";
 import FAQHero from "../components/faq/FAQHero";
 
@@ -312,7 +313,7 @@ export default function FAQPage() {
                 href="tel:+918057540906"
                 className="inline-block bg-blue-500 text-white px-7 py-3 rounded-lg font-semibold border border-blue-400 hover:bg-blue-600 transition"
               >
-                📞 Call Now
+                <Phone size={16} className="mr-2" aria-hidden="true" />Call Now
               </a>
             </div>
           </motion.div>
@@ -322,4 +323,3 @@ export default function FAQPage() {
     </>
   );
 }
-
