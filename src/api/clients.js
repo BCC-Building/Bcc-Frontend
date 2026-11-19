@@ -1,7 +1,7 @@
 // src/api/client.js
 import axios from 'axios';
 import StorageService from '../utils/storage';
-import { API_BASE_URL } from '../utils/constants';
+import { API_BASE_URL, API_IMAGE_BASE_URL } from '../utils/constants';
 
 // ─── Single, safe image URL helper ───────────────────────────────
 /**
@@ -13,7 +13,7 @@ import { API_BASE_URL } from '../utils/constants';
 export function getImageUrl(path) {
   if (!path) return 'https://placehold.co/600x400/e2e8f0/64748b?text=No+Image';
   if (path.startsWith('http')) return path;
-  const base = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'VITE_API_URL=https://api.bcc.net.in';
+  const base = API_IMAGE_BASE_URL.replace(/\/api\/?$/, '');
   return base + (path.startsWith('/') ? path : '/' + path);
 }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from "../../api/endpoints";
-import { CircleCheck } from 'lucide-react';
+import { CircleCheck, Eye, EyeOff } from 'lucide-react';
 
 /**
  * AdminRegister Component
@@ -17,6 +17,7 @@ export default function AdminRegister() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');       // 👈 Renamed from message to error
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   /**
@@ -157,16 +158,29 @@ export default function AdminRegister() {
             <label htmlFor="reg-password" className="block text-sm font-medium mb-1">
               Password
             </label>
-            <input
-              id="reg-password"
-              type="password"
-              autoComplete="new-password"
-              className="w-full px-4 py-2 border rounded-lg"
-              value={form.password}
-              onChange={(e) => handleFieldChange('password', e.target.value)}
-              placeholder="Minimum 6 characters"
-              disabled={loading}
-            />
+            <div className="relative">
+              <input
+                id="reg-password"
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                className="w-full px-4 py-2 pr-11 border rounded-lg"
+                value={form.password}
+                onChange={(e) => handleFieldChange('password', e.target.value)}
+                placeholder="Minimum 6 characters"
+                disabled={loading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((visible) => !visible)}
+                className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-r-lg"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+              >
+                {showPassword
+                  ? <EyeOff size={18} aria-hidden="true" />
+                  : <Eye size={18} aria-hidden="true" />}
+              </button>
+            </div>
           </div>
 
           {/* Submit */}

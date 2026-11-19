@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { authAPI } from '../api/endpoints';
 import StorageService from '../utils/storage';
+import { useAuth as useAuthContext } from '../core/context/AuthContext';
 
 /**
  * useAuth
@@ -18,6 +19,7 @@ import StorageService from '../utils/storage';
  */
 export function useAuth() {
   const [loading, setLoading] = useState(false);
+  const { login: setAuth, logout: clearAuth } = useAuthContext();
 
   // ─── Shared call wrapper ─────────────────────────────────────────────────
   // Handles loading state + network-level errors in one place.
@@ -58,15 +60,16 @@ export function useAuth() {
       call(async () => {
         const { data } = await authAPI.verifyLoginOTP(email, otp);
         if (data.success) {
-          // Store tokens in sessionStorage (cleared on tab close)
-          StorageService.setTokens(data.data.accessToken, data.data.refreshToken);
-          // Store only display info — never use for auth checks
-          StorageService.setAdminUser({ username: data.data.username });
+          setAuth(
+            data.data.accessToken,
+            data.data.refreshToken,
+            { username: data.data.username }
+          );
           return { success: true };
         }
         return { success: false, message: data.message };
       }),
-    [call]
+    [call, setAuth]
   );
 
   // ─── Resend OTP — email only, no credentials re-sent ────────────────────
@@ -92,10 +95,9 @@ export function useAuth() {
     } catch {
       // Even if backend call fails, clear local storage and redirect
     } finally {
-      StorageService.clearAuth();
-      window.location.href = '/admin/login';
+      clearAuth();
     }
-  }, []);
+  }, [clearAuth]);
 
   // ─── Auth check — simple getter, no useCallback needed ──────────────────
   const isAuthenticated = () => StorageService.isAuthenticated();

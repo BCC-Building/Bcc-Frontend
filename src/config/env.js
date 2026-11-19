@@ -7,10 +7,24 @@ const getEnvVar = (key, fallback = '') => {
   return import.meta.env[key] || fallback;
 };
 
+const configuredApiBaseUrl = getEnvVar(
+  'VITE_API_BASE_URL',
+  import.meta.env.DEV
+    ? 'http://localhost:8081/api'
+    : 'https://api.bcc.net.in/api'
+);
+const isLocalApiUrl = /^https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)/i.test(
+  configuredApiBaseUrl
+);
+
 export const ENV = {
   // API Configuration
-  API_BASE_URL: getEnvVar('VITE_API_BASE_URL', 'https://api.bcc.net.in/api'),
-  API_IMAGE_BASE_URL: getEnvVar('VITE_API_IMAGE_BASE_URL', 'https://api.bcc.net.in'),
+  API_BASE_URL:
+    import.meta.env.DEV && isLocalApiUrl ? '/api' : configuredApiBaseUrl,
+  API_IMAGE_BASE_URL: getEnvVar(
+    'VITE_API_IMAGE_BASE_URL',
+    import.meta.env.DEV ? 'http://localhost:8081' : 'https://api.bcc.net.in'
+  ),
   API_TIMEOUT: 30000,
 
   // Environment

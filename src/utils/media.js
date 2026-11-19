@@ -1,6 +1,6 @@
-import { API_BASE_URL } from './constants';
+import { API_IMAGE_BASE_URL } from './constants';
 
-const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
+const API_ORIGIN = API_IMAGE_BASE_URL.replace(/\/api\/?$/, '');
 
 export const getMediaUrl = (url) => {
   if (!url) return '';

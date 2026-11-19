@@ -1,6 +1,7 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 
 // ─── Reducer ────────────────────────────────────────────────────────────────
 const initialState = {
@@ -54,6 +55,7 @@ function reducer(state, action) {
 // ─── Component ──────────────────────────────────────────────────────────────
 export default function AdminLogin() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [showPassword, setShowPassword] = useState(false);
   const {
     step, username, password, email, otp,
     message, loginError, otpError, resendTimer,
@@ -130,56 +132,78 @@ export default function AdminLogin() {
 
         {/* ── Step 1: Credentials ── */}
         {step === 1 && (
-          <form onSubmit={handleLogin} className="space-y-4" noValidate>
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium mb-1">
-                Username
-              </label>
-              <input
-                id="username"
-                type="text"
-                autoComplete="username"
-                className="w-full px-3 py-2 border rounded"
-                value={username}
-                onChange={e => {
-                  dispatch({ type: 'SET_FIELD', field: 'username', value: e.target.value });
-                  dispatch({ type: 'CLEAR_LOGIN_ERROR' });
-                }}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-1">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                className="w-full px-3 py-2 border rounded"
-                value={password}
-                onChange={e => {
-                  dispatch({ type: 'SET_FIELD', field: 'password', value: e.target.value });
-                  dispatch({ type: 'CLEAR_LOGIN_ERROR' });
-                }}
-              />
-            </div>
-
-            {/* Error shown inline above submit button */}
-            {loginError && (
-              <div role="alert" className="bg-red-50 text-red-700 p-3 rounded text-sm">
-                {loginError}
+          <>
+            <form onSubmit={handleLogin} className="space-y-4" noValidate>
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium mb-1">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  autoComplete="username"
+                  className="w-full px-3 py-2 border rounded"
+                  value={username}
+                  onChange={e => {
+                    dispatch({ type: 'SET_FIELD', field: 'username', value: e.target.value });
+                    dispatch({ type: 'CLEAR_LOGIN_ERROR' });
+                  }}
+                />
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-            >
-              {loading ? 'Sending OTP…' : 'Send OTP'}
-            </button>
-          </form>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    className="w-full px-3 py-2 pr-10 border rounded"
+                    value={password}
+                    onChange={e => {
+                      dispatch({ type: 'SET_FIELD', field: 'password', value: e.target.value });
+                      dispatch({ type: 'CLEAR_LOGIN_ERROR' });
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-r"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
+                  >
+                    {showPassword
+                      ? <EyeOff size={18} aria-hidden="true" />
+                      : <Eye size={18} aria-hidden="true" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Error shown inline above submit button */}
+              {loginError && (
+                <div role="alert" className="bg-red-50 text-red-700 p-3 rounded text-sm">
+                  {loginError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                {loading ? 'Sending OTP…' : 'Send OTP'}
+              </button>
+            </form>
+
+            <p className="mt-4 text-center text-sm text-gray-600">
+              Need an admin account?{' '}
+              <Link to="/admin/register" className="font-medium text-blue-600 hover:underline">
+                Register here
+              </Link>
+            </p>
+          </>
         )}
 
         {/* ── Step 2: OTP ── */}

@@ -4,24 +4,24 @@ import client from './clients';
 // Auth Endpoints
 export const authAPI = {
   login: (username, password) =>
-    client.post('/v1/auth/login', { username, password }),
+    client.post('/auth/login', { username, password }),
 
   verifyLoginOTP: (email, otp) =>
-    client.post('/v1/auth/login/verify-otp', { email, otp }),
+    client.post('/auth/login/verify-otp', { email, otp }),
 
   signup: (username, email, password) =>
-    client.post('/v1/auth/signup/request-otp', { username, email, password }),
+    client.post('/auth/signup/request-otp', { username, email, password }),
 
   verifySignupOTP: (payload) =>
-    client.post('/v1/auth/signup/verify-otp', payload),
+    client.post('/auth/signup/verify-otp', payload),
 
-  resendOTP: (email) => client.post('/v1/auth/resend-otp', { email }),  
+  resendOTP: (email) => client.post('/auth/resend-otp', { email }),
 
   refreshToken: (refreshToken) =>
-    client.post('/v1/auth/refresh', { refreshToken }),
+    client.post('/auth/refresh', { refreshToken }),
 
   logout: (refreshToken) =>
-    client.post('/v1/auth/logout', { refreshToken }),
+    client.post('/auth/logout', { refreshToken }),
 };
 
 // Admin Endpoints
