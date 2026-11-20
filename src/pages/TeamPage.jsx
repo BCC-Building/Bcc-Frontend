@@ -16,8 +16,6 @@ import TeamHero from '../components/team/TeamHero';
 
 // --- constants ------------------------------------------------------------
 const FEATURED_COUNT = 3;
-const HERO_IMAGE = // (no longer used for hero, but kept for fallback if needed)
-  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80';
 
 const TYPEWRITER_WORDS = ['precision', 'dedication', 'excellence'];
 
@@ -595,19 +593,6 @@ export default function TeamPage({ featured = false }) {
           padding: featured ? '40px 0' : '60px 0',
         }}
       >
-        {/* dot-grid texture */}
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            pointerEvents: 'none',
-            zIndex: 0,
-            backgroundImage: 'radial-gradient(circle, #E2E8F0 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-            opacity: 0.55,
-          }}
-        />
-
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 1160, margin: '0 auto', padding: '0 24px' }}>
           {/* -- FILTERS -- */}
           {!featured && !loading && !error && teamMembers.length > 0 && (
@@ -642,19 +627,45 @@ export default function TeamPage({ featured = false }) {
 
           {/* -- ERROR / EMPTY -- */}
           {!loading && error && (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>??</div>
-              <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>Could not load team</h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.88rem' }}>{error}</p>
+            <div
+              role="alert"
+              style={{
+                textAlign: 'center',
+                padding: '40px 24px',
+                color: '#64748B',
+                background: '#FFFFFF',
+                border: '1px solid #E2E8F0',
+                borderRadius: '16px',
+              }}
+            >
+              <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>
+                Team profiles are temporarily unavailable
+              </h3>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.88rem', marginBottom: 0 }}>
+                We couldn’t load the team directory. Please try again shortly.
+              </p>
               <button className="bcc-retry-btn" onClick={() => window.location.reload()}>Try again</button>
             </div>
           )}
 
           {!loading && !error && teamMembers.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '12px' }}>??</div>
-              <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>No team members yet</h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.88rem' }}>Our team page is being updated.</p>
+            <div
+              role="status"
+              style={{
+                textAlign: 'center',
+                padding: '40px 24px',
+                color: '#64748B',
+                background: '#FFFFFF',
+                border: '1px solid #E2E8F0',
+                borderRadius: '16px',
+              }}
+            >
+              <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px' }}>
+                No team profiles available yet
+              </h3>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '0.88rem', marginBottom: 0 }}>
+                Our team directory is being updated. Please check back soon.
+              </p>
             </div>
           )}
 

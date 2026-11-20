@@ -6,7 +6,7 @@ import SEO from '../components/SEO';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import BlogHero from '../components/blog/BlogHero';
-import { AlertTriangle, Bookmark, CircleCheck, Heart, Inbox, Search, Share2 } from 'lucide-react';
+import { Bookmark, CircleCheck, Heart, Search, Share2 } from 'lucide-react';
 
 // --- constants ----------------------------------------------------------------
 const CATEGORIES = ['All', 'Architecture', 'Design', 'Business', 'Soil Testing', 'Survey', 'Construction', 'Engineering'];
@@ -435,7 +435,7 @@ export default function BlogPage() {
       }
     } catch (e) {
       console.error(e);
-      setApiError('Failed to load articles. Please try again.');
+      setApiError("We couldn't load articles right now. Please try again shortly.");
     } finally {
       setLoading(false);
     }
@@ -531,9 +531,8 @@ export default function BlogPage() {
 
                   {/* Error */}
                   {!loading && apiError && (
-                    <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-                      <AlertTriangle size={44} strokeWidth={1.5} className="mx-auto mb-4 text-amber-500" aria-hidden="true" />
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
+                    <div role="alert" className="text-center py-12 px-6 bg-white rounded-2xl border border-gray-200">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">Articles are temporarily unavailable</h3>
                       <p className="text-gray-500 mb-6">{apiError}</p>
                       <button
                         onClick={fetchPosts}
@@ -546,18 +545,23 @@ export default function BlogPage() {
 
                   {/* No Results */}
                   {!loading && !apiError && filtered.length === 0 && (
-                    <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-                      <Inbox size={44} strokeWidth={1.5} className="mx-auto mb-4 text-gray-400" aria-hidden="true" />
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">No Articles Found</h3>
+                    <div role="status" className="text-center py-12 px-6 bg-white rounded-2xl border border-gray-200">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {posts.length === 0 ? 'No articles available yet' : 'No articles match your search'}
+                      </h3>
                       <p className="text-gray-500 mb-6">
-                        {search ? `No results for "${search}".` : 'No articles in this category yet.'}
+                        {posts.length === 0
+                          ? 'New articles will appear here soon. Please check back later.'
+                          : 'Try another search or category, or clear your filters.'}
                       </p>
-                      <button
-                        onClick={() => { setSearch(''); setCategory('All'); }}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl hover:opacity-90 transition"
-                      >
-                        Clear Filters
-                      </button>
+                      {posts.length > 0 && (
+                        <button
+                          onClick={() => { setSearch(''); setCategory('All'); }}
+                          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-xl hover:opacity-90 transition"
+                        >
+                          Clear Filters
+                        </button>
+                      )}
                     </div>
                   )}
 

@@ -19,6 +19,48 @@ import {
 const img = (id) =>
   `https://images.unsplash.com/${id}?q=80&w=1400&auto=format&fit=crop`;
 
+const soilInvestigationImages = [
+  {
+    src: "/images/services/soil-testing-lab.png",
+    alt: "Soil samples being tested in a laboratory",
+  },
+  {
+    src: "/images/services/soil-testing-field.png",
+    alt: "Field team carrying out a soil investigation",
+  },
+];
+
+const ndtTestingImages = [
+  {
+    src: "/images/services/ndt-testing-ceiling.png",
+    alt: "Technician checking a building ceiling with NDT equipment",
+  },
+  {
+    src: "/images/services/ndt-testing-beam.png",
+    alt: "Technician inspecting a concrete beam",
+  },
+  {
+    src: "/images/services/ndt-testing-column.png",
+    alt: "Technician testing a concrete column with a handheld instrument",
+  },
+];
+
+const plateLoadTestImages = [
+  {
+    src: "/images/services/plate-load-test-lab.png",
+    alt: "Laboratory technicians recording a soil sample test",
+    layout: "wide",
+  },
+  {
+    src: "/images/services/plate-load-test-field.png",
+    alt: "Field team preparing a soil test at a construction site",
+  },
+  {
+    src: "/images/services/plate-load-test-equipment.png",
+    alt: "Technician operating soil testing equipment in a laboratory",
+  },
+];
+
 export const services = [
   {
     id: 1,
@@ -95,8 +137,8 @@ export const services = [
     name: "Soil Investigation & Geotechnical Work",
     shortDesc: "Precise soil testing for strong foundations",
     desc: "Comprehensive geotechnical investigation and soil testing services.",
-    // Soil / earth
-    image: img("photo-1560493676-04071c5f467b"),
+    image: soilInvestigationImages[0].src,
+    galleryImages: soilInvestigationImages,
     icon: Globe,
     category: "Testing",
     features: [
@@ -118,9 +160,8 @@ export const services = [
     name: "Non Destructive Testing (NDT)",
     shortDesc: "Advanced testing without structural damage",
     desc: "Non-destructive testing services for quality assessment of structures.",
-    // TODO: yahan apni NDT (rebound hammer / UPV) ki building ya bridge par photo lagayein
-    // e.g. image: "/images/services/ndt-testing.jpg",
-    image: img("photo-1581094794329-c8112a89af12"),
+    image: ndtTestingImages[0].src,
+    galleryImages: ndtTestingImages,
     icon: Microscope,
     category: "Testing",
     features: [
@@ -144,7 +185,7 @@ export const services = [
     desc: "Quality testing for all construction materials.",
     // TODO: yahan apni concrete cube testing / CTM machine ki photo lagayein
     // e.g. image: "/images/services/material-testing.jpg",
-    image: img("photo-1532187863486-abf9dbad1b69"),
+    image: "/images/services/material-testing.png",
     icon: FlaskConical,
     category: "Testing",
     features: [
@@ -306,8 +347,8 @@ export const services = [
     name: "Plate Load Test",
     shortDesc: "Accurate bearing capacity assessment",
     desc: "On-site plate load testing for foundation design.",
-    // Excavation / foundation work
-    image: img("photo-1580901368919-7738efb0f87e"),
+    image: plateLoadTestImages[0].src,
+    galleryImages: plateLoadTestImages,
     icon: Scale,
     category: "Testing",
     features: [

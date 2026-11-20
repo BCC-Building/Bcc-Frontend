@@ -4,7 +4,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaTimes } from 'react-icons/fa';
-import { AlertTriangle, FolderSearch } from 'lucide-react';
 import { publicAPI } from '../api/endpoints';
 import { getImageUrl } from '../api/clients';
 import ErrorBoundary from './ErrorBoundary';
@@ -346,7 +345,7 @@ export default function Projects() {
         console.log(`${projectsData.length} projects loaded`);
       } catch (e) {
         console.error('Projects request failed:', e);
-        setApiError('Failed to load projects. Please try again.');
+        setApiError("We couldn't load projects right now. Please try again shortly.");
       } finally {
         setIsLoading(false);
       }
@@ -452,9 +451,8 @@ export default function Projects() {
           {isLoading && <Skeleton />}
 
           {!isLoading && apiError && (
-            <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-              <AlertTriangle size={44} strokeWidth={1.5} className="mx-auto mb-4 text-amber-500" aria-hidden="true" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Failed to Load</h3>
+            <div role="alert" className="text-center py-12 px-6 bg-white rounded-2xl border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Projects are temporarily unavailable</h3>
               <p className="text-gray-500 mb-6">{apiError}</p>
               <button
                 onClick={() => window.location.reload()}
@@ -466,16 +464,23 @@ export default function Projects() {
           )}
 
           {!isLoading && !apiError && filtered.length === 0 && (
-            <div className="text-center py-16 bg-white rounded-2xl border border-gray-200">
-              <FolderSearch size={44} strokeWidth={1.5} className="mx-auto mb-4 text-gray-400" aria-hidden="true" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No Projects Found</h3>
-              <p className="text-gray-500 mb-6">Try adjusting your filters or search term.</p>
-              <button
-                onClick={clearFilters}
-                className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-400 text-gray-900 font-bold rounded-xl hover:opacity-90 transition"
-              >
-                Clear Filters
-              </button>
+            <div role="status" className="text-center py-12 px-6 bg-white rounded-2xl border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                {projects.length === 0 ? 'No projects available yet' : 'No projects match your filters'}
+              </h3>
+              <p className="text-gray-500 mb-6">
+                {projects.length === 0
+                  ? 'Our project portfolio is being updated. Please check back soon.'
+                  : 'Try another search or filter, or clear your filters.'}
+              </p>
+              {projects.length > 0 && (
+                <button
+                  onClick={clearFilters}
+                  className="px-6 py-3 bg-gradient-to-r from-amber-600 to-amber-400 text-gray-900 font-bold rounded-xl hover:opacity-90 transition"
+                >
+                  Clear filters
+                </button>
+              )}
             </div>
           )}
 

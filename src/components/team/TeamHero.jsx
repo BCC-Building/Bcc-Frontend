@@ -1,267 +1,208 @@
-// src/components/team/TeamHero.jsx
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaUsers, FaUserPlus, FaAward, FaArrowRight } from 'react-icons/fa';
-
-const TRUST_BADGES = [
-  "40+ Expert Professionals",
-  "Diverse Expertise",
-  "Industry Veterans",
-];
+import { FaArrowRight, FaUsers } from 'react-icons/fa';
 
 const HERO_STATS = [
-  { value: "40+", label: "Team Members" },
-  { value: "15+", label: "Specializations" },
-  { value: "200+", label: "Combined Experience" },
+  { value: '40+', label: 'Professionals' },
+  { value: '15+', label: 'Specializations' },
+  { value: '200+', label: 'Years of experience' },
 ];
 
 export default function TeamHero() {
   return (
-    <section
-      className="team-hero"
-      style={{
-        position: 'relative',
-        minHeight: '85vh',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
-        background: '#0a0f1e',
-      }}
-      aria-label="Team Hero"
-    >
-      {/* Background Image - New Image */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0,
-      }}>
-        <img
-          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1920&q=90"
-          alt="Professional engineering team collaborating"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-          }}
-          onError={(e) => {
-            e.target.style.display = 'none';
-            e.target.parentElement.style.background = 'linear-gradient(135deg, #0a2f3a, #0a1a2a)';
-          }}
-        />
-        {/* Overlay for text readability */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'linear-gradient(145deg, rgba(5,10,25,0.85) 0%, rgba(10,20,40,0.8) 100%)',
-        }} />
-      </div>
+    <section className="team-hero" aria-label="Meet the BCC team">
+      <img
+        className="team-hero__image"
+        src="/images/team/team-gathering.png"
+        alt="BCC team celebrating together at an office gathering"
+      />
+      <div className="team-hero__overlay" />
 
-      {/* Removed all animated glow orbs (dots) */}
+      <div className="team-hero__container">
+        <motion.div
+          className="team-hero__content"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="team-hero__eyebrow">
+            <FaUsers aria-hidden="true" />
+            <span>Meet the BCC team</span>
+          </div>
 
-      {/* Content Container */}
-      <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '4rem 0' }}>
-        <div className="container text-center">
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'rgba(59,130,246,0.2)',
-                border: '1px solid rgba(59,130,246,0.5)',
-                borderRadius: '40px',
-                padding: '6px 16px',
-                fontSize: '0.75rem',
-                letterSpacing: '1px',
-                color: '#a5c9ff',
-                marginBottom: '1rem',
-              }}
-            >
-              <FaUsers /> Meet Our Team
-            </span>
-          </motion.div>
+          <h1>People who bring every project to life.</h1>
+          <p>
+            Get to know the architects, engineers, surveyors, and project
+            specialists behind our thoughtful, dependable work.
+          </p>
 
-          {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            style={{
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              fontWeight: 800,
-              background: 'linear-gradient(135deg, #ffffff, #c7d2fe)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              color: 'transparent',
-              marginBottom: '1rem',
-              textShadow: '0 2px 12px rgba(0,0,0,0.2)',
-              lineHeight: 1.2,
-            }}
-          >
-            Expert Professionals Driving Excellence
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            style={{
-              maxWidth: '720px',
-              margin: '0 auto 1.5rem',
-              color: 'rgba(255,255,255,0.88)',
-              fontSize: '1.05rem',
-              lineHeight: 1.65,
-              fontWeight: 400,
-            }}
-          >
-            Our architects, engineers, surveyors, and project specialists bring practical field experience and careful coordination to every assignment.
-          </motion.p>
-
-          {/* Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}
-          >
-            <a
-              href="#team-members"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'linear-gradient(105deg, #2563eb, #1e3a8a)',
-                border: 'none',
-                borderRadius: '50px',
-                padding: '10px 28px',
-                color: 'white',
-                fontWeight: 600,
-                textDecoration: 'none',
-                boxShadow: '0 8px 20px -6px rgba(37,99,235,0.5)',
-                transition: 'all 0.25s',
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = 'translateY(-3px)';
-                e.target.style.boxShadow = '0 14px 28px -8px rgba(37,99,235,0.7)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 8px 20px -6px rgba(37,99,235,0.5)';
-              }}
-            >
-              <FaAward /> Explore Team <FaArrowRight style={{ fontSize: '0.75rem' }} />
+          <div className="team-hero__actions">
+            <a className="team-hero__button team-hero__button--primary" href="#team-members">
+              Meet our experts <FaArrowRight aria-hidden="true" />
             </a>
-            <Link
-              to="/careers"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'transparent',
-                border: '1.5px solid rgba(255,255,255,0.6)',
-                borderRadius: '50px',
-                padding: '10px 28px',
-                color: 'white',
-                fontWeight: 600,
-                textDecoration: 'none',
-                transition: 'all 0.25s',
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = 'rgba(255,255,255,0.1)';
-                e.target.style.borderColor = 'white';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent';
-                e.target.style.borderColor = 'rgba(255,255,255,0.6)';
-              }}
-            >
-              <FaUserPlus /> Join Our Team
+            <Link className="team-hero__button team-hero__button--secondary" to="/careers">
+              Join our team
             </Link>
-          </motion.div>
+          </div>
 
-          {/* Trust Badges */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}
-          >
-            {TRUST_BADGES.map((badge, idx) => (
-              <span
-                key={idx}
-                style={{
-                  background: 'rgba(59,130,246,0.12)',
-                  backdropFilter: 'blur(4px)',
-                  border: '1px solid rgba(59,130,246,0.4)',
-                  borderRadius: '40px',
-                  padding: '5px 14px',
-                  fontSize: '0.75rem',
-                  fontWeight: 500,
-                  color: '#c7dafe',
-                }}
-              >
-                {badge}
-              </span>
-            ))}
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}
-          >
-            {HERO_STATS.map((stat, idx) => (
-              <div key={idx} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 700, color: '#60a5fa' }}>
-                  {stat.value}
-                </div>
-                <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.8rem' }}>{stat.label}</div>
+          <div className="team-hero__stats" aria-label="Team highlights">
+            {HERO_STATS.map((stat) => (
+              <div className="team-hero__stat" key={stat.label}>
+                <strong>{stat.value}</strong>
+                <span>{stat.label}</span>
               </div>
             ))}
-          </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ marginTop: '3rem', cursor: 'pointer' }}
-            onClick={() => document.getElementById('team-members')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', opacity: 0.7 }}>
-              <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.7rem' }}>Our experts</span>
-              <div style={{ width: '24px', height: '24px', borderLeft: '2px solid white', borderBottom: '2px solid white', transform: 'rotate(-45deg)' }} />
-            </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
 
       <style>{`
         .team-hero {
           position: relative;
-          min-height: 85vh;
           display: flex;
           align-items: center;
+          min-height: 82vh;
+          overflow: hidden;
+          background: #101923;
         }
-        @media (max-width: 768px) {
+        .team-hero__image,
+        .team-hero__overlay {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+        .team-hero__image {
+          object-fit: cover;
+          object-position: center 45%;
+        }
+        .team-hero__overlay {
+          background: linear-gradient(
+            90deg,
+            rgba(9, 17, 28, 0.94) 0%,
+            rgba(9, 17, 28, 0.82) 42%,
+            rgba(9, 17, 28, 0.28) 100%
+          );
+        }
+        .team-hero__container {
+          position: relative;
+          z-index: 1;
+          width: min(1160px, 100%);
+          margin: 0 auto;
+          padding: 88px 24px;
+        }
+        .team-hero__content {
+          max-width: 650px;
+          color: #fff;
+        }
+        .team-hero__eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 20px;
+          color: #e6b27a;
+          font: 600 0.78rem/1.2 'Jost', sans-serif;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+        .team-hero__content h1 {
+          max-width: 620px;
+          margin: 0 0 18px;
+          color: #fff;
+          font: 500 clamp(2.6rem, 5.4vw, 4.65rem)/1.08 'Cormorant Garamond', Georgia, serif;
+          letter-spacing: -0.02em;
+        }
+        .team-hero__content p {
+          max-width: 540px;
+          margin: 0;
+          color: rgba(255, 255, 255, 0.82);
+          font: 400 1rem/1.75 'Jost', sans-serif;
+        }
+        .team-hero__actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 30px;
+        }
+        .team-hero__button {
+          display: inline-flex;
+          min-height: 48px;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 0 22px;
+          border: 1px solid transparent;
+          border-radius: 4px;
+          font: 600 0.9rem/1 'Jost', sans-serif;
+          text-decoration: none;
+          transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .team-hero__button:hover {
+          transform: translateY(-2px);
+        }
+        .team-hero__button--primary {
+          background: #c8864a;
+          color: #111827;
+        }
+        .team-hero__button--primary:hover {
+          background: #dda66d;
+          color: #111827;
+        }
+        .team-hero__button--secondary {
+          border-color: rgba(255, 255, 255, 0.55);
+          color: #fff;
+        }
+        .team-hero__button--secondary:hover {
+          border-color: #fff;
+          color: #fff;
+        }
+        .team-hero__stats {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 28px;
+          margin-top: 44px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.24);
+        }
+        .team-hero__stat {
+          display: grid;
+          gap: 5px;
+        }
+        .team-hero__stat strong {
+          color: #e6b27a;
+          font: 500 1.65rem/1 'Cormorant Garamond', Georgia, serif;
+        }
+        .team-hero__stat span {
+          color: rgba(255, 255, 255, 0.72);
+          font: 400 0.74rem/1.4 'Jost', sans-serif;
+          letter-spacing: 0.04em;
+        }
+        @media (max-width: 640px) {
           .team-hero {
-            min-height: 70vh;
+            min-height: 0;
+          }
+          .team-hero__image {
+            object-position: 55% center;
+          }
+          .team-hero__overlay {
+            background: linear-gradient(
+              90deg,
+              rgba(9, 17, 28, 0.88) 0%,
+              rgba(9, 17, 28, 0.74) 100%
+            );
+          }
+          .team-hero__container {
+            padding: 76px 22px 56px;
+          }
+          .team-hero__content h1 {
+            font-size: clamp(2.5rem, 12vw, 3.5rem);
+          }
+          .team-hero__stats {
+            gap: 20px;
+            margin-top: 34px;
+          }
+          .team-hero__stat {
+            flex: 1 1 90px;
           }
         }
       `}</style>

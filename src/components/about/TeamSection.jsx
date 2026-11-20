@@ -11,6 +11,7 @@ const FEATURED_COUNT = 3;
 export default function TeamSection() {
   const [teamMembers, setTeamMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const [imageErrors, setImageErrors] = useState({});
 
   useEffect(() => {
@@ -20,9 +21,12 @@ export default function TeamSection() {
         const response = await publicAPI.getActiveTeamMembers();
         if (response.data?.success) {
           setTeamMembers((response.data.data || []).slice(0, FEATURED_COUNT));
+        } else {
+          throw new Error(response.data?.message || 'Unable to load team profiles.');
         }
       } catch (err) {
         console.error('Team section fetch error:', err);
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
@@ -33,8 +37,6 @@ export default function TeamSection() {
   const handleImageError = (id) => {
     setImageErrors((prev) => ({ ...prev, [id]: true }));
   };
-
-  if (!isLoading && teamMembers.length === 0) return null;
 
   return (
     <section className="team-section py-5 bg-white" aria-label="Our team">
@@ -64,6 +66,17 @@ export default function TeamSection() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {!isLoading && teamMembers.length === 0 && (
+          <div
+            role={hasError ? 'alert' : 'status'}
+            className="text-center py-4 px-3 text-secondary"
+          >
+            {hasError
+              ? 'Team profiles are temporarily unavailable. Please check back shortly.'
+              : 'Team profiles will be available here soon. Please check back later.'}
           </div>
         )}
 

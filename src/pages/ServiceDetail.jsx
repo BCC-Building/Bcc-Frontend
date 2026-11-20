@@ -43,6 +43,9 @@ export default function ServiceDetail() {
   }
 
   const ServiceIcon = service.icon;
+  const serviceImages = service.galleryImages || [
+    { src: service.image, alt: service.name },
+  ];
 
   // ==================== RENDER ====================
   return (
@@ -84,12 +87,16 @@ export default function ServiceDetail() {
             </div>
 
             {/* Right: Image */}
-            <div className="service-detail-image">
-              <img
-                src={service.image}
-                alt={service.name}
-                loading="lazy"
-              />
+            <div className={`service-detail-image${service.galleryImages ? ' service-detail-image--gallery' : ''}`}>
+              {serviceImages.map((image) => (
+                <img
+                  key={image.src}
+                  className={image.layout === 'wide' ? 'service-detail-image__wide' : undefined}
+                  src={image.src}
+                  alt={image.alt}
+                  loading="lazy"
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -288,6 +295,20 @@ export default function ServiceDetail() {
           border-radius: 20px;
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
+        .service-detail-image--gallery {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+          gap: 16px;
+        }
+        .service-detail-image--gallery img {
+          height: auto;
+          aspect-ratio: 3 / 4;
+          border-radius: 16px;
+        }
+        .service-detail-image--gallery .service-detail-image__wide {
+          grid-column: 1 / -1;
+          aspect-ratio: 4 / 3;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -300,6 +321,9 @@ export default function ServiceDetail() {
           }
           .service-detail-image img {
             height: 300px;
+          }
+          .service-detail-image--gallery img {
+            height: auto;
           }
           .service-tabs {
             gap: 8px;

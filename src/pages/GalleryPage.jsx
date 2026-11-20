@@ -298,9 +298,8 @@ export default function GalleryPage() {
           {isLoading && <LoadingSkeleton />}
 
           {!isLoading && apiError && (
-            <div className="text-center py-20">
-              <div className="text-5xl mb-4 font-bold text-amber-500">!</div>
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Failed to Load Gallery</h3>
+            <div role="alert" className="text-center py-12 px-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Gallery is temporarily unavailable</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">{apiError}</p>
               <button onClick={fetchGalleryData} className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
                 Try Again
@@ -321,16 +320,23 @@ export default function GalleryPage() {
               </div>
 
               {filteredImages.length === 0 ? (
-                <div className="text-center py-20">
-                  <div className="text-5xl mb-4 font-bold text-gray-400">No results</div>
-                  <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">No projects found</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">We couldn't find any projects matching "{searchTerm}"</p>
-                  <button
-                    onClick={() => { setSearchTerm(""); setActiveCategory("all"); }}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
-                  >
-                    Clear All Filters
-                  </button>
+                <div role="status" className="text-center py-12 px-6">
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                    {galleryData.length === 0 ? 'No gallery items available yet' : 'No gallery items match your filters'}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    {galleryData.length === 0
+                      ? 'Our project gallery is being updated. Please check back soon.'
+                      : 'Try another search or category, or clear your filters.'}
+                  </p>
+                  {galleryData.length > 0 && (
+                    <button
+                      onClick={() => { setSearchTerm(""); setActiveCategory("all"); }}
+                      className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                    >
+                      Clear filters
+                    </button>
+                  )}
                 </div>
               ) : (
                 <>

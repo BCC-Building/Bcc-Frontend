@@ -246,7 +246,24 @@ export default function ProjectsPreview() {
     );
   }
 
-  if (error || projects.length === 0) return null;
+  if (error || projects.length === 0) {
+    return (
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div role={error ? 'alert' : 'status'} className="text-center py-12 px-6 bg-white rounded-2xl border border-gray-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              {error ? 'Project highlights are temporarily unavailable' : 'Project highlights will be available soon'}
+            </h3>
+            <p className="text-gray-500">
+              {error
+                ? 'We couldn’t load our featured projects right now. Please check back shortly.'
+                : 'We’re updating our portfolio. Please check back soon.'}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
