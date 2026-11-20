@@ -44,8 +44,8 @@ export default function Footer() {
       {/* Top Wave SVG */}
       <div className="footer-wave-wrap">
         <svg viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 35 C200 70 400 0 600 35 C800 70 1000 0 1200 35 L1200 70 L0 70 Z" fill="#131b2f"/>
-          <path d="M0 45 C200 80 400 10 600 45 C800 80 1000 10 1200 45 L1200 70 L0 70 Z" fill="rgba(59,130,246,0.06)"/>
+          <path d="M0 35 C200 70 400 0 600 35 C800 70 1000 0 1200 35 L1200 70 L0 70 Z" fill="#ffffff"/>
+          <path d="M0 45 C200 80 400 10 600 45 C800 80 1000 10 1200 45 L1200 70 L0 70 Z" fill="rgba(19,27,47,0.04)"/>
         </svg>
       </div>
 
@@ -88,9 +88,8 @@ export default function Footer() {
               Trusted construction &amp; engineering partner delivering quality, safety, and professionalism across every project we undertake.
             </p>
             <div className="footer-contacts">
-              <a href="tel:+918057540906" className="footer-contact-item">
+              <a href="tel:+918057540906" className="footer-contact-item" aria-label="Call us">
                 <span className="footer-contact-icon"><i className="bi bi-telephone-fill" aria-hidden="true"/></span>
-                +91 80575 40906
               </a>
               <a href="mailto:bcc06.info@gmail.com" className="footer-contact-item">
                 <span className="footer-contact-icon"><i className="bi bi-envelope-fill" aria-hidden="true"/></span>
@@ -191,7 +190,7 @@ export default function Footer() {
 
         .footer {
           position: relative;
-          background: transparent;
+          background: #ffffff;
           font-family: 'DM Sans', sans-serif;
         }
 
@@ -208,7 +207,7 @@ export default function Footer() {
         }
 
         .footer-body {
-          background: #131b2f;
+          background: #ffffff;
           position: relative;
           overflow: hidden;
           padding: 0 0 8px;
@@ -218,8 +217,8 @@ export default function Footer() {
           position: absolute;
           inset: 0;
           background-image:
-            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            linear-gradient(rgba(19,27,47,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(19,27,47,0.03) 1px, transparent 1px);
           background-size: 60px 60px;
           pointer-events: none;
           z-index: 0;
@@ -241,7 +240,7 @@ export default function Footer() {
           flex-wrap: wrap;
           gap: 16px;
           padding: 32px 48px 28px;
-          border-bottom: 1px solid rgba(255,255,255,0.08);
+          border-bottom: 1px solid rgba(19,27,47,0.12);
           margin-bottom: 48px;
           position: relative;
           z-index: 1;
@@ -254,18 +253,18 @@ export default function Footer() {
         }
 
         .footer-logo-box {
-          width: 54px; height: 54px;
-          border-radius: 14px;
-          background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
-          display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 0 0 1px rgba(59,130,246,0.3), 0 8px 28px rgba(59,130,246,0.2);
+          display: flex; align-items: center;
           flex-shrink: 0;
-          overflow: hidden;
         }
 
         .footer-logo-img {
-          width: 100%; height: 100%;
-          object-fit: cover;
+          width: auto;
+          height: 48px;
+          max-width: 180px;
+          object-fit: contain;
+          display: block;
+          border: none;
+          border-radius: 0;
         }
 
         .footer-logo-fallback {
@@ -280,7 +279,7 @@ export default function Footer() {
         .footer-brand-text h2 {
           font-family: 'Playfair Display', serif;
           font-size: 15px; font-weight: 700;
-          color: #ffffff;
+          color: #131b2f;
           margin: 0 0 3px;
           letter-spacing: 0.01em;
           line-height: 1.2;
@@ -288,7 +287,7 @@ export default function Footer() {
 
         .footer-brand-text p {
           font-size: 10.5px; font-weight: 500;
-          color: #7ab7ef;
+          color: #2563eb;
           margin: 0;
           letter-spacing: 0.14em;
           text-transform: uppercase;
@@ -303,7 +302,7 @@ export default function Footer() {
           border-radius: 40px;
           font-size: 11px;
           font-weight: 400;
-          color: #8ab4f0;
+          color: #2563eb;
           letter-spacing: 0.1em;
           text-transform: uppercase;
         }
@@ -311,7 +310,7 @@ export default function Footer() {
         .footer-est-dot {
           width: 6px; height: 6px;
           border-radius: 50%;
-          background: #5b9aff;
+          background: #2563eb;
           box-shadow: 0 0 8px rgba(59,130,246,0.6);
           flex-shrink: 0;
         }
@@ -330,7 +329,7 @@ export default function Footer() {
           font-weight: 600;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #7ab7ef;
+          color: #2563eb;
           margin: 0 0 20px;
           display: flex;
           align-items: center;
@@ -349,7 +348,7 @@ export default function Footer() {
           font-size: 13.5px;
           font-weight: 300;
           line-height: 1.8;
-          color: #8a9bb0;
+          color: #475569;
           margin: 0 0 24px;
         }
 
@@ -364,13 +363,13 @@ export default function Footer() {
           align-items: center;
           gap: 12px;
           text-decoration: none;
-          color: #8a9bb0;
+          color: #475569;
           font-size: 12.5px;
           font-weight: 400;
           transition: color 0.2s ease;
         }
 
-        a.footer-contact-item:hover { color: #7ab7ef; }
+        a.footer-contact-item:hover { color: #2563eb; }
         a.footer-contact-item:hover .footer-contact-icon {
           background: rgba(59,130,246,0.15);
           border-color: rgba(59,130,246,0.45);
@@ -383,7 +382,7 @@ export default function Footer() {
           border: 1px solid rgba(59,130,246,0.25);
           display: flex; align-items: center; justify-content: center;
           font-size: 13px;
-          color: #7ab7ef;
+          color: #2563eb;
           flex-shrink: 0;
           transition: background 0.2s ease, border-color 0.2s ease;
         }
@@ -400,18 +399,18 @@ export default function Footer() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          color: #7e8ea3;
+          color: #475569;
           text-decoration: none;
           font-size: 13px;
           font-weight: 400;
           padding: 7px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.05);
+          border-bottom: 1px solid rgba(19,27,47,0.08);
           transition: all 0.2s ease;
           letter-spacing: 0.01em;
         }
 
         .footer-nav-link:hover {
-          color: #7ab7ef;
+          color: #2563eb;
           padding-left: 5px;
           border-bottom-color: rgba(59,130,246,0.25);
         }
@@ -423,7 +422,7 @@ export default function Footer() {
         }
 
         .footer-nav-link:hover .footer-link-arrow {
-          color: #7ab7ef;
+          color: #2563eb;
           transform: translateX(3px);
         }
 
@@ -442,10 +441,10 @@ export default function Footer() {
           gap: 5px;
           padding: 12px 4px;
           border-radius: 11px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(19,27,47,0.04);
+          border: 1px solid rgba(19,27,47,0.1);
           text-decoration: none;
-          color: #7e8ea3;
+          color: #475569;
           font-size: 10px;
           font-weight: 500;
           letter-spacing: 0.03em;
@@ -467,13 +466,13 @@ export default function Footer() {
         .footer-dev-card {
           padding: 14px 16px;
           border-radius: 12px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(19,27,47,0.04);
+          border: 1px solid rgba(19,27,47,0.1);
         }
 
         .footer-dev-card p {
           font-size: 10px;
-          color: #5b6e85;
+          color: #64748b;
           text-transform: uppercase;
           letter-spacing: 0.12em;
           margin: 0 0 6px;
@@ -483,7 +482,7 @@ export default function Footer() {
         .footer-dev-card a {
           font-size: 13px;
           font-weight: 600;
-          color: #5b9aff;
+          color: #2563eb;
           text-decoration: none;
           display: inline-flex;
           align-items: center;
@@ -491,11 +490,11 @@ export default function Footer() {
           transition: color 0.2s ease;
         }
 
-        .footer-dev-card a:hover { color: #7ab7ef; }
+        .footer-dev-card a:hover { color: #2563eb; }
 
         .footer-divider {
           height: 1px;
-          background: rgba(255,255,255,0.08);
+          background: rgba(19,27,47,0.12);
           margin: 0 48px;
           position: relative;
           z-index: 1;
@@ -506,7 +505,7 @@ export default function Footer() {
           position: absolute;
           left: 0; top: 0;
           width: 100px; height: 1px;
-          background: linear-gradient(90deg, #5b9aff, transparent);
+          background: linear-gradient(90deg, #2563eb, transparent);
         }
 
         .footer-bottom {
@@ -522,13 +521,13 @@ export default function Footer() {
 
         .footer-copy {
           font-size: 11.5px;
-          color: #5b6e85;
+          color: #64748b;
           margin: 0;
           letter-spacing: 0.02em;
         }
 
         .footer-copy strong {
-          color: #7e8ea3;
+          color: #334155;
           font-weight: 500;
         }
 
@@ -540,7 +539,7 @@ export default function Footer() {
 
         .footer-legal a {
           font-size: 11px;
-          color: #5b6e85;
+          color: #64748b;
           text-decoration: none;
           letter-spacing: 0.05em;
           text-transform: uppercase;
@@ -548,10 +547,10 @@ export default function Footer() {
           transition: color 0.2s ease;
         }
 
-        .footer-legal a:hover { color: #7ab7ef; }
+        .footer-legal a:hover { color: #2563eb; }
 
         .footer-legal span {
-          color: rgba(255,255,255,0.08);
+          color: rgba(19,27,47,0.2);
           font-size: 10px;
         }
 

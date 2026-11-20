@@ -80,10 +80,13 @@ export default function CTASection({
 
         {/* ─── Contact Strip ──────────────────────────────────────────────── */}
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-5 border-t border-white/10 text-white/50 text-xs sm:text-sm">
-          <span className="inline-flex items-center gap-2">
-            <FaPhoneAlt className="text-blue-400/60" size={12} />
-            {phone}
-          </span>
+          <a
+            href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+            aria-label="Call us"
+            className="inline-flex items-center"
+          >
+            <FaPhoneAlt className="text-blue-400/60" size={12} aria-hidden="true" />
+          </a>
           <span className="inline-flex items-center gap-2">
             <FaEnvelope className="text-blue-400/60" size={12} />
             {email}

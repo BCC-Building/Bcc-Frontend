@@ -8,7 +8,6 @@ import logo from "../../../assets/img.webp";
 const COMPANY_FULL  = 'Building Creators And Consulting';
 const COMPANY_SHORT = 'BCC';
 const PHONE         = '+918057540906';
-const PHONE_DISPLAY = '+91 80575 40906';
 const EMAIL         = 'bcc06.info@gmail.com';
 const ADDRESS       = 'Pvt. Plot No-5 South Avenue Bharatpur Rampur Road Near Ark Hotel Rampur Road Tehsil-Bilaspur District-Rampur, Uttar Pradesh';
 
@@ -538,15 +537,11 @@ export default function Navbar() {
 
               {/* Contact chips — desktop */}
               <div className="nb-contacts">
-                <a href={`tel:${PHONE}`} className="nb-chip" aria-label={`Call us at ${PHONE_DISPLAY}`}>
+                <a href={`tel:${PHONE}`} className="nb-chip" aria-label="Call us">
                   <div className="nb-chip-icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a2a5e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
                     </svg>
-                  </div>
-                  <div className="nb-chip-body">
-                    <span className="nb-chip-label">Call Us</span>
-                    <span className="nb-chip-val">{PHONE_DISPLAY}</span>
                   </div>
                 </a>
 
@@ -734,15 +729,11 @@ export default function Navbar() {
 
         {/* Mobile contact strip */}
         <div className="nb-m-contacts">
-          <a href={`tel:${PHONE}`} className="nb-m-chip" onClick={() => setMenuOpen(false)}>
+          <a href={`tel:${PHONE}`} className="nb-m-chip" aria-label="Call us" onClick={() => setMenuOpen(false)}>
             <div className="nb-m-chip-icon">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
               </svg>
-            </div>
-            <div>
-              <div className="nb-m-chip-label">Call Us</div>
-              <div className="nb-m-chip-val">{PHONE_DISPLAY}</div>
             </div>
           </a>
           <a href={`mailto:${EMAIL}`} className="nb-m-chip" onClick={() => setMenuOpen(false)}>
@@ -815,11 +806,10 @@ export default function Navbar() {
 
         {/* Mobile footer CTA */}
         <div className="nb-m-footer">
-          <a href={`tel:${PHONE}`} className="nb-m-cta" onClick={() => setMenuOpen(false)}>
+          <a href={`tel:${PHONE}`} className="nb-m-cta" aria-label="Call us" onClick={() => setMenuOpen(false)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 010 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
             </svg>
-            Call <span className="nb-m-cta-gold">{PHONE_DISPLAY}</span>
           </a>
         </div>
       </div>

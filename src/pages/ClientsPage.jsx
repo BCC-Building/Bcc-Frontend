@@ -1354,8 +1354,9 @@ export default function ClientsPage() {
                 <ArrowRight aria-hidden="true" />
               </Link>
               <p className="cl-cta-direct">
-                <PhoneCall aria-hidden="true" />
-                Or call us directly at <a href="tel:+911234567890">+91 8057540906</a>
+                <a href="tel:+918057540906" aria-label="Call us directly">
+                  <PhoneCall aria-hidden="true" />
+                </a>
               </p>
             </motion.div>
           </div>

@@ -127,7 +127,7 @@ export default function Contact() {
                 <a 
                   href="tel:+918057540906" 
                   className="btn btn-light px-4"
-                  aria-label="Call us at +91 8057540906"
+                  aria-label="Call us"
                 >
                   <Phone size={16} className="mr-2" aria-hidden="true" />Call Now
                 </a>
@@ -153,10 +153,10 @@ export default function Contact() {
             {
               icon: 'bi-telephone-fill',
               title: 'Call Us',
-              text: '+91 8057540906',
               sub: 'Mon - Sat: 9:00 AM - 7:00 PM',
               color: 'bg-primary',
-              ariaLabel: 'Phone number: +91 8057540906',
+              phoneHref: 'tel:+918057540906',
+              ariaLabel: 'Call us',
             },
             {
               icon: 'bi-envelope-fill',
@@ -195,11 +195,21 @@ export default function Contact() {
                 className="contact-card p-4 h-100 shadow-sm rounded-4"
                 aria-label={item.ariaLabel}
               >
-                <div className={`icon-box ${item.color} text-white mb-3`} aria-hidden="true">
-                  <i className={`bi ${item.icon} fs-4`}></i>
-                </div>
+                {item.phoneHref ? (
+                  <a
+                    href={item.phoneHref}
+                    className={`icon-box ${item.color} text-white mb-3`}
+                    aria-label={item.ariaLabel}
+                  >
+                    <i className={`bi ${item.icon} fs-4`} aria-hidden="true"></i>
+                  </a>
+                ) : (
+                  <div className={`icon-box ${item.color} text-white mb-3`} aria-hidden="true">
+                    <i className={`bi ${item.icon} fs-4`}></i>
+                  </div>
+                )}
                 <h3 className="h5">{item.title}</h3>
-                <p className="text-muted mb-1">{item.text}</p>
+                {item.text && <p className="text-muted mb-1">{item.text}</p>}
                 <small className="text-muted">{item.sub}</small>
               </article>
             </motion.div>

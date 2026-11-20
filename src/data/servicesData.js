@@ -45,6 +45,21 @@ const ndtTestingImages = [
   },
 ];
 
+const surveyWorkImages = [
+  {
+    src: "/images/services/survey-work-site-1.png",
+    alt: "Surveyor setting up a total station beside a river",
+  },
+  {
+    src: "/images/services/survey-work-site-2.png",
+    alt: "Surveyor taking a measurement with a total station",
+  },
+  {
+    src: "/images/services/survey-work-site-3.png",
+    alt: "Surveyor recording a field measurement with GPS equipment",
+  },
+];
+
 const plateLoadTestImages = [
   {
     src: "/images/services/plate-load-test-lab.png",
@@ -230,8 +245,8 @@ export const services = [
     name: "Survey Work",
     shortDesc: "Precise land and construction surveying",
     desc: "Comprehensive surveying services for various applications.",
-    // Surveyor using theodolite / total station on site - verified Pexels photo
-    image: "https://images.pexels.com/photos/30379884/pexels-photo-30379884.jpeg?auto=compress&cs=tinysrgb&w=1400",
+    image: surveyWorkImages[0].src,
+    galleryImages: surveyWorkImages,
     icon: Ruler,
     category: "Survey",
     features: [

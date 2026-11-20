@@ -65,7 +65,7 @@ export default function ServicesCTA() {
 
           {/* Contact info */}
           <div className="cta-contact">
-            <span><FaPhoneAlt /> Call us: <a href="tel:+918057540906">+91 8057540906</a></span>
+            <a href="tel:+918057540906" aria-label="Call us"><FaPhoneAlt aria-hidden="true" /></a>
             <span className="contact-sep">|</span>
             <span><FaEnvelope /> Email: <a href="mailto:bcc06.info@gmail.com">bcc06.info@gmail.com</a></span>
           </div>
